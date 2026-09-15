@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
+  <meta name="description" content="Complete your KENNE Cars order — pay now or pay on delivery, with an instant order number.">
+  <title>Checkout | Kenne Car Business</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/animations.css">
+  <link rel="stylesheet" href="assets/css/themes.css">
+  <link rel="stylesheet" href="assets/css/dark-mode.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+</head>
+<body>
+
+  <div id="header-placeholder"></div>
+
+  <section class="section" style="padding-top:calc(var(--header-height) + var(--space-8));">
+    <div class="container">
+      <h1 style="font-family:var(--font-display);font-size:var(--text-3xl);color:var(--color-navy);margin-bottom:var(--space-6);">Checkout</h1>
+
+      <div id="checkout-form-wrap" class="grid grid-2" style="gap:var(--space-10);align-items:flex-start;">
+        <form id="checkout-form">
+          <h3 style="font-size:var(--text-lg);margin-bottom:var(--space-4);">Your Details</h3>
+          <div class="grid grid-2" style="gap:var(--space-4);margin-bottom:var(--space-4);">
+            <div class="form-group"><label class="form-label">Full Name *</label><input type="text" id="ck-name" class="form-control" required></div>
+            <div class="form-group"><label class="form-label">Phone *</label><input type="tel" id="ck-phone" class="form-control" required placeholder="+237 6XX XXX XXX"></div>
+          </div>
+          <div class="form-group" style="margin-bottom:var(--space-4);"><label class="form-label">Email *</label><input type="email" id="ck-email" class="form-control" required></div>
+          <div class="form-group" style="margin-bottom:var(--space-6);"><label class="form-label">Delivery Address / City *</label><input type="text" id="ck-address" class="form-control" required placeholder="e.g. Bonapriso, Douala"></div>
+
+          <h3 style="font-size:var(--text-lg);margin-bottom:var(--space-4);">Payment</h3>
+          <label class="payment-option selected" id="opt-pay-now">
+            <input type="radio" name="pay-method" value="pay-now" checked onclick="selectPayment('pay-now')">
+            <div>
+              <strong>Pay Now</strong>
+              <p style="font-size:var(--text-sm);color:var(--color-text-light);margin:2px 0 0;">Mobile Money or bank transfer — full or partial payment</p>
+            </div>
+          </label>
+          <label class="payment-option" id="opt-pay-later">
+            <input type="radio" name="pay-method" value="pay-on-delivery" onclick="selectPayment('pay-on-delivery')">
+            <div>
+              <strong>Pay on Delivery</strong>
+              <p style="font-size:var(--text-sm);color:var(--color-text-light);margin:2px 0 0;">Reserve now, pay when your order arrives</p>
+            </div>
+          </label>
+
+          <button type="submit" class="btn btn--primary btn--full btn--lg" style="margin-top:var(--space-6);">Place Order →</button>
+          <p style="font-size:var(--text-xs);color:var(--color-gray);margin-top:var(--space-3);text-align:center;">
+            This is a demo checkout — no live payment gateway is connected. Orders are logged and an order number generated instantly.
+          </p>
+        </form>
+
+        <div class="cart-summary" id="checkout-summary"></div>
+      </div>
+
+      <div id="order-success" style="display:none;"></div>
+    </div>
+  </section>
+
+  <div id="footer-placeholder"></div>
+  <button id="back-to-top" aria-label="Back to top">↑</button>
+
+  <script>window.CART_NAMESPACE = 'kenne_cars';</script>
+  <script src="assets/js/cars-data.js"></script>
+  <script src="assets/js/shop.js"></script>
+  <script src="assets/js/cart.js"></script>
+  <script src="assets/js/notifications.js"></script>
+  <script src="assets/js/drawer.js"></script>
+  <script src="assets/js/ai-support.js"></script>
+  <script src="assets/js/main.js"></script>
+  <script>
+    const items = window.KenneCart.getItems();
+    if (items.length === 0) window.location.href = 'cart.html';
+
+    function renderSummary() {
+      const total = window.KenneCart.getTotal();
+      document.getElementById('checkout-summary').innerHTML = `
+        <h3 style="font-size:var(--text-lg);margin-bottom:var(--space-4);">Order Summary</h3>
+        ${items.map(i => `<div class="cart-summary-row"><span>${i.qty}× ${i.name}</span><span>${window.KenneCart.formatMoney(i.price * i.qty)}</span></div>`).join('')}
+        <div class="cart-summary-row total"><span>Total</span><span>${window.KenneCart.formatMoney(total)}</span></div>
+      `;
+    }
+    renderSummary();
+
+    function selectPayment(method) {
+      document.getElementById('opt-pay-now').classList.toggle('selected', method === 'pay-now');
+      document.getElementById('opt-pay-later').classList.toggle('selected', method === 'pay-on-delivery');
+    }
+
+    document.getElementById('checkout-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const customer = {
+        name: document.getElementById('ck-name').value.trim(),
+        phone: document.getElementById('ck-phone').value.trim(),
+        email: document.getElementById('ck-email').value.trim(),
+        address: document.getElementById('ck-address').value.trim(),
+      };
+      const paymentMethod = document.querySelector('input[name="pay-method"]:checked').value;
+
+      const order = window.KenneCart.placeOrder({
+        prefix: 'KCB',
+        customer,
+        paymentMethod,
+        notifyDetails: { origin: 'Kenne Car Business', destination: customer.address, service: 'Car Purchase' },
+      });
+
+      document.getElementById('checkout-form-wrap').style.display = 'none';
+      const successEl = document.getElementById('order-success');
+      successEl.style.display = 'block';
+      successEl.innerHTML = `
+        <div class="card" style="padding:var(--space-10);text-align:center;max-width:560px;margin:0 auto;">
+          <div style="font-size:3rem;margin-bottom:var(--space-4);">✅</div>
+          <h2 style="font-family:var(--font-display);font-size:var(--text-2xl);color:var(--color-navy);margin-bottom:var(--space-2);">Order Placed!</h2>
+          <p style="color:var(--color-text-light);margin-bottom:var(--space-4);">Your order number is</p>
+          <div style="font-family:var(--font-mono);font-size:var(--text-2xl);font-weight:700;color:var(--color-accent-dark);margin-bottom:var(--space-6);">${order.ref}</div>
+          <p style="font-size:var(--text-sm);color:var(--color-text-light);margin-bottom:var(--space-6);">
+            Status: <strong>${order.paymentStatus}</strong>${order.balance > 0 ? ` — Balance due: ${window.KenneCart.formatMoney(order.balance)}` : ''}<br>
+            A confirmation has been sent to ${customer.email}. Our team will contact you shortly.
+          </p>
+          <a href="index.html" class="btn btn--primary">Back to Home</a>
+        </div>
+      `;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  </script>
+  <script src="../assets/js/site-extras.js"></script>
+</body>
+</html>

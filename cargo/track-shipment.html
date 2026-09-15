@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Track your KENNE Cargo shipment from China to Cameroon. Enter your tracking number for real-time status.">
+  <title>Track Your Shipment | KENNE Cargo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/animations.css">
+  <link rel="stylesheet" href="assets/css/themes.css">
+  <link rel="stylesheet" href="assets/css/dark-mode.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+  <style>
+    .track-stage { display:flex; gap:var(--space-4); padding:var(--space-4) 0; }
+    .track-dot { width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; flex-shrink:0; position:relative; }
+    .track-dot.done { background:#0a6e46; color:#fff; }
+    .track-dot.current { background:var(--color-accent); color:var(--color-navy); box-shadow:0 0 0 4px rgba(242,185,12,0.25); }
+    .track-dot.pending { background:var(--color-off-white); color:var(--color-gray); border:2px solid var(--color-border); }
+    .track-line { position:absolute; top:32px; left:15px; width:2px; height:calc(100% + var(--space-4)); background:var(--color-border); }
+    .track-stage:last-child .track-line { display:none; }
+    .track-stage.done .track-line { background:#0a6e46; }
+  </style>
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <link rel="canonical" href="https://www.kennegroup.com/cargo/track-shipment.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="KENNE">
+  <meta property="og:title" content="Track Your Shipment | KENNE Cargo">
+  <meta property="og:description" content="Track your KENNE Cargo shipment from China to Cameroon. Enter your tracking number for real-time status.">
+  <meta property="og:url" content="https://www.kennegroup.com/cargo/track-shipment.html">
+  <meta property="og:image" content="https://www.kennegroup.com/favicon.svg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Track Your Shipment | KENNE Cargo">
+  <meta name="twitter:description" content="Track your KENNE Cargo shipment from China to Cameroon. Enter your tracking number for real-time status.">
+  <meta name="theme-color" content="#0A0E27">
+</head>
+<body>
+
+  <div id="header-placeholder"></div>
+
+  <section class="page-hero">
+    <div class="container page-hero-content">
+      <div class="eyebrow" style="color:var(--color-accent-light);">Cargo Tracking</div>
+      <h1 class="page-hero-title">Track Your Shipment</h1>
+      <p class="page-hero-subtitle">Enter your tracking number for real-time status.</p>
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="index.html">Home</a><span class="breadcrumb-sep">›</span>
+        <span class="breadcrumb-current">Track Shipment</span>
+      </nav>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container" style="max-width:680px;">
+
+      <form id="track-form" class="card" style="padding:var(--space-8);margin-bottom:var(--space-8);">
+        <div class="form-group" style="margin-bottom:var(--space-5);">
+          <label class="form-label">Tracking Number</label>
+          <input type="text" id="tn-input" class="form-control" placeholder="e.g. KENNE-CGO-2026-000123" style="font-family:var(--font-mono);" required>
+        </div>
+        <button type="submit" class="btn btn--primary btn--full btn--lg">Track Shipment →</button>
+      </form>
+
+      <div id="track-result"></div>
+
+    </div>
+  </section>
+
+  <div id="footer-placeholder"></div>
+  <button id="back-to-top" aria-label="Back to top">↑</button>
+
+  <script src="assets/js/notifications.js"></script>
+  <script src="assets/js/drawer.js"></script>
+  <script src="assets/js/cargo-shipping.js"></script>
+  <script src="assets/js/ai-support.js"></script>
+  <script src="assets/js/main.js"></script>
+  <script>
+    const K = window.KenneCargoShipping;
+
+    function renderResult(trackingNumber) {
+      const s = K.loadShipment(trackingNumber.trim().toUpperCase());
+      const host = document.getElementById('track-result');
+      if (!s) {
+        host.innerHTML = `
+          <div class="card" style="padding:var(--space-8);text-align:center;">
+            <div style="font-size:2rem;margin-bottom:var(--space-3);">🔍</div>
+            <p style="color:var(--color-text-light);margin-bottom:var(--space-4);">
+              We couldn't find a shipment with that tracking number on this device.
+            </p>
+            <p style="font-size:12px;color:var(--color-gray);">
+              Tracking numbers are issued when a KENNE Cargo staff member registers your shipment.
+              If you just received yours, make sure you're checking from the same browser it was registered on,
+              or <a href="contact.html" style="color:var(--color-accent-dark);">contact us</a> for help.
+            </p>
+          </div>
+        `;
+        return;
+      }
+
+      const stagesHtml = K.STAGES.map((stage, i) => {
+        const historyEntry = s.history.find(h => h.stageId === stage.id);
+        const state = i < s.currentStageIndex ? 'done' : i === s.currentStageIndex ? 'current' : 'pending';
+        const icon = state === 'done' ? '✓' : state === 'current' ? '●' : '○';
+        return `
+          <div class="track-stage ${state}" style="position:relative;">
+            <div class="track-dot ${state}">${icon}<div class="track-line"></div></div>
+            <div style="padding-bottom:var(--space-2);">
+              <div style="font-weight:${state === 'pending' ? '500' : '700'};font-size:var(--text-sm);color:${state === 'pending' ? 'var(--color-text-light)' : 'var(--color-navy)'};">${stage.label}</div>
+              ${historyEntry ? `<div style="font-size:12px;color:var(--color-text-light);">${new Date(historyEntry.date).toLocaleString()}${historyEntry.notes ? ' · ' + historyEntry.notes : ''}</div>` : ''}
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      host.innerHTML = `
+        <div class="card" style="padding:var(--space-8);">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:var(--space-6);flex-wrap:wrap;gap:var(--space-3);">
+            <div>
+              <div style="font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--color-gray);">Tracking Number</div>
+              <div style="font-family:var(--font-mono);font-size:var(--text-lg);font-weight:700;color:var(--color-navy);">${s.trackingNumber}</div>
+            </div>
+            <span class="product-card__badge" style="position:static;">${s.shipping.method === 'air' ? '✈️ Air Freight' : '🚢 Sea Freight'}</span>
+          </div>
+          <p style="font-size:var(--text-sm);color:var(--color-text-light);margin-bottom:var(--space-6);">${s.goods.description}</p>
+          <div>${stagesHtml}</div>
+        </div>
+      `;
+    }
+
+    document.getElementById('track-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      renderResult(document.getElementById('tn-input').value);
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const q = new URLSearchParams(window.location.search).get('id');
+      if (q) {
+        document.getElementById('tn-input').value = q;
+        renderResult(q);
+      }
+    });
+  </script>
+  <script src="../assets/js/site-extras.js"></script>
+</body>
+</html>

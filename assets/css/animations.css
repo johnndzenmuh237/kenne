@@ -1,0 +1,280 @@
+/* ============================================================
+   KENNE CARGO — ANIMATIONS STYLESHEET
+   animations.css
+   ============================================================ */
+
+/* ----------------------------------------------------------
+   KEYFRAME DEFINITIONS
+   ---------------------------------------------------------- */
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(32px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-24px); }
+  to   { opacity: 1; transform: translateY(0);     }
+}
+
+@keyframes fadeInLeft {
+  from { opacity: 0; transform: translateX(-32px); }
+  to   { opacity: 1; transform: translateX(0);     }
+}
+
+@keyframes fadeInRight {
+  from { opacity: 0; transform: translateX(32px); }
+  to   { opacity: 1; transform: translateX(0);    }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to   { opacity: 1; transform: scale(1);   }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1;   transform: scale(1);    }
+  50%       { opacity: 0.6; transform: scale(1.25); }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes trackMove {
+  0%   { left: -60%;  width: 40%; opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { left: 120%; width: 40%; opacity: 0; }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+
+@keyframes floatY {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-12px); }
+}
+
+@keyframes cargoSlide {
+  0%   { transform: translateX(-100px); opacity: 0; }
+  100% { transform: translateX(0);      opacity: 1; }
+}
+
+@keyframes countUp { from { opacity: 0; } to { opacity: 1; } }
+
+@keyframes drawLine {
+  from { stroke-dashoffset: 1000; }
+  to   { stroke-dashoffset: 0;    }
+}
+
+@keyframes ripple {
+  0%   { transform: scale(0);   opacity: 0.6; }
+  100% { transform: scale(2.5); opacity: 0;   }
+}
+
+@keyframes typing {
+  from { width: 0; }
+  to   { width: 100%; }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+/* ----------------------------------------------------------
+   SCROLL-REVEAL CLASSES
+   Applied via JS IntersectionObserver — initial hidden state
+   ---------------------------------------------------------- */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-28px);
+  transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal-left.revealed {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.reveal-right {
+  opacity: 0;
+  transform: translateX(28px);
+  transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal-right.revealed {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.reveal-scale {
+  opacity: 0;
+  transform: scale(0.92);
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal-scale.revealed {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Staggered children */
+.stagger-children > * {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.stagger-children.revealed > *:nth-child(1)  { transition-delay: 0.05s; opacity:1; transform:none; }
+.stagger-children.revealed > *:nth-child(2)  { transition-delay: 0.12s; opacity:1; transform:none; }
+.stagger-children.revealed > *:nth-child(3)  { transition-delay: 0.19s; opacity:1; transform:none; }
+.stagger-children.revealed > *:nth-child(4)  { transition-delay: 0.26s; opacity:1; transform:none; }
+.stagger-children.revealed > *:nth-child(5)  { transition-delay: 0.33s; opacity:1; transform:none; }
+.stagger-children.revealed > *:nth-child(6)  { transition-delay: 0.40s; opacity:1; transform:none; }
+.stagger-children.revealed > *:nth-child(7)  { transition-delay: 0.47s; opacity:1; transform:none; }
+.stagger-children.revealed > *:nth-child(8)  { transition-delay: 0.54s; opacity:1; transform:none; }
+
+/* ----------------------------------------------------------
+   HERO ENTRY ANIMATIONS
+   ---------------------------------------------------------- */
+.hero-eyebrow  { animation: fadeInDown 0.7s cubic-bezier(0.16,1,0.3,1) 0.1s both; }
+.hero-title    { animation: fadeInUp   0.8s cubic-bezier(0.16,1,0.3,1) 0.25s both; }
+.hero-subtitle { animation: fadeInUp   0.8s cubic-bezier(0.16,1,0.3,1) 0.4s both; }
+.hero-actions  { animation: fadeInUp   0.8s cubic-bezier(0.16,1,0.3,1) 0.55s both; }
+.hero-stats    { animation: fadeInUp   0.8s cubic-bezier(0.16,1,0.3,1) 0.7s both; }
+.hero-tracking-bar { animation: fadeInUp 0.7s cubic-bezier(0.16,1,0.3,1) 0.9s both; }
+
+/* ----------------------------------------------------------
+   TRACK LINES (Hero atmosphere)
+   ---------------------------------------------------------- */
+.hero-track-line:nth-child(1) { top: 20%; animation-duration: 7s; animation-delay: 0s; }
+.hero-track-line:nth-child(2) { top: 45%; animation-duration: 9s; animation-delay: 1.5s; }
+.hero-track-line:nth-child(3) { top: 70%; animation-duration: 6s; animation-delay: 3s; }
+.hero-track-line:nth-child(4) { top: 85%; animation-duration: 8s; animation-delay: 0.8s; }
+
+/* ----------------------------------------------------------
+   LOADING SKELETON
+   ---------------------------------------------------------- */
+.skeleton {
+  background: linear-gradient(90deg, var(--color-light-gray) 25%, #e8ecf1 50%, var(--color-light-gray) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: var(--radius-sm);
+}
+.skeleton-text  { height: 1em; margin-bottom: 0.5em; border-radius: 4px; }
+.skeleton-title { height: 2em; margin-bottom: 0.75em; }
+.skeleton-image { aspect-ratio: 16/9; }
+
+/* ----------------------------------------------------------
+   BUTTON RIPPLE
+   ---------------------------------------------------------- */
+.btn-ripple {
+  position: relative;
+  overflow: hidden;
+}
+.btn-ripple .ripple-circle {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.3);
+  transform: scale(0);
+  animation: ripple 0.6s linear;
+  pointer-events: none;
+}
+
+/* ----------------------------------------------------------
+   FLOATING ELEMENTS
+   ---------------------------------------------------------- */
+.float { animation: floatY 4s ease-in-out infinite; }
+.float-delayed { animation: floatY 4s ease-in-out 1.5s infinite; }
+
+/* ----------------------------------------------------------
+   COUNTER ANIMATION
+   ---------------------------------------------------------- */
+.counter-value { display: inline-block; animation: countUp 0.4s ease; }
+
+/* ----------------------------------------------------------
+   PROGRESS BAR
+   ---------------------------------------------------------- */
+.progress-bar {
+  height: 6px;
+  background: var(--color-light-gray);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-accent), var(--color-accent-light));
+  border-radius: var(--radius-full);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.progress-fill.animated { transform: scaleX(1); }
+
+/* ----------------------------------------------------------
+   HOVER EFFECTS
+   ---------------------------------------------------------- */
+.hover-lift {
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
+}
+.hover-lift:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-xl);
+}
+
+.hover-glow:hover {
+  box-shadow: 0 0 0 3px rgba(232,147,26,0.3);
+}
+
+/* ----------------------------------------------------------
+   PAGE TRANSITION
+   ---------------------------------------------------------- */
+.page-transition {
+  animation: fadeIn 0.4s ease;
+}
+
+/* ----------------------------------------------------------
+   REDUCED MOTION
+   ---------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration:   0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration:  0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .reveal, .reveal-left, .reveal-right, .reveal-scale {
+    opacity: 1;
+    transform: none;
+  }
+  .stagger-children > * {
+    opacity: 1;
+    transform: none;
+  }
+  .hero-eyebrow, .hero-title, .hero-subtitle,
+  .hero-actions, .hero-stats, .hero-tracking-bar {
+    animation: none;
+    opacity: 1;
+  }
+}

@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Request a freight quote from Kenne Cargo — ocean, air, road, and warehousing. Get a competitive quote in minutes.">
+  <title>Get a quote | Kenne Cargo Global Logistics</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/animations.css">
+  <link rel="stylesheet" href="assets/css/themes.css">
+  <link rel="stylesheet" href="assets/css/dark-mode.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+  <style>
+    .steps-indicator{display:flex;gap:0;margin-bottom:var(--space-10);position:relative;}
+    .step-indicator{flex:1;display:flex;flex-direction:column;align-items:center;gap:var(--space-2);position:relative;}
+    .step-indicator::before{content:'';position:absolute;top:20px;left:calc(-50%);right:calc(50%);height:2px;background:var(--color-light-gray);z-index:0;}
+    .step-indicator:first-child::before{display:none;}
+    .step-dot{width:40px;height:40px;border-radius:50%;background:var(--color-light-gray);color:var(--color-gray);display:flex;align-items:center;justify-content:center;font-size:var(--text-sm);font-weight:700;position:relative;z-index:1;transition:all var(--transition-base);}
+    .step-indicator.active .step-dot{background:var(--color-accent);color:white;box-shadow:0 0 0 4px rgba(232,147,26,0.2);}
+    .step-indicator.done .step-dot{background:var(--color-success);color:white;}
+    .step-indicator.done::before,.step-indicator.active::before{background:var(--color-success);}
+    .step-label{font-size:var(--text-xs);font-weight:600;color:var(--color-gray);text-align:center;}
+    .step-indicator.active .step-label{color:var(--color-accent);}
+    .step-indicator.done .step-label{color:var(--color-success);}
+    #quote-progress-bar{height:3px;background:var(--color-accent);transition:width .4s ease;border-radius:2px;position:fixed;top:0;left:0;z-index:2000;}
+    .service-option{display:flex;flex-direction:column;align-items:center;gap:var(--space-3);padding:var(--space-6);border:2px solid var(--color-light-gray);border-radius:var(--radius-lg);cursor:pointer;transition:all .2s;}
+    .service-option:hover{border-color:var(--color-accent);background:rgba(232,147,26,0.04);}
+    .service-option input{display:none;}
+    .service-option.selected{border-color:var(--color-accent);background:rgba(232,147,26,0.06);box-shadow:0 0 0 3px rgba(232,147,26,0.15);}
+
+    /* Success overlay */
+    .quote-success{display:none;text-align:center;padding:var(--space-12) var(--space-8);}
+    .quote-success.visible{display:block;}
+    .success-ref-box{background:var(--color-navy);border-radius:var(--radius-xl);padding:var(--space-8);margin:var(--space-8) auto;max-width:480px;}
+    .success-ref-label{font-size:var(--text-xs);color:rgba(255,255,255,0.5);letter-spacing:.12em;text-transform:uppercase;margin-bottom:var(--space-3);}
+    .success-ref-number{font-family:var(--font-mono);font-size:var(--text-3xl);font-weight:700;color:var(--color-accent);letter-spacing:.06em;margin-bottom:var(--space-4);}
+    .success-ref-copy{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.8);padding:var(--space-2) var(--space-4);border-radius:var(--radius-sm);font-size:var(--text-xs);font-weight:600;cursor:pointer;transition:all .2s;font-family:var(--font-body);}
+    .success-ref-copy:hover{background:var(--color-accent);color:#fff;border-color:var(--color-accent);}
+    .quote-summary{background:var(--color-off-white);border-radius:var(--radius-lg);padding:var(--space-6);text-align:left;max-width:480px;margin:0 auto var(--space-8);}
+    .quote-summary-row{display:flex;justify-content:space-between;align-items:flex-start;padding:var(--space-3) 0;border-bottom:1px solid var(--color-light-gray);gap:var(--space-4);}
+    .quote-summary-row:last-child{border-bottom:none;}
+    .quote-summary-key{font-size:var(--text-xs);font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--color-gray);}
+    .quote-summary-val{font-size:var(--text-sm);font-weight:600;color:var(--color-navy);text-align:right;}
+
+    /* Generating overlay */
+    .quote-generating{display:none;text-align:center;padding:var(--space-16) var(--space-8);}
+    .quote-generating.visible{display:block;}
+    .qg-ring{display:inline-block;width:52px;height:52px;border:4px solid var(--color-light-gray);border-top-color:var(--color-accent);border-radius:50%;animation:qg-spin .8s linear infinite;}
+    @keyframes qg-spin{to{transform:rotate(360deg);}}
+
+    /* Live control panel (on the quote page) */
+    .live-control{background:var(--color-off-white);border-radius:var(--radius-lg);padding:var(--space-6);max-width:480px;margin:0 auto var(--space-8);text-align:left;border:var(--border-light);}
+    .live-control-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--space-4);gap:var(--space-3);flex-wrap:wrap;}
+    .live-control-title{font-size:var(--text-xs);font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--color-gray);}
+    .live-status-chip{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:999px;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;}
+    .live-status-chip.playing{background:rgba(29,185,122,.15);color:#0a6e46;}
+    .live-status-chip.paused{background:rgba(232,147,26,.15);color:#a05a00;}
+    .live-status-chip.cancelled{background:rgba(220,38,38,.14);color:#b91c1c;}
+    .live-status-chip .dot{width:6px;height:6px;border-radius:50%;background:currentColor;}
+    .live-status-chip.playing .dot{animation:blink-dot 1.4s ease-in-out infinite;}
+    @keyframes blink-dot{0%,100%{opacity:1;}50%{opacity:.3;}}
+    .live-pbar{height:8px;background:var(--color-light-gray);border-radius:999px;overflow:hidden;margin:var(--space-3) 0;}
+    .live-pfill{height:100%;background:linear-gradient(90deg,var(--color-accent),var(--color-sky));border-radius:999px;transition:width 1s linear;}
+    .live-pfill.cancelled-fill{background:linear-gradient(90deg,#b91c1c,#e05a5a);}
+    .live-meta-row{display:flex;justify-content:space-between;font-size:var(--text-xs);color:var(--color-text-light);margin-bottom:var(--space-4);}
+    .live-loc-line{font-size:var(--text-sm);font-weight:600;color:var(--color-navy);margin-bottom:var(--space-4);}
+    .live-buttons{display:flex;gap:var(--space-3);flex-wrap:wrap;}
+    .live-buttons button, .live-buttons a{flex:1;min-width:140px;}
+
+    /* Admin shipment control panel */
+    #admin-panel .search-row{align-items:flex-end;}
+    #admin-not-found{background:rgba(220,38,38,.08);border:1px solid rgba(220,38,38,.3);border-radius:var(--radius-md);padding:var(--space-3) var(--space-4);}
+  </style>
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <link rel="canonical" href="https://www.kennegroup.com/cargo/quote-request.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="KENNE">
+  <meta property="og:title" content="Get a quote | Kenne Cargo Global Logistics">
+  <meta property="og:description" content="Request a freight quote from Kenne Cargo — ocean, air, road, and warehousing. Get a competitive quote in minutes.">
+  <meta property="og:url" content="https://www.kennegroup.com/cargo/quote-request.html">
+  <meta property="og:image" content="https://www.kennegroup.com/favicon.svg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Get a quote | Kenne Cargo Global Logistics">
+  <meta name="twitter:description" content="Request a freight quote from Kenne Cargo — ocean, air, road, and warehousing. Get a competitive quote in minutes.">
+  <meta name="theme-color" content="#0A0E27">
+</head>
+<body>
+
+  <div id="back-to-top" style="display:none;"></div>
+  <div id="quote-progress-bar" style="width:25%;"></div>
+  <div id="header-placeholder"></div>
+
+  <section class="page-hero">
+    <div class="container page-hero-content">
+      <div class="eyebrow" style="color:var(--color-accent-light);">Free Quote</div>
+      <h1 class="page-hero-title">Request a Quote</h1>
+      <p class="page-hero-subtitle">Complete the form — we'll generate your tracking reference instantly and send a full quote within 4 hours.</p>
+      <nav class="breadcrumb">
+        <a href="index.html">Home</a><span class="breadcrumb-sep">›</span>
+        <span class="breadcrumb-current">Get a Quote</span>
+      </nav>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container container--narrow">
+      <div class="card" style="padding:var(--space-10);" id="quote-card">
+
+        <!-- Step counter -->
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-8);" id="step-header">
+          <div id="step-counter" style="font-size:var(--text-sm);color:var(--color-text-light);font-weight:600;">Step 1 of 4</div>
+          <div style="font-size:var(--text-xs);color:var(--color-gray);">Fields marked <span style="color:var(--color-accent);">*</span> are required</div>
+        </div>
+
+        <!-- Steps Indicator -->
+        <div class="steps-indicator" id="steps-indicator">
+          <div class="step-indicator active" data-step-indicator="1"><div class="step-dot">1</div><div class="step-label">Service</div></div>
+          <div class="step-indicator" data-step-indicator="2"><div class="step-dot">2</div><div class="step-label">Cargo</div></div>
+          <div class="step-indicator" data-step-indicator="3"><div class="step-dot">3</div><div class="step-label">Route</div></div>
+          <div class="step-indicator" data-step-indicator="4"><div class="step-dot">4</div><div class="step-label">Contact</div></div>
+        </div>
+
+        <!-- FORM -->
+        <form id="quote-form" novalidate>
+
+          <!-- STEP 1 -->
+          <div data-step-panel="1">
+            <h3 style="font-size:var(--text-xl);font-weight:800;margin-bottom:var(--space-6);">What type of service do you need?</h3>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-4);margin-bottom:var(--space-8);">
+              <label class="service-option"><input type="radio" name="service_type" value="ocean" required><div style="font-size:2.5rem;">🚢</div><strong style="font-size:var(--text-sm);">Ocean Freight</strong><span style="font-size:var(--text-xs);color:var(--color-text-light);text-align:center;">FCL / LCL</span></label>
+              <label class="service-option"><input type="radio" name="service_type" value="air"><div style="font-size:2.5rem;">✈️</div><strong style="font-size:var(--text-sm);">Air Freight</strong><span style="font-size:var(--text-xs);color:var(--color-text-light);text-align:center;">Express / Standard</span></label>
+              <label class="service-option"><input type="radio" name="service_type" value="road"><div style="font-size:2.5rem;">🚛</div><strong style="font-size:var(--text-sm);">Road Transport</strong><span style="font-size:var(--text-xs);color:var(--color-text-light);text-align:center;">FTL / LTL</span></label>
+              <label class="service-option"><input type="radio" name="service_type" value="warehouse"><div style="font-size:2.5rem;">🏭</div><strong style="font-size:var(--text-sm);">Warehousing</strong><span style="font-size:var(--text-xs);color:var(--color-text-light);text-align:center;">Storage & Fulfillment</span></label>
+              <label class="service-option"><input type="radio" name="service_type" value="supply-chain"><div style="font-size:2.5rem;">🔗</div><strong style="font-size:var(--text-sm);">Supply Chain</strong><span style="font-size:var(--text-xs);color:var(--color-text-light);text-align:center;">End-to-End</span></label>
+              <label class="service-option"><input type="radio" name="service_type" value="multimodal"><div style="font-size:2.5rem;">🌐</div><strong style="font-size:var(--text-sm);">Multimodal</strong><span style="font-size:var(--text-xs);color:var(--color-text-light);text-align:center;">Combined Modes</span></label>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Additional Services (optional)</label>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-3);">
+                <div class="form-check"><input type="checkbox" class="form-check-input" name="customs" value="1"><label class="form-check-label">Customs Clearance</label></div>
+                <div class="form-check"><input type="checkbox" class="form-check-input" name="insurance" value="1"><label class="form-check-label">Cargo Insurance</label></div>
+                <div class="form-check"><input type="checkbox" class="form-check-input" name="pickup" value="1"><label class="form-check-label">Origin Pickup</label></div>
+                <div class="form-check"><input type="checkbox" class="form-check-input" name="delivery" value="1"><label class="form-check-label">Final Mile Delivery</label></div>
+              </div>
+            </div>
+            <div style="display:flex;justify-content:flex-end;margin-top:var(--space-8);">
+              <button type="button" data-next class="btn btn--primary btn--lg">Next: Cargo Details →</button>
+            </div>
+          </div>
+
+          <!-- STEP 2 -->
+          <div data-step-panel="2" class="hidden">
+            <h3 style="font-size:var(--text-xl);font-weight:800;margin-bottom:var(--space-6);">Tell us about your cargo</h3>
+            <div class="form-group">
+              <label class="form-label" for="cargo-desc">Cargo Description <span>*</span></label>
+              <input type="text" id="cargo-desc" name="cargo_description" class="form-control" placeholder="e.g. Electronic Components, Textiles, Machinery Parts" required>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="cargo-weight">Total Weight (kg) <span>*</span></label>
+                <input type="number" id="cargo-weight" name="cargo_weight" class="form-control" placeholder="e.g. 1500" min="1" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="cargo-volume">Volume (CBM)</label>
+                <input type="number" id="cargo-volume" name="cargo_volume" class="form-control" placeholder="e.g. 8.5" step="0.1">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="cargo-packages">Number of Packages <span>*</span></label>
+                <input type="number" id="cargo-packages" name="cargo_packages" class="form-control" placeholder="e.g. 24" min="1" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="cargo-type">Packaging Type</label>
+                <select id="cargo-type" name="packaging_type" class="form-control">
+                  <option value="">Select…</option>
+                  <option>Pallets</option><option>Cartons / Boxes</option><option>Wooden Crates</option>
+                  <option>Drums / Barrels</option><option>Bags</option><option>Break Bulk</option><option>Container (full)</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Special Handling</label>
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:var(--space-3);">
+                <div class="form-check"><input type="checkbox" class="form-check-input" name="hazmat"><label class="form-check-label">Hazardous (DG)</label></div>
+                <div class="form-check"><input type="checkbox" class="form-check-input" name="refrigerated"><label class="form-check-label">Refrigerated</label></div>
+                <div class="form-check"><input type="checkbox" class="form-check-input" name="fragile"><label class="form-check-label">Fragile</label></div>
+                <div class="form-check"><input type="checkbox" class="form-check-input" name="oversized"><label class="form-check-label">Oversized / OOG</label></div>
+                <div class="form-check"><input type="checkbox" class="form-check-input" name="high-value"><label class="form-check-label">High Value</label></div>
+                <div class="form-check"><input type="checkbox" class="form-check-input" name="perishable"><label class="form-check-label">Perishable</label></div>
+              </div>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-top:var(--space-8);">
+              <button type="button" data-prev class="btn btn--outline">← Back</button>
+              <button type="button" data-next class="btn btn--primary btn--lg">Next: Route Details →</button>
+            </div>
+          </div>
+
+          <!-- STEP 3 -->
+          <div data-step-panel="3" class="hidden">
+            <h3 style="font-size:var(--text-xl);font-weight:800;margin-bottom:var(--space-6);">Where is it going?</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="origin-country">Origin Country <span>*</span></label>
+                <input type="text" id="origin-country" name="origin_country" class="form-control" placeholder="e.g. China" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="origin-city">Origin City / Port <span>*</span></label>
+                <input type="text" id="origin-city" name="origin_city" class="form-control" placeholder="e.g. Shanghai" required>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="dest-country">Destination Country <span>*</span></label>
+                <input type="text" id="dest-country" name="destination_country" class="form-control" placeholder="e.g. Germany" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="dest-city">Destination City / Port <span>*</span></label>
+                <input type="text" id="dest-city" name="destination_city" class="form-control" placeholder="e.g. Hamburg" required>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="ready-date">Cargo Ready Date</label>
+                <input type="date" id="ready-date" name="ready_date" class="form-control">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="delivery-date">Required Delivery Date</label>
+                <input type="date" id="delivery-date" name="delivery_date" class="form-control">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="incoterm">Incoterms</label>
+              <select id="incoterm" name="incoterms" class="form-control">
+                <option value="">Not sure / Flexible</option>
+                <option value="EXW">EXW — Ex Works</option>
+                <option value="FOB">FOB — Free on Board</option>
+                <option value="CIF">CIF — Cost, Insurance &amp; Freight</option>
+                <option value="CFR">CFR — Cost &amp; Freight</option>
+                <option value="DAP">DAP — Delivered at Place</option>
+                <option value="DDP">DDP — Delivered Duty Paid</option>
+                <option value="FCA">FCA — Free Carrier</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="special-instructions">Special Instructions</label>
+              <textarea id="special-instructions" name="special_instructions" class="form-control" rows="3" placeholder="Any specific requirements, deadlines, or notes…"></textarea>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-top:var(--space-8);">
+              <button type="button" data-prev class="btn btn--outline">← Back</button>
+              <button type="button" data-next class="btn btn--primary btn--lg">Next: Your Details →</button>
+            </div>
+          </div>
+
+          <!-- STEP 4 -->
+          <div data-step-panel="4" class="hidden">
+            <h3 style="font-size:var(--text-xl);font-weight:800;margin-bottom:var(--space-6);">Your contact information</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="qf-firstname">First Name <span>*</span></label>
+                <input type="text" id="qf-firstname" name="first_name" class="form-control" required placeholder="John">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="qf-lastname">Last Name <span>*</span></label>
+                <input type="text" id="qf-lastname" name="last_name" class="form-control" required placeholder="Smith">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="qf-email">Email Address <span>*</span></label>
+                <input type="email" id="qf-email" name="email" class="form-control" required placeholder="john@company.com">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="qf-phone">Phone Number <span>*</span></label>
+                <input type="tel" id="qf-phone" name="phone" class="form-control" required placeholder="+1 (555) 000-0000">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="qf-company">Company Name <span>*</span></label>
+                <input type="text" id="qf-company" name="company" class="form-control" required placeholder="Acme Logistics Ltd.">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="qf-country">Your Country <span>*</span></label>
+                <input type="text" id="qf-country" name="country" class="form-control" required placeholder="United States">
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="form-check">
+                <input type="checkbox" id="qf-consent" name="consent" class="form-check-input" required>
+                <label class="form-check-label" for="qf-consent">
+                  I agree to the <a href="#" style="color:var(--color-accent);">Privacy Policy</a> and consent to receiving a quote from Kenne Cargo.
+                </label>
+              </div>
+            </div>
+            <div class="alert alert--info" style="margin-top:var(--space-4);">
+              ℹ️ &nbsp;Your <strong>tracking reference</strong> is generated instantly and your shipment starts moving toward its destination in real time. Use the reference on the tracking page to monitor it live.
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-top:var(--space-8);">
+              <button type="button" data-prev class="btn btn--outline">← Back</button>
+              <button type="submit" class="btn btn--primary btn--lg">Generate Quote &amp; Tracking Reference ✓</button>
+            </div>
+          </div>
+
+        </form>
+
+        <!-- GENERATING STATE -->
+        <div class="quote-generating" id="quote-generating">
+          <div class="qg-ring"></div>
+          <p style="margin-top:var(--space-6);color:var(--color-text-light);font-size:var(--text-md);">Locating your route and preparing live tracking…</p>
+        </div>
+
+        <!-- SUCCESS STATE -->
+        <div class="quote-success" id="quote-success">
+          <div style="font-size:4rem;margin-bottom:var(--space-4);">✅</div>
+          <h2 style="font-size:var(--text-3xl);font-weight:900;color:var(--color-navy);margin-bottom:var(--space-3);">Quote Request Submitted!</h2>
+          <p style="color:var(--color-text-light);font-size:var(--text-md);margin-bottom:var(--space-6);max-width:500px;margin-inline:auto;">
+            Your shipment reference has been generated and is now moving toward its destination in real time. Use it on the tracking page to see your live shipment position, route, and all booking details.
+          </p>
+
+          <div class="success-ref-box">
+            <div class="success-ref-label">Your Tracking Reference Number</div>
+            <div class="success-ref-number" id="success-ref-display">KC-2026-000000</div>
+            <button class="success-ref-copy" id="copy-ref-btn" onclick="copyRef()">📋 Copy Reference</button>
+          </div>
+
+          <!-- LIVE MOVEMENT CONTROL -->
+          <div class="live-control" id="live-control-panel">
+            <div class="live-control-head">
+              <div class="live-control-title">Live Shipment Control</div>
+              <div class="live-status-chip playing" id="live-status-chip"><div class="dot"></div><span id="live-status-text">En Route</span></div>
+            </div>
+            <div class="live-pbar"><div class="live-pfill" id="live-pfill" style="width:0%"></div></div>
+            <div class="live-meta-row">
+              <span id="live-pct-label">0% complete</span>
+              <span id="live-eta-label">—</span>
+            </div>
+            <div class="live-loc-line">📍 Currently near: <span id="live-loc-text">Calculating…</span></div>
+            <div class="live-buttons">
+              <button type="button" class="btn btn--outline" id="live-pause-btn" onclick="toggleLivePlayback()">⏸ Pause Movement</button>
+              <a href="#" class="btn btn--primary" id="live-track-btn" target="_blank" rel="noopener">🗺️ View on Live Map</a>
+            </div>
+            <p style="font-size:var(--text-xs);color:var(--color-gray);margin-top:var(--space-3);margin-bottom:0;">
+              Pausing here pauses the shipment on the live tracking map too — resume any time.
+            </p>
+          </div>
+
+          <div class="quote-summary" id="quote-summary-panel"></div>
+
+          <div id="notify-sent-panel" style="max-width:480px;margin:0 auto var(--space-8);"></div>
+
+          <div style="display:flex;gap:var(--space-4);justify-content:center;flex-wrap:wrap;margin-top:var(--space-4);">
+            <a id="track-now-btn" href="tracking.html" class="btn btn--primary btn--lg">
+              🗺️ Track My Shipment Live →
+            </a>
+            <a href="quote-request.html" class="btn btn--outline btn--lg">Submit Another Quote</a>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ===== ADMIN: MANAGE EXISTING SHIPMENT ===== -->
+      <div class="card" style="padding:var(--space-8);margin-top:var(--space-8);" id="admin-panel">
+        <div style="display:flex;align-items:center;gap:var(--space-3);margin-bottom:var(--space-2);">
+          <span style="font-size:1.3rem;">🛠️</span>
+          <h3 style="font-size:var(--text-lg);font-weight:800;margin:0;">Manage Existing Shipment</h3>
+        </div>
+        <p style="font-size:var(--text-sm);color:var(--color-text-light);margin-bottom:var(--space-6);">
+          Paste any tracking reference below to pause, resume, or cancel its movement. Changes apply instantly and are visible to anyone viewing that reference on the live tracking page.
+        </p>
+
+        <div class="search-row" style="margin-bottom:var(--space-5);">
+          <div class="form-group" style="flex:1;min-width:200px;margin-bottom:0;">
+            <label class="form-label" for="admin-ref-input" style="font-size:var(--text-xs);letter-spacing:.08em;">TRACKING REFERENCE</label>
+            <input type="text" id="admin-ref-input" class="form-control" placeholder="e.g. KC-2026-118420" autocomplete="off" style="font-family:var(--font-mono);letter-spacing:.06em;">
+          </div>
+          <button type="button" class="btn btn--primary" id="admin-load-btn" onclick="adminLoadShipment()" style="flex-shrink:0;margin-bottom:4px;white-space:nowrap;">Load Shipment</button>
+        </div>
+
+        <div id="admin-not-found" class="hidden" style="font-size:var(--text-sm);color:#b91c1c;margin-bottom:var(--space-5);"></div>
+
+        <div id="admin-control" class="live-control hidden" style="margin:0;max-width:none;">
+          <div class="live-control-head">
+            <div class="live-control-title" id="admin-ref-label">—</div>
+            <div class="live-status-chip playing" id="admin-status-chip"><div class="dot"></div><span id="admin-status-text">—</span></div>
+          </div>
+          <div class="live-pbar"><div class="live-pfill" id="admin-pfill" style="width:0%"></div></div>
+          <div class="live-meta-row">
+            <span id="admin-pct-label">0% complete</span>
+            <span id="admin-eta-label">—</span>
+          </div>
+          <div class="live-loc-line">📍 Currently near: <span id="admin-loc-text">Calculating…</span></div>
+          <div class="live-buttons">
+            <button type="button" class="btn btn--outline" id="admin-pause-btn" onclick="adminTogglePlayback()">⏸ Pause Movement</button>
+            <button type="button" class="btn btn--outline" id="admin-notify-btn" onclick="adminResendNotification()">📩 Resend Notification</button>
+            <button type="button" class="btn btn--outline" id="admin-cancel-btn" onclick="adminCancelShipment()" style="border-color:#b91c1c;color:#b91c1c;">✕ Cancel Shipment</button>
+            <a href="#" class="btn btn--primary" id="admin-track-btn" target="_blank" rel="noopener">🗺️ View Live</a>
+          </div>
+          <p style="font-size:var(--text-xs);color:var(--color-gray);margin-top:var(--space-3);margin-bottom:0;">
+            Pausing freezes the shipment's position until it's resumed. Cancelling is permanent and will show as "Cancelled" wherever this reference is tracked.
+          </p>
+        </div>
+      </div>
+
+      <!-- TRUST SIGNALS -->
+      <div class="grid grid-3" style="margin-top:var(--space-8);">
+        <div style="text-align:center;padding:var(--space-4);">
+          <div style="font-size:2rem;margin-bottom:var(--space-2);">⚡</div>
+          <strong style="font-size:var(--text-sm);">Instant Reference</strong>
+          <p style="font-size:var(--text-xs);color:var(--color-text-light);">Your tracking number is generated the moment you submit</p>
+        </div>
+        <div style="text-align:center;padding:var(--space-4);">
+          <div style="font-size:2rem;margin-bottom:var(--space-2);">🗺️</div>
+          <strong style="font-size:var(--text-sm);">Live Map Tracking</strong>
+          <p style="font-size:var(--text-xs);color:var(--color-text-light);">See your shipment position and route in real-time</p>
+        </div>
+        <div style="text-align:center;padding:var(--space-4);">
+          <div style="font-size:2rem;margin-bottom:var(--space-2);">🏆</div>
+          <strong style="font-size:var(--text-sm);">Best-Rate Guarantee</strong>
+          <p style="font-size:var(--text-xs);color:var(--color-text-light);">We'll match or beat any comparable quote</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div id="footer-placeholder"></div>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script src="assets/js/notifications.js"></script>
+  <script src="assets/js/drawer.js"></script>
+  <script src="assets/js/ai-support.js"></script>
+  <script src="assets/js/main.js"></script>
+  <script src="assets/js/quote-tracking-bridge.js"></script>
+  <script src="assets/js/quote-form.js"></script>
+  <script>
+  /* ---- Service option highlight ---- */
+  document.querySelectorAll('.service-option').forEach(opt => {
+    opt.addEventListener('click', () => {
+      document.querySelectorAll('.service-option').forEach(o => o.classList.remove('selected'));
+      opt.classList.add('selected');
+    });
+  });
+
+  let currentRef = null;
+  let livePollTimer = null;
+  let liveLocLastFetchAt = 0;
+  let liveLocCache = null;
+
+  /* ---- Override quote-form.js submitQuoteForm to use bridge ---- */
+  window.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('quote-form');
+    if (!form) return;
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const btn = form.querySelector('[type="submit"]');
+      if (btn) { btn.disabled = true; btn.textContent = 'Generating…'; }
+
+      const raw = new FormData(form);
+      const data = {};
+      raw.forEach((v, k) => {
+        if (data[k]) {
+          data[k] = Array.isArray(data[k]) ? [...data[k], v] : [data[k], v];
+        } else {
+          data[k] = v;
+        }
+      });
+
+      // Collect checkboxes
+      ['customs','insurance','pickup','delivery','hazmat','refrigerated','fragile','oversized','high-value','perishable'].forEach(n => {
+        data[n] = form.querySelector(`[name="${n}"]:checked`) ? 'yes' : 'no';
+      });
+
+      // Show "generating" state while we geocode + build the real route
+      document.getElementById('step-header').style.display    = 'none';
+      document.getElementById('steps-indicator').style.display = 'none';
+      document.getElementById('quote-form').style.display     = 'none';
+      document.getElementById('quote-generating').classList.add('visible');
+
+      const ref = window.QuoteTrackingBridge.generateReference();
+
+      window.QuoteTrackingBridge.saveQuote(data, ref).then((quote) => {
+        document.getElementById('quote-generating').classList.remove('visible');
+        showSuccessState(ref, data, quote);
+      }).catch((err) => {
+        console.error(err);
+        document.getElementById('quote-generating').classList.remove('visible');
+        showSuccessState(ref, data, null);
+      });
+    }, true); // capture phase to override quote-form.js
+
+    // Admin panel: allow pressing Enter in the reference field to load
+    const adminInput = document.getElementById('admin-ref-input');
+    if (adminInput) {
+      adminInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') { e.preventDefault(); adminLoadShipment(); }
+      });
+    }
+  });
+
+  function showSuccessState(ref, data, quote) {
+    currentRef = ref;
+    document.getElementById('quote-success').classList.add('visible');
+    document.getElementById('quote-progress-bar').style.width = '100%';
+
+    document.getElementById('success-ref-display').textContent = ref;
+    document.getElementById('track-now-btn').href = `tracking.html?id=${ref}`;
+    document.getElementById('live-track-btn').href = `tracking.html?id=${ref}`;
+
+    // Summary panel
+    const svc = {ocean:'Ocean Freight',air:'Air Freight',road:'Road Transport',warehouse:'Warehousing','supply-chain':'Supply Chain',multimodal:'Multimodal'}[data.service_type] || data.service_type;
+    const rows = [
+      ['Service',      svc || '—'],
+      ['Shipper',      (data.first_name || '') + ' ' + (data.last_name || '') + (data.company ? ' · ' + data.company : '')],
+      ['Origin',       (data.origin_city || '—') + ', ' + (data.origin_country || '—')],
+      ['Destination',  (data.destination_city || '—') + ', ' + (data.destination_country || '—')],
+      ['Cargo',        data.cargo_description || '—'],
+      ['Weight',       data.cargo_weight ? data.cargo_weight + ' kg' : '—'],
+      ['Packages',     data.cargo_packages || '—'],
+      ['Incoterms',    data.incoterms || 'Flexible'],
+      ['Est. Transit', quote ? quote.transitDays + ' days' : '—'],
+    ];
+    document.getElementById('quote-summary-panel').innerHTML =
+      '<div style="font-size:var(--text-xs);font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--color-accent);margin-bottom:var(--space-4);">Shipment Summary</div>' +
+      rows.map(([k,v]) => `<div class="quote-summary-row"><div class="quote-summary-key">${k}</div><div class="quote-summary-val">${v}</div></div>`).join('');
+
+    if (!quote || quote.service_type === 'warehouse') {
+      document.getElementById('live-control-panel').style.display = 'none';
+    } else {
+      startLivePolling();
+    }
+
+    // ---- Send tracking-number notification to the client ----
+    if (window.KenneNotifications) {
+      const svcLabel = {ocean:'Ocean Freight',air:'Air Freight',road:'Road Transport',warehouse:'Warehousing','supply-chain':'Supply Chain',multimodal:'Multimodal'}[data.service_type] || data.service_type;
+      const clientName = `${data.first_name || ''} ${data.last_name || ''}`.trim();
+      const result = window.KenneNotifications.notifyClient({
+        ref,
+        clientName,
+        clientEmail: data.email,
+        clientPhone: data.phone,
+        origin: (data.origin_city || '') + (data.origin_country ? ', ' + data.origin_country : ''),
+        destination: (data.destination_city || '') + (data.destination_country ? ', ' + data.destination_country : ''),
+        service: svcLabel,
+        itemDescription: data.cargo_description,
+      });
+      renderNotifySentCard(result, data);
+    }
+  }
+
+  function renderNotifySentCard(result, data) {
+    const host = document.getElementById('notify-sent-panel');
+    if (!host) return;
+    const ref = (result.subject.split(': ')[1] || '').trim();
+    host.innerHTML = `
+      <div class="live-control" id="qr-notify-card" style="border-color:rgba(29,185,122,.35);background:rgba(29,185,122,.06);">
+        <div class="live-control-head">
+          <span class="live-control-title" style="color:#0a6e46;">📩 Client Notification</span>
+        </div>
+        <p style="font-size:var(--text-sm);color:var(--color-text);margin-bottom:var(--space-3);">
+          Tracking number <strong>${ref}</strong> generated for <strong>${data.email || 'the client'}</strong>${data.phone ? ' and <strong>' + data.phone + '</strong>' : ''}.
+        </p>
+        <p id="qr-notify-status" style="font-size:var(--text-sm);font-weight:600;margin-bottom:var(--space-4);color:${result.sending ? '#0a6e46' : '#8a6d00'};">
+          ${result.sending ? '📤 Sending confirmation email automatically…' : '📩 Email not auto-sent yet (EmailJS not configured) — send it manually below.'}
+        </p>
+        <div class="live-buttons">
+          ${result.mailto ? `<a href="${result.mailto}" class="btn btn--outline">✉️ Send Email</a>` : ''}
+          ${result.whatsapp ? `<a href="${result.whatsapp}" target="_blank" rel="noopener" class="btn btn--outline">💬 Send WhatsApp</a>` : ''}
+        </div>
+        <p style="font-size:var(--text-xs);color:var(--color-gray);margin-top:var(--space-3);margin-bottom:0;">
+          Logged to the notification bell in the site header.
+        </p>
+      </div>
+    `;
+    window.addEventListener('kenne:notify-sent', function onSent(e) {
+      if (e.detail.ref !== ref) return;
+      const statusEl = document.getElementById('qr-notify-status');
+      if (statusEl) {
+        statusEl.textContent = e.detail.ok
+          ? '✅ Confirmation email auto-sent successfully to ' + (data.email || 'the client') + '.'
+          : '⚠️ Automatic send failed — please use "Send Email" above.';
+        statusEl.style.color = e.detail.ok ? '#0a6e46' : '#b91c1c';
+      }
+      window.removeEventListener('kenne:notify-sent', onSent);
+    });
+  }
+
+  function startLivePolling() {
+    updateLivePanel();
+    if (livePollTimer) clearInterval(livePollTimer);
+    livePollTimer = setInterval(updateLivePanel, 1000);
+  }
+
+  function updateLivePanel() {
+    if (!currentRef) return;
+    const quote = window.QuoteTrackingBridge.loadQuote(currentRef);
+    if (!quote) return;
+    const progress = window.QuoteTrackingBridge.computeProgress(quote);
+    const pct = Math.round(progress * 100);
+    const playing = quote.playback.status === 'playing';
+
+    document.getElementById('live-pfill').style.width = pct + '%';
+    document.getElementById('live-pct-label').textContent = pct + '% complete';
+
+    const chip = document.getElementById('live-status-chip');
+    const statusText = document.getElementById('live-status-text');
+    const pauseBtn = document.getElementById('live-pause-btn');
+    if (pct >= 100) {
+      chip.className = 'live-status-chip playing';
+      statusText.textContent = 'Delivered';
+      pauseBtn.style.display = 'none';
+    } else if (playing) {
+      chip.className = 'live-status-chip playing';
+      statusText.textContent = 'En Route';
+      pauseBtn.style.display = '';
+      pauseBtn.textContent = '⏸ Pause Movement';
+    } else {
+      chip.className = 'live-status-chip paused';
+      statusText.textContent = 'Paused';
+      pauseBtn.style.display = '';
+      pauseBtn.textContent = '▶ Resume Movement';
+    }
+
+    const eta = new Date(quote.submittedAt + quote.transitDurationMs);
+    document.getElementById('live-eta-label').textContent = pct >= 100
+      ? 'Delivered'
+      : 'ETA ' + eta.toLocaleDateString('en-US', { day:'numeric', month:'short', year:'numeric' });
+
+    // Reverse-geocode current location occasionally (throttled)
+    const now = Date.now();
+    if (!liveLocCache || now - liveLocLastFetchAt > 15000) {
+      liveLocLastFetchAt = now;
+      const pos = window.QuoteTrackingBridge.getPositionAtProgress(quote.waypoints, progress);
+      window.QuoteTrackingBridge.reverseGeocode(pos[0], pos[1]).then((label) => {
+        if (label) {
+          liveLocCache = label;
+          document.getElementById('live-loc-text').textContent = pct >= 100
+            ? `${quote.destination_city}, ${quote.destination_country}`
+            : label;
+        }
+      });
+    }
+  }
+
+  function toggleLivePlayback() {
+    if (!currentRef) return;
+    const quote = window.QuoteTrackingBridge.loadQuote(currentRef);
+    if (!quote) return;
+    const action = quote.playback.status === 'playing' ? 'pause' : 'play';
+    window.QuoteTrackingBridge.setPlayback(currentRef, action);
+    updateLivePanel();
+  }
+
+  function copyRef() {
+    const ref = document.getElementById('success-ref-display').textContent;
+    navigator.clipboard.writeText(ref).then(() => {
+      const btn = document.getElementById('copy-ref-btn');
+      btn.textContent = '✓ Copied!';
+      setTimeout(() => btn.textContent = '📋 Copy Reference', 2000);
+    });
+  }
+
+  /* ============================================================
+     ADMIN PANEL — pause / resume / cancel ANY tracking reference
+     This is fully separate from the "just submitted" live control
+     above, so it works for a reference typed in at any time, in
+     any browser tab that has that shipment's localStorage record.
+  ============================================================ */
+  let adminRef = null;
+  let adminPollTimer = null;
+  let adminLocLastFetchAt = 0;
+  let adminLocCache = null;
+
+  function adminResendNotification() {
+    if (!adminRef || !window.KenneNotifications) return;
+    const quote = window.QuoteTrackingBridge.loadQuote(adminRef);
+    if (!quote) return;
+    const svcLabel = {ocean:'Ocean Freight',air:'Air Freight',road:'Road Transport',warehouse:'Warehousing','supply-chain':'Supply Chain',multimodal:'Multimodal'}[quote.service_type] || quote.service_type;
+    const clientName = `${quote.first_name || ''} ${quote.last_name || ''}`.trim();
+    const result = window.KenneNotifications.notifyClient({
+      ref: adminRef,
+      clientName,
+      clientEmail: quote.email,
+      clientPhone: quote.phone,
+      origin: (quote.origin_city || '') + (quote.origin_country ? ', ' + quote.origin_country : ''),
+      destination: (quote.destination_city || '') + (quote.destination_country ? ', ' + quote.destination_country : ''),
+      service: svcLabel,
+      itemDescription: quote.cargo_description,
+    });
+    if (result.mailto) window.open(result.mailto, '_blank');
+    if (typeof showToast === 'function') showToast(`✓ Notification re-sent for ${adminRef}`);
+  }
+
+  function adminLoadShipment() {
+    const raw = document.getElementById('admin-ref-input').value.trim();
+    const notFoundEl = document.getElementById('admin-not-found');
+    const panel = document.getElementById('admin-control');
+
+    notFoundEl.classList.add('hidden');
+    panel.classList.add('hidden');
+    if (adminPollTimer) { clearInterval(adminPollTimer); adminPollTimer = null; }
+    adminRef = null;
+
+    if (!raw) return;
+    const ref = raw.toUpperCase();
+    const quote = window.QuoteTrackingBridge.loadQuote(ref);
+
+    if (!quote) {
+      notFoundEl.textContent = `No shipment found for "${ref}". Check the reference and try again.`;
+      notFoundEl.classList.remove('hidden');
+      return;
+    }
+    if (quote.service_type === 'warehouse') {
+      notFoundEl.textContent = `"${ref}" is a warehousing shipment and is always in storage — there's nothing to pause or cancel.`;
+      notFoundEl.classList.remove('hidden');
+      return;
+    }
+
+    adminRef = ref;
+    adminLocCache = null;
+    adminLocLastFetchAt = 0;
+    document.getElementById('admin-ref-label').textContent = ref;
+    document.getElementById('admin-track-btn').href = `tracking.html?id=${ref}`;
+    panel.classList.remove('hidden');
+
+    adminUpdatePanel();
+    adminPollTimer = setInterval(adminUpdatePanel, 1000);
+  }
+
+  function adminUpdatePanel() {
+    if (!adminRef) return;
+    const quote = window.QuoteTrackingBridge.loadQuote(adminRef);
+    if (!quote) { clearInterval(adminPollTimer); adminPollTimer = null; return; }
+
+    const progress = window.QuoteTrackingBridge.computeProgress(quote);
+    const pct = Math.round(progress * 100);
+    const status = quote.playback.status; // playing | paused | cancelled | stored
+
+    const pfill = document.getElementById('admin-pfill');
+    pfill.style.width = pct + '%';
+    pfill.classList.toggle('cancelled-fill', status === 'cancelled');
+    document.getElementById('admin-pct-label').textContent = pct + '% complete';
+
+    const chip = document.getElementById('admin-status-chip');
+    const statusText = document.getElementById('admin-status-text');
+    const pauseBtn = document.getElementById('admin-pause-btn');
+    const cancelBtn = document.getElementById('admin-cancel-btn');
+
+    if (status === 'cancelled') {
+      chip.className = 'live-status-chip cancelled';
+      statusText.textContent = 'Cancelled';
+      pauseBtn.style.display = 'none';
+      cancelBtn.style.display = 'none';
+    } else if (pct >= 100) {
+      chip.className = 'live-status-chip playing';
+      statusText.textContent = 'Delivered';
+      pauseBtn.style.display = 'none';
+      cancelBtn.style.display = 'none';
+    } else if (status === 'playing') {
+      chip.className = 'live-status-chip playing';
+      statusText.textContent = 'En Route';
+      pauseBtn.style.display = '';
+      pauseBtn.textContent = '⏸ Pause Movement';
+      cancelBtn.style.display = '';
+    } else {
+      chip.className = 'live-status-chip paused';
+      statusText.textContent = 'Paused';
+      pauseBtn.style.display = '';
+      pauseBtn.textContent = '▶ Resume Movement';
+      cancelBtn.style.display = '';
+    }
+
+    const eta = new Date(quote.submittedAt + quote.transitDurationMs);
+    document.getElementById('admin-eta-label').textContent = status === 'cancelled'
+      ? 'Cancelled'
+      : (pct >= 100 ? 'Delivered' : 'ETA ' + eta.toLocaleDateString('en-US', { day:'numeric', month:'short', year:'numeric' }));
+
+    if (status === 'cancelled') {
+      document.getElementById('admin-loc-text').textContent = 'Frozen at last known position';
+    } else {
+      const now = Date.now();
+      if (!adminLocCache || now - adminLocLastFetchAt > 15000) {
+        adminLocLastFetchAt = now;
+        const pos = window.QuoteTrackingBridge.getPositionAtProgress(quote.waypoints, progress);
+        window.QuoteTrackingBridge.reverseGeocode(pos[0], pos[1]).then((label) => {
+          if (label) {
+            adminLocCache = label;
+            document.getElementById('admin-loc-text').textContent = pct >= 100
+              ? `${quote.destination_city}, ${quote.destination_country}`
+              : label;
+          }
+        });
+      }
+    }
+
+    if (pct >= 100 || status === 'cancelled') { clearInterval(adminPollTimer); adminPollTimer = null; }
+  }
+
+  function adminTogglePlayback() {
+    if (!adminRef) return;
+    const quote = window.QuoteTrackingBridge.loadQuote(adminRef);
+    if (!quote) return;
+    const action = quote.playback.status === 'playing' ? 'pause' : 'play';
+    window.QuoteTrackingBridge.setPlayback(adminRef, action);
+    adminUpdatePanel();
+  }
+
+  function adminCancelShipment() {
+    if (!adminRef) return;
+    if (!confirm(`Cancel shipment ${adminRef}? This cannot be undone.`)) return;
+    window.QuoteTrackingBridge.setPlayback(adminRef, 'cancel');
+    adminUpdatePanel();
+  }
+  </script>
+  <script src="../assets/js/site-extras.js"></script>
+</body>
+</html>

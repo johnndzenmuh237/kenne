@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Shop phones at Kenne Smart Technology — Apple, Samsung, Tecno, Infinix and more, brand new or UK used, tested and verified.">
+  <title>Shop Phones | Kenne Smart Technology</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/animations.css">
+  <link rel="stylesheet" href="assets/css/themes.css">
+  <link rel="stylesheet" href="assets/css/dark-mode.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <link rel="canonical" href="https://www.kennegroup.com/smart-tech/shop.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="KENNE">
+  <meta property="og:title" content="Shop Phones | Kenne Smart Technology">
+  <meta property="og:description" content="Shop phones at Kenne Smart Technology — Apple, Samsung, Tecno, Infinix and more, brand new or UK used, tested and verified.">
+  <meta property="og:url" content="https://www.kennegroup.com/smart-tech/shop.html">
+  <meta property="og:image" content="https://www.kennegroup.com/favicon.svg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Shop Phones | Kenne Smart Technology">
+  <meta name="twitter:description" content="Shop phones at Kenne Smart Technology — Apple, Samsung, Tecno, Infinix and more, brand new or UK used, tested and verified.">
+  <meta name="theme-color" content="#0A0E27">
+</head>
+<body>
+
+  <div id="header-placeholder"></div>
+
+  <section class="page-hero">
+    <div class="container page-hero-content">
+      <div class="eyebrow" style="color:var(--color-accent-light);">Shop</div>
+      <h1 class="page-hero-title">Phones</h1>
+      <p class="page-hero-subtitle">Every device tested and verified before it reaches you.</p>
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="index.html">Home</a><span class="breadcrumb-sep">›</span>
+        <span class="breadcrumb-current">Shop</span>
+      </nav>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="shop-layout">
+
+        <aside class="filter-panel">
+          <div class="filter-group">
+            <h4>Search</h4>
+            <input type="text" id="f-search" class="form-control" placeholder="Search phones…">
+          </div>
+          <div class="filter-group">
+            <h4>Brand</h4>
+            <div class="filter-chip-row" id="f-brand"></div>
+          </div>
+          <div class="filter-group">
+            <h4>Condition</h4>
+            <label class="filter-option"><input type="radio" name="f-cond" value="" checked> All</label>
+            <label class="filter-option"><input type="radio" name="f-cond" value="Brand New"> Brand New</label>
+            <label class="filter-option"><input type="radio" name="f-cond" value="UK Used"> UK Used</label>
+          </div>
+          <div class="filter-group">
+            <h4>Max Price</h4>
+            <input type="range" id="f-price" min="100000" max="900000" step="10000" value="900000" style="width:100%;">
+            <div style="font-size:12px;color:var(--color-text-light);margin-top:4px;" id="f-price-label">Up to CFA 900,000</div>
+          </div>
+        </aside>
+
+        <div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-5);">
+            <span style="font-size:var(--text-sm);color:var(--color-text-light);" id="results-count"></span>
+          </div>
+          <div class="product-grid" id="results-grid"></div>
+          <p id="no-results" style="display:none;text-align:center;color:var(--color-text-light);padding:var(--space-12) 0;">No phones match those filters — try widening your search.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <div id="footer-placeholder"></div>
+  <button id="back-to-top" aria-label="Back to top">↑</button>
+
+  <script>window.CART_NAMESPACE = 'kenne_tech';</script>
+  <script src="assets/js/products-data.js"></script>
+  <script src="assets/js/shop.js"></script>
+  <script src="assets/js/cart.js"></script>
+  <script src="assets/js/notifications.js"></script>
+  <script src="assets/js/drawer.js"></script>
+  <script src="assets/js/ai-support.js"></script>
+  <script src="assets/js/main.js"></script>
+  <script>
+    const brands = [...new Set(PRODUCTS_DATA.map(p => p.brand))];
+    document.getElementById('f-brand').innerHTML =
+      `<button type="button" class="filter-chip active" data-brand="">All</button>` +
+      brands.map(b => `<button type="button" class="filter-chip" data-brand="${b}">${b}</button>`).join('');
+
+    let state = { search: '', brand: getQueryParam('brand') || '', condition: '', maxPrice: 900000 };
+    if (state.brand) {
+      document.querySelectorAll('#f-brand .filter-chip').forEach(b => b.classList.toggle('active', b.dataset.brand === state.brand));
+    }
+
+    function applyFilters() {
+      let results = PRODUCTS_DATA.filter(p =>
+        (!state.brand || p.brand === state.brand) &&
+        (!state.condition || p.condition.startsWith(state.condition)) &&
+        (p.price <= state.maxPrice) &&
+        (!state.search || p.name.toLowerCase().includes(state.search) || p.brand.toLowerCase().includes(state.search))
+      );
+      document.getElementById('results-count').textContent = `${results.length} phone${results.length !== 1 ? 's' : ''} found`;
+      document.getElementById('results-grid').innerHTML = results.map(renderProductCard).join('');
+      document.getElementById('no-results').style.display = results.length === 0 ? 'block' : 'none';
+    }
+
+    document.getElementById('f-search').addEventListener('input', (e) => { state.search = e.target.value.toLowerCase(); applyFilters(); });
+    document.getElementById('f-brand').addEventListener('click', (e) => {
+      const btn = e.target.closest('.filter-chip'); if (!btn) return;
+      document.querySelectorAll('#f-brand .filter-chip').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      state.brand = btn.dataset.brand; applyFilters();
+    });
+    document.querySelectorAll('input[name="f-cond"]').forEach(r => r.addEventListener('change', (e) => { state.condition = e.target.value; applyFilters(); }));
+    document.getElementById('f-price').addEventListener('input', (e) => {
+      state.maxPrice = Number(e.target.value);
+      document.getElementById('f-price-label').textContent = `Up to ${formatCFA(state.maxPrice)}`;
+      applyFilters();
+    });
+
+    applyFilters();
+  </script>
+  <script src="../assets/js/site-extras.js"></script>
+</body>
+</html>

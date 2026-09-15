@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customization Guide | Kenne Cargo Documentation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="installation.html" id="doc-styles">
+  <style>
+    :root {
+      --navy:#0A1628;--accent:#E8931A;--steel:#2C4A7C;
+      --text:#1E2D45;--light:#F7F9FC;--mid:#EDF1F7;
+      --gray:#8A9BB5;--border:#E0E8F0;--white:#FFFFFF;
+      --green:#1DB97A;--red:#E84040;
+      --font-body:'Inter',sans-serif;
+      --font-display:'Barlow Condensed',sans-serif;
+      --font-mono:'JetBrains Mono',monospace;
+      --radius:8px;--radius-lg:16px;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{font-family:var(--font-body);color:var(--text);background:var(--white);display:flex;min-height:100vh;}
+    .doc-sidebar{width:280px;flex-shrink:0;background:var(--navy);color:#fff;position:sticky;top:0;height:100vh;overflow-y:auto;padding:2rem 1.5rem;display:flex;flex-direction:column;gap:2rem;}
+    .doc-logo{display:flex;align-items:center;gap:.75rem;text-decoration:none;margin-bottom:.5rem;}
+    .doc-logo-icon{width:36px;height:36px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;}
+    .doc-logo-text{font-family:var(--font-display);font-size:1.2rem;font-weight:800;color:#fff;text-transform:uppercase;letter-spacing:.05em;}
+    .doc-logo-sub{font-size:.65rem;color:var(--accent);font-weight:600;letter-spacing:.12em;text-transform:uppercase;}
+    .doc-nav-title{font-size:.65rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:.75rem;padding-bottom:.5rem;border-bottom:1px solid rgba(255,255,255,.08);}
+    .doc-nav-section{margin-bottom:1.5rem;}
+    .doc-nav-link{display:block;padding:.45rem .75rem;border-radius:var(--radius);font-size:.875rem;color:rgba(255,255,255,.6);text-decoration:none;transition:all .2s;margin-bottom:2px;}
+    .doc-nav-link:hover{color:#fff;background:rgba(255,255,255,.08);}
+    .doc-nav-link.active{color:#fff;background:var(--accent);}
+    .doc-nav-link-sub{padding-left:1.5rem;font-size:.8rem;}
+    .doc-main{flex:1;padding:3rem 4rem;max-width:900px;}
+    .doc-header{margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border);}
+    .doc-eyebrow{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:.5rem;}
+    h1.doc-title{font-family:var(--font-display);font-size:2.5rem;font-weight:900;color:var(--navy);letter-spacing:-.02em;margin-bottom:.5rem;}
+    .doc-description{font-size:1.05rem;color:var(--gray);line-height:1.7;}
+    h2{font-family:var(--font-display);font-size:1.5rem;font-weight:800;color:var(--navy);margin:2.5rem 0 1rem;padding-top:1rem;}
+    h3{font-size:1.1rem;font-weight:700;color:var(--navy);margin:1.75rem 0 .75rem;}
+    p{line-height:1.75;color:#445573;margin-bottom:1rem;}
+    ul,ol{margin:.75rem 0 1rem 1.5rem;display:flex;flex-direction:column;gap:.4rem;}
+    li{font-size:.9375rem;color:#445573;line-height:1.65;}
+    a{color:var(--accent);}
+    code{font-family:var(--font-mono);font-size:.82rem;background:var(--mid);border:1px solid var(--border);padding:.15em .45em;border-radius:4px;color:var(--navy);}
+    pre{background:var(--navy);color:#d4e0f0;border-radius:var(--radius-lg);padding:1.5rem;margin:1.25rem 0;overflow-x:auto;font-family:var(--font-mono);font-size:.82rem;line-height:1.7;position:relative;}
+    pre .comment{color:#6b8aad;}pre .keyword{color:var(--accent);}pre .string{color:#7ec8a0;}pre .value{color:#e8c88a;}
+    .callout{display:flex;gap:.75rem;padding:1rem 1.25rem;border-radius:var(--radius);margin:1.25rem 0;}
+    .callout--info{background:#dbeafe;border-left:4px solid #3b82f6;}
+    .callout--warning{background:rgba(232,147,26,.1);border-left:4px solid var(--accent);}
+    .callout--success{background:rgba(29,185,122,.1);border-left:4px solid var(--green);}
+    .callout-icon{font-size:1.1rem;flex-shrink:0;}
+    .callout-body{font-size:.875rem;line-height:1.65;color:var(--text);}
+    .callout-body strong{display:block;margin-bottom:.2rem;}
+    .color-swatch-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem;margin:1.25rem 0;}
+    .color-swatch{border-radius:var(--radius);overflow:hidden;box-shadow:0 2px 8px rgba(10,22,40,.1);}
+    .swatch-color{height:60px;}
+    .swatch-label{padding:.5rem .75rem;font-size:.7rem;font-family:var(--font-mono);background:#fff;border-top:1px solid var(--border);}
+    .swatch-name{font-weight:700;color:var(--navy);}
+    .swatch-hex{color:var(--gray);}
+    .font-demo{padding:1.25rem;background:var(--light);border-radius:var(--radius-lg);margin:1rem 0;border:1px solid var(--border);}
+    .table-wrap{overflow-x:auto;margin:1.25rem 0;}
+    table{width:100%;border-collapse:collapse;font-size:.875rem;}
+    th{background:var(--navy);color:#fff;padding:.75rem 1rem;text-align:left;font-size:.75rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;}
+    td{padding:.65rem 1rem;border-bottom:1px solid var(--border);vertical-align:top;color:#445573;}
+    tr:nth-child(even) td{background:var(--light);}
+    .copy-btn{position:absolute;top:.75rem;right:.75rem;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.7);font-size:.7rem;font-weight:600;padding:.3rem .7rem;border-radius:4px;cursor:pointer;transition:all .2s;font-family:var(--font-body);}
+    .copy-btn:hover{background:var(--accent);border-color:var(--accent);color:#fff;}
+    .doc-nav-footer{margin-top:auto;padding-top:1.5rem;border-top:1px solid rgba(255,255,255,.08);font-size:.75rem;color:rgba(255,255,255,.35);}
+    @media(max-width:900px){body{flex-direction:column;}.doc-sidebar{width:100%;height:auto;position:static;}.doc-main{padding:2rem 1.25rem;}}
+  </style>
+</head>
+<body>
+
+  <aside class="doc-sidebar">
+    <div>
+      <a href="../index.html" class="doc-logo">
+        <div class="doc-logo-icon">⚡</div>
+        <div><div class="doc-logo-text">Kenne Cargo</div><div class="doc-logo-sub">Documentation</div></div>
+      </a>
+    </div>
+    <nav>
+      <div class="doc-nav-section">
+        <div class="doc-nav-title">Getting Started</div>
+        <a href="installation.html" class="doc-nav-link">Installation</a>
+        <a href="customization.html" class="doc-nav-link active">Customization</a>
+        <a href="deployment.html" class="doc-nav-link">Deployment</a>
+      </div>
+      <div class="doc-nav-section">
+        <div class="doc-nav-title">Customize</div>
+        <a href="#colors" class="doc-nav-link doc-nav-link-sub">Colors</a>
+        <a href="#typography" class="doc-nav-link doc-nav-link-sub">Typography</a>
+        <a href="#logo" class="doc-nav-link doc-nav-link-sub">Logo & Brand</a>
+        <a href="#images" class="doc-nav-link doc-nav-link-sub">Images</a>
+        <a href="#icons" class="doc-nav-link doc-nav-link-sub">Icons</a>
+        <a href="#content" class="doc-nav-link doc-nav-link-sub">Content & Text</a>
+        <a href="#services" class="doc-nav-link doc-nav-link-sub">Services</a>
+        <a href="#pricing" class="doc-nav-link doc-nav-link-sub">Pricing</a>
+        <a href="#contact" class="doc-nav-link doc-nav-link-sub">Contact Info</a>
+        <a href="#forms" class="doc-nav-link doc-nav-link-sub">Forms</a>
+        <a href="#darkmode" class="doc-nav-link doc-nav-link-sub">Dark Mode</a>
+        <a href="#themes" class="doc-nav-link doc-nav-link-sub">Color Themes</a>
+      </div>
+    </nav>
+    <div class="doc-nav-footer">Kenne Cargo Template v1.0.0</div>
+  </aside>
+
+  <main class="doc-main">
+
+    <div class="doc-header">
+      <div class="doc-eyebrow">Documentation</div>
+      <h1 class="doc-title">Customization Guide</h1>
+      <p class="doc-description">Make Kenne Cargo your own — update colors, fonts, logo, content, services, and more.</p>
+    </div>
+
+    <!-- COLORS -->
+    <h2 id="colors">Colors</h2>
+    <p>All colors are defined as CSS custom properties in <code>:root</code> inside <code>assets/css/style.css</code>. Changing them updates the entire site instantly.</p>
+
+    <div class="color-swatch-grid">
+      <div class="color-swatch"><div class="swatch-color" style="background:#E8931A;"></div><div class="swatch-label"><div class="swatch-name">--color-accent</div><div class="swatch-hex">#E8931A</div></div></div>
+      <div class="color-swatch"><div class="swatch-color" style="background:#0A1628;"></div><div class="swatch-label"><div class="swatch-name">--color-navy</div><div class="swatch-hex">#0A1628</div></div></div>
+      <div class="color-swatch"><div class="swatch-color" style="background:#2C4A7C;"></div><div class="swatch-label"><div class="swatch-name">--color-steel</div><div class="swatch-hex">#2C4A7C</div></div></div>
+      <div class="color-swatch"><div class="swatch-color" style="background:#4A9FD4;"></div><div class="swatch-label"><div class="swatch-name">--color-sky</div><div class="swatch-hex">#4A9FD4</div></div></div>
+      <div class="color-swatch"><div class="swatch-color" style="background:#F7F9FC;border:1px solid #e0e8f0;"></div><div class="swatch-label"><div class="swatch-name">--color-off-white</div><div class="swatch-hex">#F7F9FC</div></div></div>
+      <div class="color-swatch"><div class="swatch-color" style="background:#1DB97A;"></div><div class="swatch-label"><div class="swatch-name">--color-success</div><div class="swatch-hex">#1DB97A</div></div></div>
+      <div class="color-swatch"><div class="swatch-color" style="background:#E84040;"></div><div class="swatch-label"><div class="swatch-name">--color-danger</div><div class="swatch-hex">#E84040</div></div></div>
+      <div class="color-swatch"><div class="swatch-color" style="background:#1E2D45;"></div><div class="swatch-label"><div class="swatch-name">--color-text</div><div class="swatch-hex">#1E2D45</div></div></div>
+    </div>
+
+    <p>To change your primary brand/accent color, update just these three variables:</p>
+    <pre><button class="copy-btn" onclick="navigator.clipboard.writeText(':root {\n  --color-accent:       #E8931A; /* Your brand color */\n  --color-accent-dark:  #C67A10; /* Darker shade */\n  --color-accent-light: #F5B04A; /* Lighter shade */\n}');this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',1500);">Copy</button>:root {
+  --color-accent:       <span class="value">#E8931A</span>;  <span class="comment">/* Main brand color */</span>
+  --color-accent-dark:  <span class="value">#C67A10</span>;  <span class="comment">/* Hover states */</span>
+  --color-accent-light: <span class="value">#F5B04A</span>;  <span class="comment">/* Light tints */</span>
+}</pre>
+
+    <div class="callout callout--info">
+      <div class="callout-icon">💡</div>
+      <div class="callout-body"><strong>Pre-built Themes</strong> Instead of manually changing colors, try the pre-built themes in <code>themes.css</code>: <code>theme-ocean</code>, <code>theme-forest</code>, <code>theme-crimson</code>, or <code>theme-slate</code>. Apply by adding the class to <code>&lt;html&gt;</code>.</div>
+    </div>
+
+    <!-- TYPOGRAPHY -->
+    <h2 id="typography">Typography</h2>
+    <p>The template uses three font families, loaded from Google Fonts:</p>
+
+    <div class="font-demo">
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:2rem;font-weight:900;letter-spacing:-.02em;color:#0A1628;">BARLOW CONDENSED — Headings</div>
+      <div style="font-family:'Inter',sans-serif;font-size:1rem;margin-top:.5rem;color:#445573;">Inter — Body text, navigation, UI labels (400 / 500 / 600 / 700)</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:.875rem;margin-top:.5rem;color:#2C4A7C;">JetBrains Mono — Tracking numbers, code</div>
+    </div>
+
+    <p>To change fonts, update both the Google Fonts link in your HTML <code>&lt;head&gt;</code> and the CSS variables:</p>
+    <pre><span class="comment">&lt;!-- In &lt;head&gt; of each HTML file --&gt;</span>
+&lt;link href=<span class="string">"https://fonts.googleapis.com/css2?family=YOUR+FONT:wght@700;800;900&display=swap"</span> rel=<span class="string">"stylesheet"</span>&gt;
+
+<span class="comment">/* In assets/css/style.css :root */</span>
+--font-display: <span class="string">'Your Font'</span>, sans-serif;
+--font-body:    <span class="string">'Your Body Font'</span>, sans-serif;</pre>
+
+    <!-- LOGO -->
+    <h2 id="logo">Logo & Brand Name</h2>
+    <p>The logo is an inline SVG in <code>main.js</code> (injected into the header and footer). To use your own logo image:</p>
+
+    <pre><span class="comment">// In assets/js/main.js — injectHeader() function</span>
+<span class="comment">// Replace the SVG block with:</span>
+&lt;img src=<span class="string">"assets/images/logo/logo.svg"</span>
+     alt=<span class="string">"YourCompany"</span>
+     class=<span class="string">"logo-icon"</span>
+     style=<span class="string">"height:40px;width:auto;"</span>&gt;</pre>
+
+    <p>Also update the <code>SITE.name</code> and <code>SITE.tagline</code> values in <code>main.js</code>:</p>
+    <pre><span class="keyword">const</span> SITE = {
+  name:    <span class="string">'YourCompany'</span>,
+  tagline: <span class="string">'Your Tagline'</span>,
+  <span class="comment">// ...</span>
+};</pre>
+
+    <!-- IMAGES -->
+    <h2 id="images">Images</h2>
+    <p>Place your images in <code>assets/images/</code>. The recommended sizes are:</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Image</th><th>Folder</th><th>Recommended Size</th><th>Format</th></tr></thead>
+        <tbody>
+          <tr><td>Hero background</td><td>hero/</td><td>1920×1080px minimum</td><td>JPG / WebP</td></tr>
+          <tr><td>Service images</td><td>services/</td><td>800×600px</td><td>JPG / WebP</td></tr>
+          <tr><td>Fleet / vessel photos</td><td>fleet/</td><td>800×500px</td><td>JPG / WebP</td></tr>
+          <tr><td>Destination cards</td><td>destinations/</td><td>400×500px</td><td>JPG / WebP</td></tr>
+          <tr><td>Team headshots</td><td>team/</td><td>400×400px (square)</td><td>JPG / WebP</td></tr>
+          <tr><td>Testimonial avatars</td><td>testimonials/</td><td>150×150px (square)</td><td>JPG / WebP</td></tr>
+          <tr><td>Blog post thumbnails</td><td>hero/</td><td>800×500px</td><td>JPG / WebP</td></tr>
+          <tr><td>Partner logos</td><td>team/</td><td>200×80px (transparent bg)</td><td>PNG / SVG</td></tr>
+          <tr><td>Logo</td><td>logo/</td><td>200×60px</td><td>SVG preferred</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout callout--warning">
+      <div class="callout-icon">⚡</div>
+      <div class="callout-body"><strong>Performance tip</strong> Use WebP format and compress images to under 200KB each. Tools: <a href="https://squoosh.app" target="_blank">Squoosh.app</a> (free, browser-based), <a href="https://tinypng.com" target="_blank">TinyPNG</a>, or ImageOptim.</div>
+    </div>
+
+    <!-- ICONS -->
+    <h2 id="icons">Icons</h2>
+    <p>The template uses <strong>emoji icons</strong> throughout (service cards, feature lists, etc.) for zero-dependency simplicity. To use SVG icon libraries instead:</p>
+
+    <h3>Option A: Heroicons (recommended)</h3>
+    <pre><span class="comment">&lt;!-- Add to &lt;head&gt; --&gt;</span>
+&lt;script src=<span class="string">"https://unpkg.com/@heroicons/react/24/outline"</span>&gt;&lt;/script&gt;
+
+<span class="comment">&lt;!-- Use inline SVG --&gt;</span>
+&lt;svg xmlns=<span class="string">"http://www.w3.org/2000/svg"</span> width=<span class="string">"24"</span> height=<span class="string">"24"</span> fill=<span class="string">"none"</span> viewBox=<span class="string">"0 0 24 24"</span> stroke=<span class="string">"currentColor"</span>&gt;
+  &lt;path stroke-linecap=<span class="string">"round"</span> stroke-linejoin=<span class="string">"round"</span> stroke-width=<span class="string">"2"</span> d=<span class="string">"M5 13l4 4L19 7"</span> /&gt;
+&lt;/svg&gt;</pre>
+
+    <h3>Option B: Font Awesome</h3>
+    <pre><span class="comment">&lt;!-- Add to &lt;head&gt; --&gt;</span>
+&lt;link rel=<span class="string">"stylesheet"</span> href=<span class="string">"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"</span>&gt;
+
+<span class="comment">&lt;!-- Usage --&gt;</span>
+&lt;i class=<span class="string">"fa-solid fa-ship"</span>&gt;&lt;/i&gt;</pre>
+
+    <!-- CONTENT -->
+    <h2 id="content">Content & Text</h2>
+    <p>All page text is directly in the HTML files — no CMS or database required. Simply open each <code>.html</code> file and edit the content. Key things to update on every page:</p>
+    <ul>
+      <li>Page <code>&lt;title&gt;</code> tag</li>
+      <li><code>&lt;meta name="description"&gt;</code> for SEO</li>
+      <li>Page hero title and subtitle</li>
+      <li>All body copy, headings, and lists</li>
+      <li>Pricing numbers and feature lists</li>
+      <li>Blog post content and dates</li>
+      <li>Team names, roles, and bios</li>
+      <li>Testimonial text and names</li>
+    </ul>
+
+    <!-- SERVICES -->
+    <h2 id="services">Services</h2>
+    <p>Services are defined in plain HTML in <code>services.html</code> and as cards in <code>index.html</code>. To add, remove, or rename a service, edit the service card HTML directly. The navigation dropdown in <code>main.js</code> also needs updating:</p>
+    <pre><span class="comment">// In main.js — injectHeader() — nav-dropdown section</span>
+&lt;a href=<span class="string">"services.html"</span>&gt;&lt;span&gt;🚢&lt;/span&gt; <span class="value">Your Service Name</span>&lt;/a&gt;
+&lt;a href=<span class="string">"services.html"</span>&gt;&lt;span&gt;✈️&lt;/span&gt; <span class="value">Another Service</span>&lt;/a&gt;</pre>
+
+    <!-- PRICING -->
+    <h2 id="pricing">Pricing</h2>
+    <p>Update pricing on <code>pricing.html</code>. The billing toggle (monthly/annual) is handled by inline JavaScript at the bottom of that page — update both the display prices and the <code>prices</code> object:</p>
+    <pre><span class="keyword">const</span> prices = {
+  starter:  [<span class="value">299</span>, <span class="value">239</span>],   <span class="comment">// [monthly, annual]</span>
+  business: [<span class="value">899</span>, <span class="value">719</span>],   <span class="comment">// [monthly, annual]</span>
+};</pre>
+
+    <!-- CONTACT INFO -->
+    <h2 id="contact">Contact Information</h2>
+    <p>Contact details appear in three places. Update them all:</p>
+    <ul>
+      <li><strong><code>main.js</code></strong> — <code>SITE</code> object (top bar + footer)</li>
+      <li><strong><code>contact.html</code></strong> — Contact section HTML</li>
+      <li><strong>Each page's footer</strong> — Injected from <code>main.js</code></li>
+    </ul>
+
+    <!-- FORMS -->
+    <h2 id="forms">Connecting Forms</h2>
+    <p>The contact form and quote form are currently client-side only. To receive submissions, choose one of these options:</p>
+
+    <h3>Option A: Formspree (easiest)</h3>
+    <pre><span class="comment">&lt;!-- Change the form action --&gt;</span>
+&lt;form action=<span class="string">"https://formspree.io/f/YOUR_FORM_ID"</span> method=<span class="string">"POST"</span>&gt;</pre>
+
+    <h3>Option B: EmailJS (no backend)</h3>
+    <pre><span class="comment">// In quote-form.js — submitQuoteForm()</span>
+emailjs.send(<span class="string">'service_id'</span>, <span class="string">'template_id'</span>, {
+  from_name:  data.first_name + <span class="string">' '</span> + data.last_name,
+  from_email: data.email,
+  message:    JSON.stringify(data),
+});</pre>
+
+    <h3>Option C: Custom Backend (API)</h3>
+    <pre><span class="comment">// In quote-form.js — submitQuoteForm()</span>
+<span class="keyword">const</span> response = <span class="keyword">await</span> fetch(<span class="string">'https://your-api.com/quotes'</span>, {
+  method: <span class="string">'POST'</span>,
+  headers: { <span class="string">'Content-Type'</span>: <span class="string">'application/json'</span> },
+  body: JSON.stringify(data),
+});</pre>
+
+    <!-- DARK MODE -->
+    <h2 id="darkmode">Dark Mode</h2>
+    <p>Dark mode works automatically via <code>prefers-color-scheme</code> media query. The toggle button in the header switches it manually and saves preference to <code>localStorage</code>.</p>
+    <p>To <strong>disable</strong> dark mode entirely, remove the <code>dark-mode.css</code> link from all HTML files and remove the <code>initDarkMode()</code> call in <code>main.js</code>.</p>
+    <p>To force dark mode by default:</p>
+    <pre><span class="comment">&lt;!-- Add to &lt;html&gt; tag --&gt;</span>
+&lt;<span class="keyword">html</span> lang=<span class="string">"en"</span> class=<span class="string">"dark"</span>&gt;</pre>
+
+    <!-- THEMES -->
+    <h2 id="themes">Pre-built Color Themes</h2>
+    <p>Five color themes are included in <code>themes.css</code>. Apply by adding a class to <code>&lt;html&gt;</code>:</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Class</th><th>Accent</th><th>Background</th><th>Best For</th></tr></thead>
+        <tbody>
+          <tr><td><code>theme-amber</code></td><td style="color:#E8931A;">● #E8931A</td><td>Dark Navy</td><td>Default (no class needed)</td></tr>
+          <tr><td><code>theme-ocean</code></td><td style="color:#1A8FD1;">● #1A8FD1</td><td>Deep Navy</td><td>Ocean shipping focus</td></tr>
+          <tr><td><code>theme-forest</code></td><td style="color:#1DB97A;">● #1DB97A</td><td>Dark Green</td><td>Eco / sustainable logistics</td></tr>
+          <tr><td><code>theme-crimson</code></td><td style="color:#D63031;">● #D63031</td><td>Dark Red</td><td>Bold / high-impact</td></tr>
+          <tr><td><code>theme-slate</code></td><td style="color:#5B6EF5;">● #5B6EF5</td><td>Near Black</td><td>Tech / corporate</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div style="display:flex;gap:1rem;margin-top:2.5rem;padding-top:2rem;border-top:1px solid var(--border);">
+      <a href="installation.html" style="background:var(--mid);color:var(--navy);padding:.75rem 1.5rem;border-radius:var(--radius);font-weight:700;text-decoration:none;font-size:.875rem;">← Installation Guide</a>
+      <a href="deployment.html" style="background:var(--accent);color:#fff;padding:.75rem 1.5rem;border-radius:var(--radius);font-weight:700;text-decoration:none;font-size:.875rem;">Next: Deployment →</a>
+    </div>
+
+  </main>
+</body>
+</html>

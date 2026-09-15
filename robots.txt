@@ -1,0 +1,14 @@
+User-agent: *
+Allow: /
+
+# Private staff tools and transactional pages — not for indexing
+Disallow: /cargo/register-shipment.html
+Disallow: /cargo/shipment-center.html
+Disallow: /cargo/shipping-rates.html
+Disallow: /cargo/review-admin.html
+Disallow: /cars/cart.html
+Disallow: /cars/checkout.html
+Disallow: /smart-tech/cart.html
+Disallow: /smart-tech/checkout.html
+
+Sitemap: https://www.kennegroup.com/sitemap.xml

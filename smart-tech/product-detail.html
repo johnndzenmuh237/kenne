@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Product details — Kenne Smart Technology. Full specs, gallery, and instant checkout with pay now or pay on delivery.">
+  <title id="page-title">Product Details | Kenne Smart Technology</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/animations.css">
+  <link rel="stylesheet" href="assets/css/themes.css">
+  <link rel="stylesheet" href="assets/css/dark-mode.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <link rel="canonical" href="https://www.kennegroup.com/smart-tech/product-detail.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="KENNE">
+  <meta property="og:title" content="Product Details | Kenne Smart Technology">
+  <meta property="og:description" content="Product details — Kenne Smart Technology. Full specs, gallery, and instant checkout with pay now or pay on delivery.">
+  <meta property="og:url" content="https://www.kennegroup.com/smart-tech/product-detail.html">
+  <meta property="og:image" content="https://www.kennegroup.com/favicon.svg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Product Details | Kenne Smart Technology">
+  <meta name="twitter:description" content="Product details — Kenne Smart Technology. Full specs, gallery, and instant checkout with pay now or pay on delivery.">
+  <meta name="theme-color" content="#0A0E27">
+</head>
+<body>
+
+  <div id="header-placeholder"></div>
+
+  <section class="section" style="padding-top:calc(var(--header-height) + var(--space-8));">
+    <div class="container">
+      <nav class="breadcrumb" aria-label="Breadcrumb" style="margin-bottom:var(--space-6);">
+        <a href="index.html">Home</a><span class="breadcrumb-sep">›</span>
+        <a href="shop.html">Shop</a><span class="breadcrumb-sep">›</span>
+        <span class="breadcrumb-current" id="crumb-name">Product</span>
+      </nav>
+
+      <div id="pd-content" class="pd-layout"></div>
+    </div>
+  </section>
+
+  <section class="section bg-light">
+    <div class="container">
+      <div class="section-header section-header--center reveal">
+        <div class="eyebrow">You Might Also Like</div>
+        <h2 class="section-title">Related <span>Products</span></h2>
+      </div>
+      <div class="product-grid" id="related-products"></div>
+    </div>
+  </section>
+
+  <div id="footer-placeholder"></div>
+  <button id="back-to-top" aria-label="Back to top">↑</button>
+
+  <script>window.CART_NAMESPACE = 'kenne_tech';</script>
+  <script src="assets/js/products-data.js"></script>
+  <script src="assets/js/shop.js"></script>
+  <script src="assets/js/cart.js"></script>
+  <script src="assets/js/notifications.js"></script>
+  <script src="assets/js/drawer.js"></script>
+  <script src="assets/js/ai-support.js"></script>
+  <script src="assets/js/main.js"></script>
+  <script>
+    const product = allProducts().find(p => p.id === getQueryParam('id')) || PRODUCTS_DATA[0];
+    document.getElementById('page-title').textContent = `${product.name} | Kenne Smart Technology`;
+    document.getElementById('crumb-name').textContent = product.name;
+
+    const gallery = product.gallery || [product.image];
+    const inStock = product.stock === undefined || product.stock > 0;
+
+    document.getElementById('pd-content').innerHTML = `
+      <div>
+        <div class="pd-gallery-main"><img id="pd-main-img" src="${gallery[0]}" alt="${product.name}"></div>
+        <div class="pd-gallery-thumbs">
+          ${gallery.map((g, i) => `<img src="${g}" alt="${product.name} — photo ${i + 1}" class="${i === 0 ? 'active' : ''}" onclick="document.getElementById('pd-main-img').src='${g}';document.querySelectorAll('.pd-gallery-thumbs img').forEach(t=>t.classList.remove('active'));this.classList.add('active');">`).join('')}
+        </div>
+      </div>
+      <div>
+        <span class="product-card__badge" style="position:static;display:inline-block;margin-bottom:var(--space-3);">${inStock ? 'In Stock' : 'Out of Stock'}</span>
+        <h1 style="font-family:var(--font-display);font-size:var(--text-3xl);color:var(--color-navy);margin-bottom:var(--space-2);">${product.name}</h1>
+        <div class="pd-price">${formatCFA(product.price)}</div>
+        <p style="color:var(--color-text-light);margin:var(--space-4) 0;line-height:1.7;">${product.description}</p>
+        <div class="pd-specs">
+          <div class="pd-spec-item"><span>Brand</span><strong>${product.brand}</strong></div>
+          ${product.condition ? `<div class="pd-spec-item"><span>Condition</span><strong>${product.condition}</strong></div>` : ''}
+          ${product.storage ? `<div class="pd-spec-item"><span>Storage</span><strong>${product.storage}</strong></div>` : ''}
+          ${product.color ? `<div class="pd-spec-item"><span>Color</span><strong>${product.color}</strong></div>` : ''}
+        </div>
+        <div class="pd-qty-row">
+          <span style="font-size:var(--text-sm);font-weight:600;">Quantity</span>
+          <div class="qty-stepper">
+            <button type="button" onclick="stepQty(-1)">−</button>
+            <input type="text" id="pd-qty" value="1" readonly>
+            <button type="button" onclick="stepQty(1)">+</button>
+          </div>
+        </div>
+        <div style="display:flex;gap:var(--space-3);flex-wrap:wrap;">
+          <button class="btn btn--primary btn--lg" onclick="addProductToCart()" ${inStock ? '' : 'disabled'}>🛒 Add to Cart</button>
+          <a href="https://wa.me/${SITE.whatsapp}?text=${encodeURIComponent('Hi, I\\'m interested in the ' + product.name + ' listed on Kenne Tech.')}" target="_blank" rel="noopener" class="btn btn--outline btn--lg">💬 Ask on WhatsApp</a>
+        </div>
+      </div>
+    `;
+
+    function stepQty(delta) {
+      const input = document.getElementById('pd-qty');
+      const next = Math.max(1, parseInt(input.value || '1') + delta);
+      input.value = next;
+    }
+
+    function addProductToCart() {
+      const qty = parseInt(document.getElementById('pd-qty').value || '1');
+      window.KenneCart.addItem({ id: product.id, name: product.name, price: product.price, image: product.image }, qty);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const related = PRODUCTS_DATA.filter(p => p.id !== product.id && p.brand === product.brand).slice(0, 3);
+      const fallback = related.length ? related : PRODUCTS_DATA.filter(p => p.id !== product.id).slice(0, 3);
+      document.getElementById('related-products').innerHTML = fallback.map(renderProductCard).join('');
+    });
+  </script>
+  <script src="../assets/js/site-extras.js"></script>
+</body>
+</html>

@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Track your Kenne Cargo shipment in real-time with live map, route, and full booking details.">
+  <title>Live Shipment Tracking | Kenne Cargo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/animations.css">
+  <link rel="stylesheet" href="assets/css/themes.css">
+  <link rel="stylesheet" href="assets/css/dark-mode.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+  <style>
+    /* ===== MAP ===== */
+    #live-map { width:100%; height:460px; border-radius:var(--radius-xl); overflow:hidden; z-index:1; }
+    .map-wrapper { position:relative; margin-bottom:var(--space-8); border-radius:var(--radius-xl); overflow:hidden; box-shadow:var(--shadow-lg); }
+    .map-live-badge {
+      position:absolute; top:16px; left:16px; z-index:800;
+      background:rgba(10,22,40,.88); backdrop-filter:blur(8px);
+      color:#fff; border-radius:999px; padding:6px 14px;
+      font-size:.7rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase;
+      display:flex; align-items:center; gap:8px; border:1px solid rgba(255,255,255,.12);
+    }
+    .live-dot { width:8px; height:8px; background:#22c55e; border-radius:50%; animation:blink-dot 1.4s ease-in-out infinite; }
+    .map-live-badge.paused .live-dot { background:#e8931a; animation:none; }
+    .map-live-badge.cancelled .live-dot { background:#b91c1c; animation:none; }
+    @keyframes blink-dot { 0%,100%{opacity:1;} 50%{opacity:.35;} }
+    .map-eta-badge {
+      position:absolute; bottom:16px; right:16px; z-index:800;
+      background:var(--color-accent); color:#fff;
+      border-radius:var(--radius-lg); padding:10px 18px;
+      font-weight:700; font-size:.875rem; text-align:center;
+      box-shadow:0 4px 20px rgba(232,147,26,.5);
+    }
+    .map-eta-badge small { display:block; font-size:.7rem; opacity:.85; font-weight:500; margin-top:2px; }
+    .map-pos-badge {
+      position:absolute; bottom:16px; left:16px; z-index:800;
+      background:rgba(10,22,40,.88); backdrop-filter:blur(8px);
+      color:#fff; border-radius:var(--radius-md); padding:8px 14px;
+      font-size:.75rem; font-family:var(--font-mono); border:1px solid rgba(255,255,255,.1);
+      max-width:60%;
+    }
+
+    /* ===== CUSTOM LEAFLET MARKERS ===== */
+    .lm-origin, .lm-dest, .lm-ship {
+      border-radius:50%; display:flex; align-items:center; justify-content:center;
+      border:3px solid #fff; box-shadow:0 2px 12px rgba(0,0,0,.35);
+    }
+    .lm-origin { width:38px; height:38px; background:var(--color-navy); font-size:18px; }
+    .lm-dest   { width:38px; height:38px; background:var(--color-success); font-size:18px; }
+    .lm-ship   {
+      width:46px; height:46px; background:var(--color-accent); font-size:24px;
+      box-shadow:0 2px 20px rgba(232,147,26,.65);
+      animation:ship-float .9s ease-in-out infinite alternate;
+    }
+    .lm-ship.paused { animation:none; background:#8a8f98; box-shadow:0 2px 20px rgba(0,0,0,.35); }
+    .lm-ship.cancelled { animation:none; background:#b91c1c; box-shadow:0 2px 20px rgba(185,28,28,.45); }
+    @keyframes ship-float { from{transform:translateY(0);} to{transform:translateY(-5px);} }
+
+    /* ===== STATUS ===== */
+    .status-pill {
+      display:inline-flex; align-items:center; gap:7px;
+      padding:5px 14px; border-radius:999px;
+      font-size:.7rem; font-weight:700; text-transform:uppercase; letter-spacing:.08em;
+    }
+    .status-pill .dot { width:6px; height:6px; border-radius:50%; background:currentColor; }
+    .status-pill.in-transit  { background:rgba(74,159,212,.15); color:#0a6fa0; }
+    .status-pill.pending     { background:rgba(232,147,26,.15);  color:#a05a00; }
+    .status-pill.delivered   { background:rgba(29,185,122,.15);  color:#0a6e46; }
+    .status-pill.paused      { background:rgba(232,147,26,.18);  color:#a05a00; }
+    .status-pill.cancelled   { background:rgba(220,38,38,.14);   color:#b91c1c; }
+    .status-pill.paused .dot { animation:none; }
+    .status-pill.cancelled .dot { animation:none; }
+    .status-pill.in-transit .dot { animation:blink-dot 1.4s ease-in-out infinite; }
+
+    .paused-banner {
+      display:flex; align-items:center; gap:var(--space-3);
+      background:rgba(232,147,26,.1); border:1px solid rgba(232,147,26,.35);
+      color:#a05a00; border-radius:var(--radius-lg); padding:var(--space-4) var(--space-6);
+      font-size:var(--text-sm); font-weight:600; margin-bottom:var(--space-6);
+    }
+    .cancelled-banner {
+      display:flex; align-items:center; gap:var(--space-3);
+      background:rgba(220,38,38,.08); border:1px solid rgba(220,38,38,.35);
+      color:#b91c1c; border-radius:var(--radius-lg); padding:var(--space-4) var(--space-6);
+      font-size:var(--text-sm); font-weight:600; margin-bottom:var(--space-6);
+    }
+
+    /* ===== ROUTE BAR ===== */
+    .route-bar {
+      display:flex; align-items:center; gap:0;
+      background:var(--color-off-white); border-radius:var(--radius-xl);
+      padding:var(--space-6) var(--space-8); margin-bottom:var(--space-8);
+      border:var(--border-light); box-shadow:var(--shadow-card);
+    }
+    .rc { flex-shrink:0; }
+    .rc-code { font-family:var(--font-display); font-size:var(--text-3xl); font-weight:900; color:var(--color-navy); line-height:1; }
+    .rc-name { font-size:var(--text-sm); font-weight:700; color:var(--color-navy); }
+    .rc-sub  { font-size:var(--text-xs); color:var(--color-text-light); }
+    .route-mid { flex:1; margin:0 var(--space-6); }
+    .route-track { height:4px; background:var(--color-light-gray); border-radius:2px; position:relative; }
+    .route-done  { height:4px; background:linear-gradient(90deg,var(--color-accent),var(--color-sky)); border-radius:2px; position:absolute; top:0; left:0; transition:width 1s linear; }
+    .route-icon  { position:absolute; top:50%; transform:translate(-50%,-50%); font-size:1.5rem; transition:left 1s linear; filter:drop-shadow(0 1px 4px rgba(0,0,0,.3)); }
+    .route-pct   { position:absolute; top:50%; transform:translate(-50%,8px); background:var(--color-accent); color:#fff; font-size:.6rem; font-weight:800; padding:1px 6px; border-radius:6px; white-space:nowrap; transition:left 1s linear; }
+    .route-meta  { text-align:center; font-size:var(--text-xs); color:var(--color-text-light); margin-top:var(--space-3); }
+
+    /* ===== DETAIL GRID ===== */
+    .detail-grid { display:grid; grid-template-columns:1fr 1fr; gap:var(--space-6); margin-bottom:var(--space-8); }
+    @media(max-width:768px){ .detail-grid{ grid-template-columns:1fr; } }
+    .dcard { background:var(--color-white); border:var(--border-light); border-radius:var(--radius-xl); overflow:hidden; box-shadow:var(--shadow-card); }
+    .dcard-head { background:var(--color-navy); padding:var(--space-4) var(--space-6); display:flex; align-items:center; gap:var(--space-3); }
+    .dcard-title { font-size:var(--text-sm); font-weight:700; color:#fff; text-transform:uppercase; letter-spacing:.08em; }
+    .drow { display:flex; align-items:flex-start; justify-content:space-between; gap:var(--space-4); padding:var(--space-3) var(--space-6); border-bottom:1px solid var(--color-light-gray); }
+    .drow:last-child { border-bottom:none; }
+    .dk { font-size:.7rem; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--color-gray); white-space:nowrap; flex-shrink:0; padding-top:1px; }
+    .dv { font-size:var(--text-sm); font-weight:600; color:var(--color-navy); text-align:right; }
+
+    /* ===== TIMELINE ===== */
+    .tl-wrap { background:var(--color-white); border:var(--border-light); border-radius:var(--radius-xl); overflow:hidden; box-shadow:var(--shadow-card); }
+    .tl-head { background:var(--color-navy); padding:var(--space-4) var(--space-6); display:flex; align-items:center; gap:var(--space-3); }
+    .tl-body { padding:var(--space-6); }
+    .tl-step { display:flex; gap:var(--space-4); position:relative; padding-bottom:var(--space-6); }
+    .tl-step:last-child { padding-bottom:0; }
+    .tl-step::before { content:''; position:absolute; left:15px; top:32px; bottom:0; width:2px; background:var(--color-light-gray); }
+    .tl-step:last-child::before { display:none; }
+    .tl-dot { width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; flex-shrink:0; position:relative; z-index:1; }
+    .tl-dot.done    { background:var(--color-success); color:#fff; }
+    .tl-dot.active  { background:var(--color-accent); color:#fff; animation:ring-pulse 2s ease-in-out infinite; }
+    .tl-dot.pending { background:var(--color-light-gray); color:var(--color-gray); }
+    @keyframes ring-pulse { 0%,100%{box-shadow:0 0 0 4px rgba(232,147,26,.2);} 50%{box-shadow:0 0 0 8px rgba(232,147,26,.08);} }
+    .tl-info {}
+    .tl-date  { font-size:.7rem; color:var(--color-gray); margin-bottom:2px; }
+    .tl-event { font-size:var(--text-sm); font-weight:700; color:var(--color-navy); }
+    .tl-event.active-ev { color:var(--color-accent); }
+    .tl-loc   { font-size:.75rem; color:var(--color-text-light); margin-top:2px; }
+
+    /* ===== SEARCH BAR ===== */
+    .search-bar {
+      background:var(--color-white); border:var(--border-light); border-radius:var(--radius-xl);
+      padding:var(--space-6) var(--space-8); margin-bottom:var(--space-8); box-shadow:var(--shadow-card);
+    }
+    .search-row { display:flex; gap:var(--space-3); align-items:flex-end; flex-wrap:wrap; }
+    .search-row .form-group { flex:1; min-width:200px; margin-bottom:0; }
+
+    /* ===== NOT FOUND ===== */
+    .no-result { text-align:center; padding:var(--space-12); }
+    .no-result-icon  { font-size:3.5rem; margin-bottom:var(--space-4); }
+    .no-result-title { font-size:var(--text-xl); font-weight:800; color:var(--color-navy); margin-bottom:var(--space-3); }
+
+    /* ===== LOADING SPINNER ===== */
+    .sc-spinner {
+      text-align:center; padding:var(--space-16);
+    }
+    .sc-spinner-ring {
+      display:inline-block; width:48px; height:48px;
+      border:4px solid var(--color-light-gray);
+      border-top-color:var(--color-accent);
+      border-radius:50%;
+      animation:sc-spin .8s linear infinite;
+    }
+    @keyframes sc-spin { to{ transform:rotate(360deg); } }
+  </style>
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <link rel="canonical" href="https://www.kennegroup.com/cargo/tracking.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="KENNE">
+  <meta property="og:title" content="Live Shipment Tracking | Kenne Cargo">
+  <meta property="og:description" content="Track your Kenne Cargo shipment in real-time with live map, route, and full booking details.">
+  <meta property="og:url" content="https://www.kennegroup.com/cargo/tracking.html">
+  <meta property="og:image" content="https://www.kennegroup.com/favicon.svg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Live Shipment Tracking | Kenne Cargo">
+  <meta name="twitter:description" content="Track your Kenne Cargo shipment in real-time with live map, route, and full booking details.">
+  <meta name="theme-color" content="#0A0E27">
+</head>
+<body>
+
+  <div id="header-placeholder"></div>
+
+  <section class="page-hero" style="padding-bottom:var(--space-10);">
+    <div class="container page-hero-content">
+      <div class="eyebrow" style="color:var(--color-accent-light);">Live Visibility</div>
+      <h1 class="page-hero-title">Live Shipment Tracking</h1>
+      <p class="page-hero-subtitle">Enter your tracking or quote reference to see real-time position, live route map and full shipment details.</p>
+      <nav class="breadcrumb">
+        <a href="index.html">Home</a><span class="breadcrumb-sep">›</span>
+        <span class="breadcrumb-current">Tracking</span>
+      </nav>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:var(--space-8);">
+    <div class="container" style="max-width:1100px;">
+
+      <!-- ===== SEARCH BAR ===== -->
+      <div class="search-bar">
+        <div class="search-row">
+          <div class="form-group">
+            <label class="form-label" for="t-input" style="font-size:var(--text-xs);letter-spacing:.08em;">
+              TRACKING NUMBER / QUOTE REFERENCE
+            </label>
+            <input type="text" id="t-input" class="form-control"
+              placeholder=" paste your quote reference"
+              autocomplete="off"
+              style="font-family:var(--font-mono);letter-spacing:.06em;font-size:var(--text-sm);">
+          </div>
+          <button id="t-btn" class="btn btn--primary btn--lg" onclick="doTrack()" style="white-space:nowrap;flex-shrink:0;margin-bottom:4px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="flex-shrink:0"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+            Track Shipment
+          </button>
+        </div>
+        <p style="font-size:var(--text-xs);color:var(--color-gray);margin-top:var(--space-3);line-height:1.6;">
+          ✦ Paste your reference from <a href="quote-request.html" style="color:var(--color-accent);">Ship With Us</a> — try a demo:
+          <a href="#" onclick="loadDemo('KC-2026-118420');return false;" style="color:var(--color-accent);font-family:var(--font-mono);">KC-2026-118420</a> ·
+          <a href="#" onclick="loadDemo('KC-2026-104233');return false;" style="color:var(--color-accent);font-family:var(--font-mono);">KC-2026-104233</a> ·
+          <a href="#" onclick="loadDemo('KC-2026-129981');return false;" style="color:var(--color-accent);font-family:var(--font-mono);">KC-2026-129981</a>
+        </p>
+      </div>
+
+      <!-- ===== RESULTS ===== -->
+      <div id="t-result"></div>
+
+      <!-- ===== INFO CARDS (initial state) ===== -->
+      <div id="t-info" class="grid grid-3">
+        <div class="card" style="padding:var(--space-6);">
+          <div style="font-size:2rem;margin-bottom:var(--space-3);">🗺️</div>
+          <h4 style="margin-bottom:var(--space-2);">Live Map Position</h4>
+          <p style="font-size:var(--text-sm);color:var(--color-text-light);">See your shipment moving along its actual route on a real interactive map, with a position that advances in real time and shows the town or city it's currently near.</p>
+        </div>
+        <div class="card" style="padding:var(--space-6);">
+          <div style="font-size:2rem;margin-bottom:var(--space-3);">📋</div>
+          <h4 style="margin-bottom:var(--space-2);">Full Booking Details</h4>
+          <p style="font-size:var(--text-sm);color:var(--color-text-light);">Every detail you entered in the quote form — cargo, weight, route, incoterms, contacts — displayed in full.</p>
+        </div>
+        <div class="card" style="padding:var(--space-6);">
+          <div style="font-size:2rem;margin-bottom:var(--space-3);">🔗</div>
+          <h4 style="margin-bottom:var(--space-2);">Quote → Tracking</h4>
+          <p style="font-size:var(--text-sm);color:var(--color-text-light);">Submit a quote and your reference number instantly becomes your live tracking ID. <a href="contact.html" style="color:var(--color-accent);">Book your shipment →</a></p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <div id="footer-placeholder"></div>
+  <button id="back-to-top" aria-label="Back to top">↑</button>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="assets/js/notifications.js"></script>
+  <script src="assets/js/drawer.js"></script>
+  <script src="assets/js/ai-support.js"></script>
+  <script src="assets/js/main.js"></script>
+  <script src="assets/js/quote-tracking-bridge.js"></script>
+
+  <script>
+  /* ============================================================
+     KENNE CARGO — UNIFIED TRACKING ENGINE
+  ============================================================ */
+
+  /* ---- Built-in demo shipments (illustrative, fixed snapshot + gentle drift) ---- */
+  const DEMO = {
+    'KC-2026-118420': {
+      id: 'KC-2026-118420',
+      statusClass: 'in-transit', statusLabel: 'In Transit',
+      service: 'Ocean Freight', vehicleEmoji: '🚢',
+      vessel: 'MV Kenne Pacific',
+      shipper: 'Kenne Cargo — China Office', consignee: 'Mballa Auto Parts, Douala',
+      origin: 'Guangzhou, China',  originCity: 'Guangzhou',  originCountry: 'China',
+      dest:   'Douala, Cameroon', destCity:   'Douala', destCountry: 'Cameroon',
+      originCode: 'CAN', destCode: 'DLA',
+      originCoords: [23.13, 113.26], destCoords: [4.05, 9.70],
+      weight: '3,120 kg', volume: '14.8 CBM', packages: '1 × 20ft container',
+      description: 'Used Toyota Land Cruiser + Auto Spare Parts',
+      incoterms: 'FOB', transitDays: 32, progress: 0.45,
+      eta: 'October 2, 2026', daysLeft: '17 days remaining',
+      currentLocation: 'Indian Ocean — Mid Route',
+      currentCoords: [3, 68],
+      waypoints: [[23.13,113.26],[1.35,103.82],[3,68],[4.05,9.70]],
+      events: [
+        { status:'done',    icon:'✓', date:'Aug 20, 2026 — 09:15', event:'Shipment Booked',            location:'Guangzhou, China' },
+        { status:'done',    icon:'✓', date:'Aug 22, 2026 — 11:45', event:'Cargo Received at Terminal', location:'Port of Guangzhou, China' },
+        { status:'done',    icon:'✓', date:'Aug 24, 2026 — 08:00', event:'Vessel Departed',            location:'Port of Guangzhou, China' },
+        { status:'active',  icon:'▸', date:'Aug 30, 2026 — 14:32', event:'In Transit — Ocean Crossing', location:'Indian Ocean' },
+        { status:'pending', icon:'○', date:'Est. Sep 26, 2026',    event:'Arrival at Port of Douala',  location:'Douala, Cameroon' },
+        { status:'pending', icon:'○', date:'Est. Sep 29, 2026',    event:'Customs Clearance',          location:'Douala, Cameroon' },
+        { status:'pending', icon:'○', date:'Est. Oct 2, 2026',     event:'Delivered to Consignee',     location:'Douala, Cameroon' },
+      ],
+    },
+    'KC-2026-104233': {
+      id: 'KC-2026-104233',
+      statusClass: 'delivered', statusLabel: 'Delivered',
+      service: 'Air Freight', vehicleEmoji: '✈️',
+      vessel: 'Kenne Air Freighter 12',
+      shipper: 'Kenne Cargo — China Office', consignee: 'Ngo Electronics, Douala',
+      origin: 'Guangzhou, China',       originCity: 'Guangzhou',     originCountry: 'China',
+      dest:   'Douala, Cameroon', destCity: 'Douala',  destCountry: 'Cameroon',
+      originCode: 'CAN', destCode: 'DLA',
+      originCoords: [23.13, 113.26], destCoords: [4.05, 9.70],
+      weight: '410 kg', volume: '2.6 CBM', packages: '18 cartons',
+      description: 'Phones, Electronics & Accessories',
+      incoterms: 'DAP', transitDays: 4, progress: 1,
+      eta: 'August 24, 2026', daysLeft: 'Delivered',
+      currentLocation: 'Douala, Cameroon — Delivered',
+      currentCoords: [4.05, 9.70],
+      waypoints: [[23.13,113.26],[4.05,9.70]],
+      events: [
+        { status:'done', icon:'✓', date:'Aug 20, 2026 — 07:00', event:'Shipment Picked Up',    location:'Guangzhou, China' },
+        { status:'done', icon:'✓', date:'Aug 20, 2026 — 14:30', event:'Departed CAN',          location:'Guangzhou Baiyun Airport' },
+        { status:'done', icon:'✓', date:'Aug 23, 2026 — 06:15', event:'Arrived DLA',           location:'Douala International Airport, Cameroon' },
+        { status:'done', icon:'✓', date:'Aug 23, 2026 — 10:00', event:'Customs Cleared',       location:'Douala, Cameroon' },
+        { status:'done', icon:'✓', date:'Aug 24, 2026 — 11:20', event:'Delivered to Recipient', location:'Douala, Cameroon' },
+      ],
+    },
+    'KC-2026-129981': {
+      id: 'KC-2026-129981',
+      statusClass: 'pending', statusLabel: 'Awaiting Pickup',
+      service: 'Door to Door Delivery', vehicleEmoji: '📦',
+      vessel: 'Kenne Road Unit 118',
+      shipper: 'Kenne Cargo — Douala Warehouse', consignee: 'Fotso Household Goods, Yaoundé',
+      origin: 'Douala, Cameroon',  originCity: 'Douala',   originCountry: 'Cameroon',
+      dest:   'Yaoundé, Cameroon', destCity:   'Yaoundé',  destCountry: 'Cameroon',
+      originCode: 'DLA', destCode: 'YAO',
+      originCoords: [4.05, 9.70], destCoords: [3.87, 11.52],
+      weight: '860 kg', volume: '5.2 CBM', packages: '22 cartons',
+      description: 'Household Goods & Furniture',
+      incoterms: 'DDP', transitDays: 3, progress: 0.05,
+      eta: 'September 2, 2026', daysLeft: '2 days remaining',
+      currentLocation: 'Douala, Cameroon — Awaiting Pickup',
+      currentCoords: [4.05, 9.70],
+      waypoints: [[4.05,9.70],[3.95,10.6],[3.87,11.52]],
+      events: [
+        { status:'done',    icon:'✓', date:'Aug 30, 2026 — 09:00', event:'Booking Confirmed',    location:'Douala, Cameroon' },
+        { status:'active',  icon:'▸', date:'Est. Aug 31, 2026',     event:'Awaiting Pickup',      location:'Douala, Cameroon' },
+        { status:'pending', icon:'○', date:'Est. Sep 1, 2026',      event:'In Transit',           location:'En Route, Cameroon' },
+        { status:'pending', icon:'○', date:'Est. Sep 2, 2026',      event:'Delivered — Door to Door', location:'Yaoundé, Cameroon' },
+      ],
+    },
+  };
+
+  /* ---- Map + polling state ---- */
+  let leafMap      = null;
+  let shipMark     = null;
+  let animId       = null;   // demo drift animation
+  let animProg     = 0;
+  let animWay      = [];
+  let lastTick     = null;
+  let trackPollTimer = null; // real-time poll for user-submitted quotes
+  let liveLocLastFetchAt = 0;
+  let liveLocLabel = null;
+
+  /* ---- URL auto-load ---- */
+  document.addEventListener('DOMContentLoaded', () => {
+    const p = new URLSearchParams(window.location.search).get('id');
+    if (p) {
+      document.getElementById('t-input').value = p;
+      setTimeout(doTrack, 250);
+    }
+    document.getElementById('t-input').addEventListener('keydown', e => {
+      if (e.key === 'Enter') doTrack();
+    });
+  });
+
+  /* ---- Load demo shortcut ---- */
+  function loadDemo(id) {
+    document.getElementById('t-input').value = id;
+    doTrack();
+  }
+
+  /* ---- Stop any running loops before rendering a new result ---- */
+  function stopAllLoops() {
+    if (animId) { cancelAnimationFrame(animId); animId = null; }
+    if (trackPollTimer) { clearInterval(trackPollTimer); trackPollTimer = null; }
+    liveLocLastFetchAt = 0;
+    liveLocLabel = null;
+  }
+
+  /* ---- Main track function ---- */
+  function doTrack() {
+    const raw = document.getElementById('t-input').value.trim();
+    if (!raw) { showMsg('Please enter a tracking number.'); return; }
+    const id  = raw.toUpperCase();
+
+    stopAllLoops();
+    setBtnLoading(true);
+    document.getElementById('t-info').style.display = 'none';
+    showSpinner();
+
+    setTimeout(() => {
+      setBtnLoading(false);
+
+      /* Priority 1 — user-submitted quote in localStorage (real-time engine) */
+      const quote = window.QuoteTrackingBridge ? window.QuoteTrackingBridge.loadQuote(id) : null;
+      if (quote) { renderQuoteLive(quote); return; }
+
+      /* Priority 2 — built-in demo data */
+      const demo = DEMO[id];
+      if (demo) { renderDemo(demo); return; }
+
+      /* Not found */
+      renderNotFound(id);
+    }, 700);
+  }
+
+  function setBtnLoading(on) {
+    const btn = document.getElementById('t-btn');
+    btn.disabled = on;
+    btn.innerHTML = on
+      ? '<span style="display:inline-block;animation:sc-spin .7s linear infinite;font-style:normal;font-size:1.1rem;">↻</span>&nbsp;&nbsp;Searching…'
+      : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg> Track Shipment';
+  }
+
+  function showSpinner() {
+    document.getElementById('t-result').innerHTML = `
+      <div class="sc-spinner">
+        <div class="sc-spinner-ring"></div>
+        <p style="margin-top:var(--space-4);color:var(--color-text-light);font-size:var(--text-sm);">Looking up shipment…</p>
+      </div>`;
+  }
+
+  /* ============================================================
+     RENDER — DEMO SHIPMENTS (fixed snapshot, gentle visual drift)
+  ============================================================ */
+  function renderDemo(s) {
+    const pct = Math.round(s.progress * 100);
+
+    document.getElementById('t-result').innerHTML = buildResultHTML({
+      id: s.id, statusClass: s.statusClass, statusLabel: s.statusLabel,
+      vehicleEmoji: s.vehicleEmoji, service: s.service, vessel: s.vessel,
+      originCode: s.originCode, originCity: s.originCity, originCountry: s.originCountry,
+      destCode: s.destCode, destCity: s.destCity, destCountry: s.destCountry,
+      pct, transitDays: s.transitDays, eta: s.eta, daysLeft: s.daysLeft,
+      currentLocation: s.currentLocation, paused: false, isDemo: true,
+      detailCards: [
+        { icon: '📦', title: 'Shipment Info', rows: [
+            ['Shipper', s.shipper], ['Consignee', s.consignee], ['Description', s.description],
+            ['Weight', s.weight], ['Volume', s.volume], ['Packages', s.packages], ['Incoterms', s.incoterms],
+        ]},
+        { icon: '🗺️', title: 'Route & Transport', rows: [
+            ['Service', s.service], ['Vessel', s.vessel], ['Origin', s.origin], ['Destination', s.dest],
+            ['Transit', s.transitDays + ' days'], ['Est. Delivery', s.eta], ['Progress', pct + '% complete'],
+        ]},
+      ],
+      events: s.events,
+    });
+
+    setTimeout(() => {
+      initMap(s.originCoords, s.destCoords, s.waypoints, s.currentCoords, s.progress, s.vehicleEmoji);
+      animProg = s.progress; animWay = s.waypoints; lastTick = null;
+      startDemoAnim();
+    }, 80);
+  }
+
+  /* ============================================================
+     RENDER — QUOTE-SUBMITTED SHIPMENT (real time + pause/cancel aware)
+  ============================================================ */
+  const SERVICE_LABELS = { ocean:'Ocean Freight', air:'Air Freight', road:'Road Transport', warehouse:'Warehousing', 'supply-chain':'Supply Chain', multimodal:'Multimodal' };
+  const SERVICE_EMOJI  = { ocean:'🚢', air:'✈️', road:'🚛', warehouse:'🏭', 'supply-chain':'🔗', multimodal:'🌐' };
+
+  function renderQuoteLive(quote) {
+    if (quote.service_type === 'warehouse') { renderWarehouseQuote(quote); return; }
+
+    const progress = window.QuoteTrackingBridge.computeProgress(quote);
+    const pct = Math.round(progress * 100);
+    const cancelled = quote.playback.status === 'cancelled';
+    const paused = quote.playback.status === 'paused' && pct < 100;
+    const svcLabel = SERVICE_LABELS[quote.service_type] || quote.service_type;
+    const vehicleEmoji = SERVICE_EMOJI[quote.service_type] || '📦';
+
+    const eta = new Date(quote.submittedAt + quote.transitDurationMs);
+    const etaStr = eta.toLocaleDateString('en-US', { weekday:'short', day:'numeric', month:'short', year:'numeric' });
+    const dLeft = Math.max(0, Math.round((eta - new Date()) / 86400000));
+
+    const statusClass = cancelled ? 'cancelled' : (pct >= 100 ? 'delivered' : (paused ? 'paused' : 'in-transit'));
+    const statusLabel = cancelled ? 'Cancelled' : (pct >= 100 ? 'Delivered' : (paused ? 'Paused by Shipper' : 'In Transit'));
+
+    const addons = ['customs','insurance','pickup','delivery'].filter(k => quote[k] === 'yes')
+      .map(k => ({ customs:'Customs Clearance', insurance:'Cargo Insurance', pickup:'Origin Pickup', delivery:'Final Mile' }[k]));
+    const special = ['hazmat','refrigerated','fragile','oversized','high-value','perishable'].filter(k => quote[k] === 'yes')
+      .map(k => ({ hazmat:'Hazardous', refrigerated:'Refrigerated', fragile:'Fragile', oversized:'Oversized', 'high-value':'High Value', perishable:'Perishable' }[k]));
+
+    const originLabel = `${quote.origin_city || '—'}, ${quote.origin_country || '—'}`;
+    const destLabel = `${quote.destination_city || '—'}, ${quote.destination_country || '—'}`;
+    const currentPos = window.QuoteTrackingBridge.getPositionAtProgress(quote.waypoints, progress);
+    const initialLocLabel = pct >= 100 ? destLabel : (pct <= 0 ? originLabel : 'Locating current position…');
+
+    document.getElementById('t-result').innerHTML =
+      `<div id="status-banner">${cancelled
+          ? '<div class="cancelled-banner">✕ &nbsp;This shipment has been cancelled by the shipper.</div>'
+          : (paused ? '<div class="paused-banner">⏸ &nbsp;This shipment has been paused by the shipper. It will resume moving as soon as they press play.</div>' : '')
+        }</div>` +
+      buildResultHTML({
+        id: quote.ref, statusClass, statusLabel, vehicleEmoji, service: svcLabel, vessel: quote.vessel,
+        originCode: (quote.origin_city || '—').slice(0,3).toUpperCase(), originCity: quote.origin_city || '—', originCountry: quote.origin_country || '—',
+        destCode: (quote.destination_city || '—').slice(0,3).toUpperCase(), destCity: quote.destination_city || '—', destCountry: quote.destination_country || '—',
+        pct, transitDays: quote.transitDays, eta: etaStr,
+        daysLeft: pct >= 100 ? 'Delivered' : dLeft + ' days remaining',
+        currentLocation: initialLocLabel, paused, cancelled, isDemo: false,
+        submittedAt: new Date(quote.submittedAt).toLocaleDateString('en-US', { day:'numeric', month:'short', year:'numeric' }),
+        detailCards: [
+          { icon: '👤', title: 'Shipper & Contact', rows: [
+              ['Name', `${quote.first_name || ''} ${quote.last_name || ''}`], ['Company', quote.company || '—'],
+              ['Email', quote.email || '—'], ['Phone', quote.phone || '—'], ['Country', quote.country || '—'],
+          ]},
+          { icon: '📦', title: 'Cargo', rows: [
+              ['Description', quote.cargo_description || '—'],
+              ['Weight', quote.cargo_weight ? quote.cargo_weight + ' kg' : '—'],
+              ['Volume', quote.cargo_volume ? quote.cargo_volume + ' CBM' : '—'],
+              ['Packages', quote.cargo_packages || '—'], ['Packaging', quote.packaging_type || '—'],
+              ...(special.length ? [['Special', special.join(', ')]] : []),
+          ]},
+          { icon: '🗺️', title: 'Route & Logistics', rows: [
+              ['Service', svcLabel], ['Origin', originLabel], ['Destination', destLabel],
+              ['Distance', quote.distanceKm ? quote.distanceKm.toLocaleString() + ' km' : '—'],
+              ['Incoterms', quote.incoterms || 'Flexible'],
+              ['Ready Date', quote.ready_date ? new Date(quote.ready_date).toLocaleDateString('en-US',{day:'numeric',month:'short',year:'numeric'}) : '—'],
+              ['Est. Delivery', etaStr],
+              ...(addons.length ? [['Add-ons', addons.join(', ')]] : []),
+          ]},
+          { icon: vehicleEmoji, title: 'Transport & Status', rows: [
+              ['Vessel / Unit', quote.vessel], ['Transit Time', quote.transitDays + ' days'],
+              ['Progress', pct + '% complete'], ['Live Status', cancelled ? 'Cancelled' : (paused ? 'Paused by Shipper' : (pct>=100?'Delivered':'Moving'))],
+              ['Submitted', new Date(quote.submittedAt).toLocaleDateString('en-US',{day:'numeric',month:'short',year:'numeric'})],
+              ...(quote.special_instructions ? [['Notes', quote.special_instructions]] : []),
+          ]},
+        ],
+        events: window.QuoteTrackingBridge.buildEvents(quote, progress, pct > 0 && pct < 100 ? liveLocLabel : null),
+      });
+
+    setTimeout(() => {
+      initQuoteMap(quote.originCoords, quote.destCoords, quote.waypoints, currentPos, progress, vehicleEmoji, paused, cancelled);
+      startQuotePolling(quote.ref);
+    }, 80);
+  }
+
+  function renderWarehouseQuote(quote) {
+    const originLabel = `${quote.origin_city || '—'}, ${quote.origin_country || '—'}`;
+    document.getElementById('t-result').innerHTML = buildResultHTML({
+      id: quote.ref, statusClass: 'delivered', statusLabel: 'In Storage',
+      vehicleEmoji: '🏭', service: 'Warehousing', vessel: quote.vessel,
+      originCode: (quote.origin_city||'WHS').slice(0,3).toUpperCase(), originCity: quote.origin_city || '—', originCountry: quote.origin_country || '—',
+      destCode: (quote.destination_city||'WHS').slice(0,3).toUpperCase(), destCity: quote.destination_city || '—', destCountry: quote.destination_country || '—',
+      pct: 100, transitDays: 0, eta: 'Ongoing storage', daysLeft: 'In warehouse',
+      currentLocation: originLabel, paused: false, isDemo: false,
+      detailCards: [
+        { icon: '👤', title: 'Shipper & Contact', rows: [
+            ['Name', `${quote.first_name||''} ${quote.last_name||''}`], ['Company', quote.company||'—'], ['Email', quote.email||'—'],
+        ]},
+        { icon: '📦', title: 'Cargo in Storage', rows: [
+            ['Description', quote.cargo_description||'—'], ['Weight', quote.cargo_weight ? quote.cargo_weight+' kg':'—'],
+            ['Packages', quote.cargo_packages||'—'], ['Facility', originLabel],
+        ]},
+      ],
+      events: [{ status:'done', icon:'✓', date:new Date(quote.submittedAt).toLocaleDateString('en-US',{day:'numeric',month:'short',year:'numeric'}), event:'Cargo Received at Warehouse', location:originLabel },
+               { status:'active', icon:'▸', date:'Ongoing', event:'In Storage — Available for Fulfillment', location:originLabel }],
+    });
+    setTimeout(() => initMap(quote.originCoords, quote.originCoords, [quote.originCoords, quote.originCoords], quote.originCoords, 0, '🏭'), 80);
+  }
+
+  /* ============================================================
+     REAL-TIME POLLING for quote shipments
+  ============================================================ */
+  function startQuotePolling(ref) {
+    if (trackPollTimer) clearInterval(trackPollTimer);
+    trackPollTimer = setInterval(() => tickQuote(ref), 1000);
+  }
+
+  function tickQuote(ref) {
+    const quote = window.QuoteTrackingBridge.loadQuote(ref);
+    if (!quote) { clearInterval(trackPollTimer); trackPollTimer = null; return; }
+    const progress = window.QuoteTrackingBridge.computeProgress(quote);
+    const pct = Math.round(progress * 100);
+    const cancelled = quote.playback.status === 'cancelled';
+    const paused = quote.playback.status === 'paused' && pct < 100;
+    const pos = window.QuoteTrackingBridge.getPositionAtProgress(quote.waypoints, progress);
+
+    // Route bar
+    const doneEl = document.querySelector('.route-done');
+    const iconEl = document.querySelector('.route-icon');
+    const pctEl  = document.querySelector('.route-pct');
+    const clamped = Math.max(4, Math.min(96, pct));
+    if (doneEl) doneEl.style.width = pct + '%';
+    if (iconEl) iconEl.style.left = clamped + '%';
+    if (pctEl)  { pctEl.style.left = clamped + '%'; pctEl.textContent = pct + '%'; }
+
+    // Status pill
+    const pill = document.querySelector('.status-pill');
+    if (pill) {
+      pill.className = 'status-pill ' + (cancelled ? 'cancelled' : (pct >= 100 ? 'delivered' : (paused ? 'paused' : 'in-transit')));
+      pill.innerHTML = '<div class="dot"></div>' + (cancelled ? 'Cancelled' : (pct >= 100 ? 'Delivered' : (paused ? 'Paused by Shipper' : 'In Transit')));
+    }
+
+    // Status banner (paused / cancelled) — kept in sync live, even if an admin
+    // pauses or cancels the shipment while this page is already open
+    const banner = document.getElementById('status-banner');
+    if (banner) {
+      banner.innerHTML = cancelled
+        ? '<div class="cancelled-banner">✕ &nbsp;This shipment has been cancelled by the shipper.</div>'
+        : (paused ? '<div class="paused-banner">⏸ &nbsp;This shipment has been paused by the shipper. It will resume moving as soon as they press play.</div>' : '');
+    }
+
+    // Live badge + ship marker style
+    const liveBadge = document.querySelector('.map-live-badge');
+    if (liveBadge) {
+      liveBadge.classList.toggle('paused', paused && !cancelled);
+      liveBadge.classList.toggle('cancelled', cancelled);
+      liveBadge.innerHTML = `<div class="live-dot"></div>${cancelled ? 'CANCELLED' : (paused ? 'PAUSED' : (pct>=100 ? 'DELIVERED' : 'LIVE POSITION'))}`;
+    }
+    if (shipMark) {
+      const el = shipMark.getElement();
+      if (el) { const div = el.querySelector('.lm-ship'); if (div) { div.classList.toggle('paused', paused && !cancelled); div.classList.toggle('cancelled', cancelled); } }
+      shipMark.setLatLng(pos);
+    }
+
+    // Pos badge (reverse-geocoded, throttled) — frozen once cancelled
+    const now = Date.now();
+    if (!cancelled && (now - liveLocLastFetchAt > 15000 || !liveLocLabel)) {
+      liveLocLastFetchAt = now;
+      window.QuoteTrackingBridge.reverseGeocode(pos[0], pos[1]).then((label) => {
+        if (label) {
+          liveLocLabel = label;
+          const badge = document.getElementById('pos-badge');
+          if (badge) badge.textContent = pct >= 100 ? `📍 ${quote.destination_city}, ${quote.destination_country}` : `📍 ${label}`;
+        }
+      });
+    }
+
+    // Rebuild timeline + eta box every tick (cheap, keeps active step accurate)
+    const tlBody = document.querySelector('.tl-body');
+    if (tlBody) {
+      const events = window.QuoteTrackingBridge.buildEvents(quote, progress, pct > 0 && pct < 100 ? liveLocLabel : null);
+      tlBody.innerHTML = events.map(ev => `
+        <div class="tl-step">
+          <div class="tl-dot ${ev.status}">${ev.status==='done'?'✓':ev.status==='active'?'▸':'○'}</div>
+          <div class="tl-info">
+            <div class="tl-date">${ev.date}</div>
+            <div class="tl-event ${ev.status==='active'?'active-ev':''}">${ev.event}</div>
+            <div class="tl-loc">📍 ${ev.location}</div>
+          </div>
+        </div>`).join('');
+    }
+
+    if (pct >= 100 || cancelled) { clearInterval(trackPollTimer); trackPollTimer = null; }
+  }
+
+  /* ============================================================
+     HTML BUILDER — shared between demo + quote
+  ============================================================ */
+  function buildResultHTML(o) {
+    const pct = o.pct || 0;
+
+    return `
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:var(--space-4);margin-bottom:var(--space-6);">
+        <div>
+          <div style="font-size:.65rem;color:var(--color-gray);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px;">Tracking Reference</div>
+          <div style="font-family:var(--font-mono);font-size:var(--text-2xl);font-weight:700;color:var(--color-navy);letter-spacing:.04em;">${o.id}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:var(--space-3);flex-wrap:wrap;margin-top:4px;">
+          <div class="status-pill ${o.statusClass}"><div class="dot"></div>${o.statusLabel}</div>
+          ${o.submittedAt ? `<div style="font-size:var(--text-xs);color:var(--color-gray);">Submitted ${o.submittedAt}</div>` : ''}
+        </div>
+      </div>
+
+      <div class="route-bar">
+        <div class="rc">
+          <div class="rc-code">${o.originCode}</div>
+          <div class="rc-name">${o.originCity}</div>
+          <div class="rc-sub">${o.originCountry}</div>
+        </div>
+        <div class="route-mid">
+          <div class="route-track">
+            <div class="route-done" style="width:${pct}%"></div>
+            <div class="route-icon" style="left:${Math.max(4,Math.min(96,pct))}%">${o.vehicleEmoji}</div>
+            <div class="route-pct"  style="left:${Math.max(4,Math.min(96,pct))}%">${pct}%</div>
+          </div>
+          <div class="route-meta">${o.service} &nbsp;·&nbsp; ${o.transitDays}-day transit &nbsp;·&nbsp; ${o.vessel}</div>
+        </div>
+        <div class="rc" style="text-align:right">
+          <div class="rc-code">${o.destCode}</div>
+          <div class="rc-name">${o.destCity}</div>
+          <div class="rc-sub">${o.destCountry}</div>
+        </div>
+      </div>
+
+      <div class="map-wrapper">
+        <div id="live-map"></div>
+        <div class="map-live-badge ${o.cancelled ? 'cancelled' : (o.paused ? 'paused' : '')}"><div class="live-dot"></div>${o.cancelled ? 'CANCELLED' : (o.paused ? 'PAUSED' : (pct>=100?'DELIVERED':'LIVE POSITION'))}</div>
+        <div class="map-pos-badge" id="pos-badge">📍 ${o.currentLocation}</div>
+        <div class="map-eta-badge">
+          <small>Est. Arrival</small>
+          ${o.eta}
+          <small>${o.daysLeft}</small>
+        </div>
+      </div>
+
+      <div class="detail-grid">
+        ${o.detailCards.map(card => `
+          <div class="dcard">
+            <div class="dcard-head"><span style="font-size:1rem;">${card.icon}</span><div class="dcard-title">${card.title}</div></div>
+            ${card.rows.map(([k,v]) => `
+              <div class="drow">
+                <div class="dk">${k}</div>
+                <div class="dv">${v || '—'}</div>
+              </div>
+            `).join('')}
+          </div>
+        `).join('')}
+      </div>
+
+      <div class="tl-wrap">
+        <div class="tl-head">
+          <span style="font-size:1rem;">🕐</span>
+          <div class="dcard-title">Shipment Timeline</div>
+        </div>
+        <div class="tl-body">
+          ${o.events.map(ev => `
+            <div class="tl-step">
+              <div class="tl-dot ${ev.status}">${ev.icon}</div>
+              <div class="tl-info">
+                <div class="tl-date">${ev.date}</div>
+                <div class="tl-event ${ev.status==='active'?'active-ev':''}">${ev.event}</div>
+                <div class="tl-loc">📍 ${ev.location}</div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+
+      <div style="display:flex;gap:var(--space-3);margin-top:var(--space-6);flex-wrap:wrap;">
+        <a href="contact.html" class="btn btn--primary">+ New Quote</a>
+        <button onclick="window.print()" class="btn btn--outline">🖨 Print</button>
+        <button onclick="copyTrackLink('${o.id}')" class="btn btn--outline">🔗 Share Link</button>
+      </div>
+    `;
+  }
+
+  /* ============================================================
+     NOT FOUND
+  ============================================================ */
+function renderNotFound(id) {
+    document.getElementById('t-result').innerHTML = `
+      <div class="card no-result">
+        <div class="no-result-icon">🔍</div>
+        <div class="no-result-title">No Shipment Found</div>
+        <p style="color:var(--color-text-light);max-width:420px;margin:0 auto var(--space-6);">
+          No records match <strong style="font-family:var(--font-mono);">${id}</strong>.
+          Check the reference or submit a new quote to get a live tracking ID instantly.
+        </p>
+        <div style="display:flex;gap:var(--space-3);justify-content:center;flex-wrap:wrap;">
+          <a href="contact.html" class="btn btn--primary">Get a Quote &amp; Tracking Ref →</a>
+          <a href="contact.html" class="btn btn--outline">Contact Support</a>
+        </div>
+      </div>
+    `;
+    document.getElementById('t-info').style.display = '';
+  }
+
+  /* ============================================================
+     LEAFLET MAP — shared setup
+  ============================================================ */
+  function baseMapSetup(orig, dest, waypoints, currentPos, progress) {
+    const el = document.getElementById('live-map');
+    if (!el || !window.L) return null;
+
+    if (leafMap) { leafMap.remove(); leafMap = null; }
+
+    leafMap = L.map('live-map', { zoomControl:true, scrollWheelZoom:false, attributionControl:true });
+
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+      attribution: '© <a href="https://openstreetmap.org">OpenStreetMap</a> © <a href="https://carto.com">CARTO</a>',
+      maxZoom: 18,
+    }).addTo(leafMap);
+
+    const bounds = L.latLngBounds([orig, dest]);
+    waypoints.forEach(p => bounds.extend(p));
+    bounds.extend(currentPos);
+    leafMap.fitBounds(bounds, { padding: [64, 64] });
+
+    L.polyline(waypoints, { color:'#4A9FD4', weight:2, opacity:0.45, dashArray:'8 6' }).addTo(leafMap);
+    if (progress > 0) {
+      const donePath = window.QuoteTrackingBridge.getPathUpTo(waypoints, progress);
+      L.polyline(donePath, { color:'#E8931A', weight:3.5, opacity:0.9 }).addTo(leafMap);
+    }
+
+    L.marker(orig, { icon: L.divIcon({ html:`<div class="lm-origin">🏭</div>`, className:'', iconSize:[38,38], iconAnchor:[19,19] }) })
+     .addTo(leafMap).bindPopup('<strong>Origin</strong>');
+    L.marker(dest, { icon: L.divIcon({ html:`<div class="lm-dest">🏁</div>`, className:'', iconSize:[38,38], iconAnchor:[19,19] }) })
+     .addTo(leafMap).bindPopup('<strong>Destination</strong>');
+
+    return leafMap;
+  }
+
+  function initMap(orig, dest, waypoints, currentPos, progress, emoji) {
+    if (animId) { cancelAnimationFrame(animId); animId = null; }
+    orig = orig || [20, 80]; dest = dest || [20, 20];
+    currentPos = currentPos || orig;
+    waypoints = (waypoints && waypoints.length >= 2) ? waypoints : [orig, dest];
+
+    const map = baseMapSetup(orig, dest, waypoints, currentPos, progress);
+    if (!map) return;
+
+    shipMark = L.marker(currentPos, {
+      icon: L.divIcon({ html:`<div class="lm-ship">${emoji}</div>`, className:'', iconSize:[46,46], iconAnchor:[23,23] }),
+      zIndexOffset: 1000,
+    }).addTo(map);
+    shipMark.bindPopup(`<strong>Current Position</strong><br>Lat ${currentPos[0].toFixed(2)}° Lng ${currentPos[1].toFixed(2)}°`).openPopup();
+  }
+
+  function initQuoteMap(orig, dest, waypoints, currentPos, progress, emoji, paused, cancelled) {
+    orig = orig || [20, 80]; dest = dest || [20, 20];
+    currentPos = currentPos || orig;
+    waypoints = (waypoints && waypoints.length >= 2) ? waypoints : [orig, dest];
+
+    const map = baseMapSetup(orig, dest, waypoints, currentPos, progress);
+    if (!map) return;
+
+    const shipClass = cancelled ? ' cancelled' : (paused ? ' paused' : '');
+    shipMark = L.marker(currentPos, {
+      icon: L.divIcon({ html:`<div class="lm-ship${shipClass}">${emoji}</div>`, className:'', iconSize:[46,46], iconAnchor:[23,23] }),
+      zIndexOffset: 1000,
+    }).addTo(map);
+    shipMark.bindPopup(`<strong>Current Position</strong><br>Lat ${currentPos[0].toFixed(2)}° Lng ${currentPos[1].toFixed(2)}°`);
+  }
+
+  /* ---- Demo drift animation (visual only, endless slow forward motion) ---- */
+  function startDemoAnim() {
+    const SPEED = 0.0003;
+    function tick(now) {
+      if (!shipMark || !leafMap) return;
+      if (!lastTick) lastTick = now;
+      const dt = (now - lastTick) / 1000;
+      lastTick = now;
+      animProg = Math.min(1, animProg + SPEED * dt);
+      const pos = window.QuoteTrackingBridge.getPathUpTo(animWay, animProg).at(-1);
+      if (pos) {
+        shipMark.setLatLng(pos);
+        const posBadge = document.getElementById('pos-badge');
+        if (posBadge) posBadge.textContent = `📍 Lat ${pos[0].toFixed(2)}°  Lng ${pos[1].toFixed(2)}°`;
+      }
+      if (animProg < 1) animId = requestAnimationFrame(tick);
+    }
+    animId = requestAnimationFrame(tick);
+  }
+
+  /* ---- Utilities ---- */
+  function copyTrackLink(id) {
+    const url = `${location.origin}${location.pathname}?id=${encodeURIComponent(id)}`;
+    navigator.clipboard.writeText(url).then(() => {
+      if (window.showToast) showToast('✓ Tracking link copied!');
+    });
+  }
+
+  function showMsg(msg) {
+    if (window.showToast) showToast(msg, 'error');
+    else alert(msg);
+  }
+  </script>
+  <script src="../assets/js/site-extras.js"></script>
+</body>
+</html>

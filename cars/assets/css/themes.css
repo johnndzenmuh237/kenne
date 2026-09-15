@@ -1,0 +1,218 @@
+/* ============================================================
+   KENNE CARGO — THEMES STYLESHEET
+   themes.css  |  Color theme variants
+   ============================================================ */
+
+/* ----------------------------------------------------------
+   HOW TO CHANGE THE ACCENT COLOR
+   Swap out the --color-accent / --color-accent-dark values
+   in :root inside style.css, OR use one of the preset
+   themes below by adding a class to <html> or <body>.
+   ---------------------------------------------------------- */
+
+/* ----------------------------------------------------------
+   THEME: OCEAN BLUE (default-like alternative)
+   Usage: <html class="theme-ocean">
+   ---------------------------------------------------------- */
+.theme-ocean {
+  --color-accent:       #1A8FD1;
+  --color-accent-dark:  #1472A8;
+  --color-accent-light: #5AB5E5;
+  --color-navy:         #062240;
+  --color-navy-mid:     #0A3560;
+  --color-navy-light:   #0F4A84;
+  --color-steel:        #1A5E96;
+  --color-sky:          #3399CC;
+  --color-sky-light:    #D4EDF8;
+}
+
+/* ----------------------------------------------------------
+   THEME: FOREST GREEN
+   Usage: <html class="theme-forest">
+   ---------------------------------------------------------- */
+.theme-forest {
+  --color-accent:       #1DB97A;
+  --color-accent-dark:  #169660;
+  --color-accent-light: #4DD9A0;
+  --color-navy:         #0A2016;
+  --color-navy-mid:     #103528;
+  --color-navy-light:   #194D38;
+  --color-steel:        #236644;
+  --color-sky:          #40B08A;
+  --color-sky-light:    #D1F0E4;
+}
+
+/* ----------------------------------------------------------
+   THEME: CRIMSON RED
+   Usage: <html class="theme-crimson">
+   ---------------------------------------------------------- */
+.theme-crimson {
+  --color-accent:       #D63031;
+  --color-accent-dark:  #B02626;
+  --color-accent-light: #E86263;
+  --color-navy:         #1A0A0A;
+  --color-navy-mid:     #2D1515;
+  --color-navy-light:   #401E1E;
+  --color-steel:        #6B2A2A;
+  --color-sky:          #C05050;
+  --color-sky-light:    #FAE0E0;
+}
+
+/* ----------------------------------------------------------
+   THEME: SLATE GRAY (corporate / minimal)
+   Usage: <html class="theme-slate">
+   ---------------------------------------------------------- */
+.theme-slate {
+  --color-accent:       #5B6EF5;
+  --color-accent-dark:  #4455D6;
+  --color-accent-light: #8A9AF8;
+  --color-navy:         #14181F;
+  --color-navy-mid:     #1C2330;
+  --color-navy-light:   #252E3F;
+  --color-steel:        #354462;
+  --color-sky:          #6B82D4;
+  --color-sky-light:    #DEE5FA;
+}
+
+/* ----------------------------------------------------------
+   THEME: AMBER (default — also documented for reference)
+   Usage: (no class needed — this IS the default)
+   ---------------------------------------------------------- */
+.theme-amber {
+  --color-accent:       #E8931A;
+  --color-accent-dark:  #C67A10;
+  --color-accent-light: #F5B04A;
+  --color-navy:         #0A1628;
+  --color-navy-mid:     #112040;
+  --color-navy-light:   #1A3260;
+  --color-steel:        #2C4A7C;
+  --color-sky:          #4A9FD4;
+  --color-sky-light:    #D6EAF8;
+}
+
+/* ----------------------------------------------------------
+   SECTION BACKGROUND VARIANTS
+   ---------------------------------------------------------- */
+.bg-gradient-hero {
+  background: linear-gradient(135deg, var(--color-navy) 0%, var(--color-navy-light) 100%);
+}
+.bg-gradient-cta {
+  background: linear-gradient(135deg, var(--color-navy) 0%, var(--color-steel) 100%);
+}
+.bg-gradient-accent {
+  background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-dark) 100%);
+}
+.bg-gradient-light {
+  background: linear-gradient(180deg, var(--color-white) 0%, var(--color-off-white) 100%);
+}
+
+/* ----------------------------------------------------------
+   HIGHLIGHT COLORS (spans/marks in text)
+   ---------------------------------------------------------- */
+.highlight-accent {
+  background: linear-gradient(transparent 60%, rgba(232,147,26,0.25) 60%);
+  padding-inline: 2px;
+}
+.highlight-sky {
+  background: linear-gradient(transparent 60%, rgba(74,159,212,0.2) 60%);
+  padding-inline: 2px;
+}
+
+/* ----------------------------------------------------------
+   ICON COLOR THEMES FOR SERVICE ICONS
+   ---------------------------------------------------------- */
+.icon-theme--orange { background: linear-gradient(135deg, #E8931A, #C67A10) !important; }
+.icon-theme--blue   { background: linear-gradient(135deg, #1A8FD1, #0F5FA8) !important; }
+.icon-theme--green  { background: linear-gradient(135deg, #1DB97A, #169660) !important; }
+.icon-theme--red    { background: linear-gradient(135deg, #D63031, #A02222) !important; }
+.icon-theme--purple { background: linear-gradient(135deg, #8A4FD1, #6A34B0) !important; }
+.icon-theme--teal   { background: linear-gradient(135deg, #1BA8A8, #158888) !important; }
+.icon-theme--navy   { background: linear-gradient(135deg, #0A1628, #1A3260) !important; }
+.icon-theme--gray   { background: linear-gradient(135deg, #445573, #2C3D5A) !important; }
+
+/* ----------------------------------------------------------
+   SECTION DIVIDER SHAPES
+   ---------------------------------------------------------- */
+.divider-wave {
+  position: relative;
+  overflow: hidden;
+}
+.divider-wave::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0; right: 0;
+  height: 80px;
+  background: var(--color-white);
+  clip-path: ellipse(55% 100% at 50% 100%);
+}
+
+.divider-angle {
+  position: relative;
+}
+.divider-angle::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0; right: 0;
+  height: 60px;
+  background: var(--color-white);
+  clip-path: polygon(0 100%, 100% 0, 100% 100%);
+}
+
+.divider-angle-navy::after  { background: var(--color-navy); }
+.divider-angle-light::after { background: var(--color-off-white); }
+
+/* ----------------------------------------------------------
+   BADGE / LABEL VARIANTS
+   ---------------------------------------------------------- */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  line-height: 1.5;
+}
+.badge--amber  { background: rgba(232,147,26,0.15); color: #C67A10; border: 1px solid rgba(232,147,26,0.3); }
+.badge--blue   { background: rgba(74,159,212,0.15); color: #1472A8; border: 1px solid rgba(74,159,212,0.3); }
+.badge--green  { background: rgba(29,185,122,0.15); color: #169660; border: 1px solid rgba(29,185,122,0.3); }
+.badge--red    { background: rgba(232,64,64,0.12);  color: #C03030; border: 1px solid rgba(232,64,64,0.25); }
+.badge--gray   { background: rgba(138,155,181,0.15); color: #445573; border: 1px solid rgba(138,155,181,0.3); }
+.badge--navy   { background: rgba(10,22,40,0.08);   color: var(--color-navy); border: 1px solid rgba(10,22,40,0.15); }
+
+/* ----------------------------------------------------------
+   CALLOUT BOXES
+   ---------------------------------------------------------- */
+.callout {
+  padding: var(--space-6) var(--space-8);
+  border-radius: var(--radius-lg);
+  border-left: 4px solid;
+}
+.callout--tip {
+  background: rgba(74,159,212,0.08);
+  border-color: var(--color-sky);
+  color: var(--color-text);
+}
+.callout--warning {
+  background: rgba(232,147,26,0.08);
+  border-color: var(--color-accent);
+  color: var(--color-text);
+}
+.callout--success {
+  background: rgba(29,185,122,0.08);
+  border-color: var(--color-success);
+  color: var(--color-text);
+}
+.callout-title {
+  font-size: var(--text-sm);
+  font-weight: 700;
+  margin-bottom: var(--space-2);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.callout-body { font-size: var(--text-sm); line-height: 1.7; }

@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Installation Guide | Kenne Cargo Documentation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy:   #0A1628; --accent: #E8931A; --steel: #2C4A7C;
+      --text:   #1E2D45; --light:  #F7F9FC; --mid:   #EDF1F7;
+      --gray:   #8A9BB5; --border: #E0E8F0; --white: #FFFFFF;
+      --green:  #1DB97A; --red:    #E84040;
+      --font-body:    'Inter', sans-serif;
+      --font-display: 'Barlow Condensed', sans-serif;
+      --font-mono:    'JetBrains Mono', monospace;
+      --radius: 8px; --radius-lg: 16px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font-body); color: var(--text); background: var(--white); display: flex; min-height: 100vh; }
+
+    /* Sidebar */
+    .doc-sidebar {
+      width: 280px; flex-shrink: 0;
+      background: var(--navy); color: #fff;
+      position: sticky; top: 0; height: 100vh;
+      overflow-y: auto; padding: 2rem 1.5rem;
+      display: flex; flex-direction: column; gap: 2rem;
+    }
+    .doc-logo { display: flex; align-items: center; gap: .75rem; text-decoration: none; margin-bottom: .5rem; }
+    .doc-logo-icon { width: 36px; height: 36px; background: var(--accent); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+    .doc-logo-text { font-family: var(--font-display); font-size: 1.2rem; font-weight: 800; color: #fff; text-transform: uppercase; letter-spacing: .05em; }
+    .doc-logo-sub { font-size: .65rem; color: var(--accent); font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
+    .doc-nav-section { margin-bottom: 1.5rem; }
+    .doc-nav-title { font-size: .65rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,.35); margin-bottom: .75rem; padding-bottom: .5rem; border-bottom: 1px solid rgba(255,255,255,.08); }
+    .doc-nav-link { display: block; padding: .45rem .75rem; border-radius: var(--radius); font-size: .875rem; color: rgba(255,255,255,.6); text-decoration: none; transition: all .2s; margin-bottom: 2px; }
+    .doc-nav-link:hover { color: #fff; background: rgba(255,255,255,.08); }
+    .doc-nav-link.active { color: #fff; background: var(--accent); }
+    .doc-nav-link-sub { padding-left: 1.5rem; font-size: .8rem; }
+
+    /* Main */
+    .doc-main { flex: 1; padding: 3rem 4rem; max-width: 900px; }
+    .doc-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
+    .doc-eyebrow { font-size: .7rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); margin-bottom: .5rem; }
+    h1.doc-title { font-family: var(--font-display); font-size: 2.5rem; font-weight: 900; color: var(--navy); letter-spacing: -.02em; margin-bottom: .5rem; }
+    .doc-description { font-size: 1.05rem; color: var(--gray); line-height: 1.7; }
+    h2 { font-family: var(--font-display); font-size: 1.5rem; font-weight: 800; color: var(--navy); margin: 2.5rem 0 1rem; padding-top: 1rem; }
+    h3 { font-size: 1.1rem; font-weight: 700; color: var(--navy); margin: 1.75rem 0 .75rem; }
+    p { line-height: 1.75; color: #445573; margin-bottom: 1rem; }
+    ul, ol { margin: .75rem 0 1rem 1.5rem; display: flex; flex-direction: column; gap: .4rem; }
+    li { font-size: .9375rem; color: #445573; line-height: 1.65; }
+    a { color: var(--accent); }
+    code { font-family: var(--font-mono); font-size: .82rem; background: var(--mid); border: 1px solid var(--border); padding: .15em .45em; border-radius: 4px; color: var(--navy); }
+    pre { background: var(--navy); color: #d4e0f0; border-radius: var(--radius-lg); padding: 1.5rem; margin: 1.25rem 0; overflow-x: auto; font-family: var(--font-mono); font-size: .82rem; line-height: 1.7; position: relative; }
+    pre .comment { color: #6b8aad; }
+    pre .keyword { color: var(--accent); }
+    pre .string  { color: #7ec8a0; }
+    .callout { display: flex; gap: .75rem; padding: 1rem 1.25rem; border-radius: var(--radius); margin: 1.25rem 0; }
+    .callout--info    { background: #dbeafe; border-left: 4px solid #3b82f6; }
+    .callout--warning { background: rgba(232,147,26,.1); border-left: 4px solid var(--accent); }
+    .callout--success { background: rgba(29,185,122,.1); border-left: 4px solid var(--green); }
+    .callout-icon { font-size: 1.1rem; flex-shrink: 0; }
+    .callout-body { font-size: .875rem; line-height: 1.65; color: var(--text); }
+    .callout-body strong { display: block; margin-bottom: .2rem; }
+    .step-block { display: flex; gap: 1rem; margin-bottom: 1.5rem; padding: 1.25rem; background: var(--light); border-radius: var(--radius-lg); border: 1px solid var(--border); }
+    .step-num { width: 32px; height: 32px; background: var(--accent); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: .875rem; flex-shrink: 0; }
+    .step-content h4 { font-size: .9375rem; font-weight: 700; color: var(--navy); margin-bottom: .35rem; }
+    .step-content p { margin-bottom: .5rem; font-size: .875rem; }
+    .file-tree { background: var(--navy); color: #d4e0f0; border-radius: var(--radius-lg); padding: 1.5rem; margin: 1.25rem 0; font-family: var(--font-mono); font-size: .82rem; line-height: 1.9; }
+    .file-tree .dir  { color: var(--accent); font-weight: 700; }
+    .file-tree .file { color: #9cc0e8; }
+    .file-tree .comment { color: #6b8aad; }
+    .badge { display: inline-flex; align-items: center; gap: 4px; padding: 2px 10px; border-radius: 999px; font-size: .7rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+    .badge--green { background: rgba(29,185,122,.15); color: #0d6e48; }
+    .badge--blue  { background: rgba(74,159,212,.15); color: #1060a0; }
+    .badge--gray  { background: var(--mid); color: var(--gray); }
+    .table-wrap { overflow-x: auto; margin: 1.25rem 0; }
+    table { width: 100%; border-collapse: collapse; font-size: .875rem; }
+    th { background: var(--navy); color: #fff; padding: .75rem 1rem; text-align: left; font-size: .75rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+    td { padding: .65rem 1rem; border-bottom: 1px solid var(--border); vertical-align: top; color: #445573; }
+    tr:nth-child(even) td { background: var(--light); }
+    .copy-btn { position: absolute; top: .75rem; right: .75rem; background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.2); color: rgba(255,255,255,.7); font-size: .7rem; font-weight: 600; padding: .3rem .7rem; border-radius: 4px; cursor: pointer; transition: all .2s; font-family: var(--font-body); }
+    .copy-btn:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .doc-nav-footer { margin-top: auto; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,.08); font-size: .75rem; color: rgba(255,255,255,.35); }
+    @media (max-width: 900px) {
+      body { flex-direction: column; }
+      .doc-sidebar { width: 100%; height: auto; position: static; }
+      .doc-main { padding: 2rem 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- SIDEBAR -->
+  <aside class="doc-sidebar">
+    <div>
+      <a href="../index.html" class="doc-logo">
+        <div class="doc-logo-icon">⚡</div>
+        <div>
+          <div class="doc-logo-text">Kenne Cargo</div>
+          <div class="doc-logo-sub">Documentation</div>
+        </div>
+      </a>
+    </div>
+
+    <nav>
+      <div class="doc-nav-section">
+        <div class="doc-nav-title">Getting Started</div>
+        <a href="installation.html" class="doc-nav-link active">Installation</a>
+        <a href="customization.html" class="doc-nav-link">Customization</a>
+        <a href="deployment.html" class="doc-nav-link">Deployment</a>
+      </div>
+      <div class="doc-nav-section">
+        <div class="doc-nav-title">Template Pages</div>
+        <a href="../index.html" class="doc-nav-link doc-nav-link-sub">index.html — Homepage</a>
+        <a href="../about.html" class="doc-nav-link doc-nav-link-sub">about.html</a>
+        <a href="../services.html" class="doc-nav-link doc-nav-link-sub">services.html</a>
+        <a href="../service-single.html" class="doc-nav-link doc-nav-link-sub">service-single.html</a>
+        <a href="../tracking.html" class="doc-nav-link doc-nav-link-sub">tracking.html</a>
+        <a href="../pricing.html" class="doc-nav-link doc-nav-link-sub">pricing.html</a>
+        <a href="../fleet.html" class="doc-nav-link doc-nav-link-sub">fleet.html</a>
+        <a href="../destinations.html" class="doc-nav-link doc-nav-link-sub">destinations.html</a>
+        <a href="../careers.html" class="doc-nav-link doc-nav-link-sub">careers.html</a>
+        <a href="../blog.html" class="doc-nav-link doc-nav-link-sub">blog.html</a>
+        <a href="../blog-single.html" class="doc-nav-link doc-nav-link-sub">blog-single.html</a>
+        <a href="../contact.html" class="doc-nav-link doc-nav-link-sub">contact.html</a>
+        <a href="../faq.html" class="doc-nav-link doc-nav-link-sub">faq.html</a>
+        <a href="../contact.html" class="doc-nav-link doc-nav-link-sub">contact.html</a>
+      </div>
+      <div class="doc-nav-section">
+        <div class="doc-nav-title">CSS Files</div>
+        <a href="#css-style" class="doc-nav-link doc-nav-link-sub">style.css</a>
+        <a href="#css-responsive" class="doc-nav-link doc-nav-link-sub">responsive.css</a>
+        <a href="#css-animations" class="doc-nav-link doc-nav-link-sub">animations.css</a>
+        <a href="#css-themes" class="doc-nav-link doc-nav-link-sub">themes.css</a>
+        <a href="#css-darkmode" class="doc-nav-link doc-nav-link-sub">dark-mode.css</a>
+      </div>
+      <div class="doc-nav-section">
+        <div class="doc-nav-title">JS Files</div>
+        <a href="#js-main" class="doc-nav-link doc-nav-link-sub">main.js</a>
+        <a href="#js-tracking" class="doc-nav-link doc-nav-link-sub">tracking.js</a>
+        <a href="#js-quote" class="doc-nav-link doc-nav-link-sub">quote-form.js</a>
+        <a href="#js-counters" class="doc-nav-link doc-nav-link-sub">counters.js</a>
+        <a href="#js-slider" class="doc-nav-link doc-nav-link-sub">slider.js</a>
+      </div>
+    </nav>
+
+    <div class="doc-nav-footer">
+      Kenne Cargo Template v1.0.0<br>
+      © 2024 All rights reserved
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="doc-main">
+
+    <div class="doc-header">
+      <div class="doc-eyebrow">Documentation</div>
+      <h1 class="doc-title">Installation Guide</h1>
+      <p class="doc-description">Get Kenne Cargo up and running in minutes. No build tools required — pure HTML, CSS, and JavaScript.</p>
+    </div>
+
+    <!-- REQUIREMENTS -->
+    <h2>Requirements</h2>
+    <p>Kenne Cargo is a static HTML template. There are no server-side requirements, no npm installs, and no build steps needed to get it running.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Requirement</th><th>Minimum</th><th>Notes</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Browser</td><td>Chrome 90+, Firefox 88+, Safari 14+, Edge 90+</td><td>All modern browsers supported</td></tr>
+          <tr><td>Web Server</td><td>Any static file server</td><td>Apache, Nginx, Netlify, Vercel, GitHub Pages etc.</td></tr>
+          <tr><td>Internet Connection</td><td>Required for Google Fonts</td><td>Or self-host fonts (see Customization guide)</td></tr>
+          <tr><td>File Editor</td><td>VS Code recommended</td><td>Any text editor works</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- FILE STRUCTURE -->
+    <h2>File Structure</h2>
+    <p>After extracting the template package, you'll find the following structure:</p>
+
+    <div class="file-tree">
+<span class="dir">shipping-agency-pro/</span>
+│
+├── <span class="file">index.html</span>             <span class="comment">← Homepage</span>
+├── <span class="file">about.html</span>
+├── <span class="file">services.html</span>
+├── <span class="file">service-single.html</span>    <span class="comment">← Individual service page</span>
+├── <span class="file">tracking.html</span>
+├── <span class="file">pricing.html</span>
+├── <span class="file">fleet.html</span>
+├── <span class="file">destinations.html</span>
+├── <span class="file">careers.html</span>
+├── <span class="file">blog.html</span>
+├── <span class="file">blog-single.html</span>
+├── <span class="file">contact.html</span>
+├── <span class="file">faq.html</span>
+├── <span class="file">quote.html</span>
+│
+├── <span class="dir">assets/</span>
+│   ├── <span class="dir">css/</span>
+│   │   ├── <span class="file">style.css</span>         <span class="comment">← Core design tokens, layout, components</span>
+│   │   ├── <span class="file">responsive.css</span>    <span class="comment">← Breakpoints and mobile styles</span>
+│   │   ├── <span class="file">animations.css</span>    <span class="comment">← Keyframes, scroll-reveal, transitions</span>
+│   │   ├── <span class="file">themes.css</span>        <span class="comment">← Color theme variants</span>
+│   │   └── <span class="file">dark-mode.css</span>     <span class="comment">← Dark mode overrides</span>
+│   │
+│   ├── <span class="dir">js/</span>
+│   │   ├── <span class="file">main.js</span>           <span class="comment">← Header, footer inject, nav, FAQ, etc.</span>
+│   │   ├── <span class="file">tracking.js</span>       <span class="comment">← Shipment tracking logic</span>
+│   │   ├── <span class="file">quote-form.js</span>     <span class="comment">← Multi-step quote form</span>
+│   │   ├── <span class="file">counters.js</span>       <span class="comment">← Animated number counters</span>
+│   │   └── <span class="file">slider.js</span>         <span class="comment">← Lightweight carousel</span>
+│   │
+│   ├── <span class="dir">images/</span>               <span class="comment">← Add your own images here</span>
+│   │   ├── <span class="dir">logo/</span>
+│   │   ├── <span class="dir">hero/</span>
+│   │   ├── <span class="dir">fleet/</span>
+│   │   ├── <span class="dir">services/</span>
+│   │   ├── <span class="dir">destinations/</span>
+│   │   ├── <span class="dir">team/</span>
+│   │   └── <span class="dir">testimonials/</span>
+│   │
+│   └── <span class="dir">fonts/</span>                <span class="comment">← Optional: self-hosted fonts</span>
+│
+├── <span class="dir">documentation/</span>
+│   ├── <span class="file">installation.html</span>   <span class="comment">← You are here</span>
+│   ├── <span class="file">customization.html</span>
+│   └── <span class="file">deployment.html</span>
+│
+└── <span class="file">README.md</span>
+    </div>
+
+    <!-- STEP-BY-STEP SETUP -->
+    <h2>Step-by-Step Setup</h2>
+
+    <div class="step-block">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <h4>Extract the Template Files</h4>
+        <p>Unzip the downloaded package into your desired project folder. Keep all folder structures intact — the CSS and JS files reference each other via relative paths.</p>
+      </div>
+    </div>
+
+    <div class="step-block">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <h4>Open in Your Code Editor</h4>
+        <p>We recommend Visual Studio Code with the "Live Server" extension for the best development experience.</p>
+        <pre><button class="copy-btn" onclick="navigator.clipboard.writeText('code shipping-agency-pro/');this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',1500);">Copy</button><span class="comment"># Open in VS Code</span>
+code shipping-agency-pro/</pre>
+      </div>
+    </div>
+
+    <div class="step-block">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <h4>Add Your Images</h4>
+        <p>Place your images in the appropriate subfolders inside <code>assets/images/</code>. The HTML files reference images by these paths. See the <a href="customization.html">Customization guide</a> for expected image names and dimensions.</p>
+        <div class="callout callout--info">
+          <div class="callout-icon">ℹ️</div>
+          <div class="callout-body"><strong>Fallback Images</strong> All <code>&lt;img&gt;</code> tags include an <code>onerror</code> fallback to a placeholder image from Unsplash, so the template looks great even before you add your own photos.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step-block">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <h4>Update Your Brand Information</h4>
+        <p>Open <code>assets/js/main.js</code> and update the <code>SITE</code> configuration object at the top of the file:</p>
+        <pre><button class="copy-btn" onclick="navigator.clipboard.writeText(`const SITE = {\n  name: 'YourCompany',\n  tagline: 'Global Logistics',\n  phone: '+1 (800) 000-0000',\n  email: 'info@yourcompany.com',\n  address: 'Your Address Here',\n  hours: 'Mon–Fri: 9am–5pm',\n};`);this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',1500);">Copy</button><span class="keyword">const</span> SITE = {
+  name:    <span class="string">'YourCompany'</span>,       <span class="comment">// Appears in header & footer</span>
+  tagline: <span class="string">'Global Logistics'</span>,   <span class="comment">// Subtitle under logo</span>
+  phone:   <span class="string">'+1 (800) 000-0000'</span>,
+  email:   <span class="string">'info@yourcompany.com'</span>,
+  address: <span class="string">'Your Address Here'</span>,
+  hours:   <span class="string">'Mon–Fri: 9am–5pm EST'</span>,
+};</pre>
+      </div>
+    </div>
+
+    <div class="step-block">
+      <div class="step-num">5</div>
+      <div class="step-content">
+        <h4>Launch with Live Server</h4>
+        <p>In VS Code, right-click <code>index.html</code> and select <strong>"Open with Live Server"</strong>. Your browser will open at <code>http://127.0.0.1:5500</code> with hot-reload on file save.</p>
+        <div class="callout callout--warning">
+          <div class="callout-icon">⚠️</div>
+          <div class="callout-body"><strong>Don't open HTML files directly</strong> Opening HTML files via <code>file://</code> (double-clicking) can cause issues with relative paths and JavaScript modules. Always use a local server.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CSS FILE DESCRIPTIONS -->
+    <h2 id="css-style">CSS File Reference</h2>
+
+    <h3 id="css-style">style.css — Core Stylesheet</h3>
+    <p>The main stylesheet containing all design tokens, component styles, layout utilities, and page sections. It is the only required CSS file — the others are enhancements.</p>
+    <p>Design tokens are defined as CSS custom properties at <code>:root</code> level, making global changes trivial:</p>
+    <pre><button class="copy-btn" onclick="navigator.clipboard.writeText(':root {\n  --color-accent: #E8931A;\n  --color-navy:   #0A1628;\n  --font-body:    \'Inter\', sans-serif;\n}');this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',1500);">Copy</button><span class="comment">/* Change brand color — one line, site-wide */</span>
+:root {
+  --color-accent: <span class="string">#E8931A</span>;   <span class="comment">/* → change to your brand color */</span>
+  --color-navy:   <span class="string">#0A1628</span>;
+  --font-body:    <span class="string">'Inter'</span>, sans-serif;
+}</pre>
+
+    <h3 id="css-responsive">responsive.css — Breakpoints</h3>
+    <p>All media queries are here. Breakpoints used: <code>1024px</code> (tablet), <code>768px</code> (mobile), <code>480px</code> (small mobile). Do not modify <code>style.css</code> breakpoints — add overrides here.</p>
+
+    <h3 id="css-animations">animations.css — Motion</h3>
+    <p>All keyframe animations, scroll-reveal classes (<code>.reveal</code>, <code>.stagger-children</code>), and transition helpers. Includes a <code>prefers-reduced-motion</code> block that disables all animations for accessibility.</p>
+
+    <h3 id="css-themes">themes.css — Color Themes</h3>
+    <p>Pre-built color variants. Apply by adding a class to <code>&lt;html&gt;</code>:</p>
+    <pre><span class="comment">&lt;!-- Available: theme-ocean | theme-forest | theme-crimson | theme-slate | theme-amber --&gt;</span>
+&lt;<span class="keyword">html</span> lang=<span class="string">"en"</span> class=<span class="string">"theme-ocean"</span>&gt;</pre>
+
+    <h3 id="css-darkmode">dark-mode.css — Dark Mode</h3>
+    <p>Dark mode activates automatically via <code>prefers-color-scheme: dark</code> media query, or manually by adding class <code>dark</code> to <code>&lt;html&gt;</code>. The toggle button in the header handles this via JavaScript and persists the preference to <code>localStorage</code>.</p>
+
+    <!-- JS FILE DESCRIPTIONS -->
+    <h2>JavaScript File Reference</h2>
+
+    <h3 id="js-main">main.js — Core Logic</h3>
+    <p>Handles: header/footer injection, mobile nav toggle, dark mode, scroll reveal (IntersectionObserver), back-to-top button, FAQ accordion, hero tracking form, tab panels, and ripple effects on buttons. Must be included on every page.</p>
+
+    <h3 id="js-tracking">tracking.js — Shipment Tracking</h3>
+    <p>Powers the tracking page. Currently uses mock data — replace the <code>MOCK_SHIPMENTS</code> object with real API calls to your carrier's tracking API or TMS system. Include only on <code>tracking.html</code>.</p>
+
+    <h3 id="js-quote">quote-form.js — Multi-Step Form</h3>
+    <p>Manages the 4-step quote request form with client-side validation, step navigation, and a success state. The <code>submitQuoteForm()</code> function at the bottom is where you wire in your backend or email service. Include only on <code>quote.html</code>.</p>
+
+    <h3 id="js-counters">counters.js — Animated Numbers</h3>
+    <p>Animates any element with class <code>.counter</code> when it enters the viewport. Configure via data attributes:</p>
+    <pre>&lt;span class=<span class="string">"counter"</span>
+  data-target=<span class="string">"25000"</span>
+  data-suffix=<span class="string">"+"</span>
+  data-duration=<span class="string">"2000"</span>&gt;0&lt;/span&gt;</pre>
+
+    <h3 id="js-slider">slider.js — Carousel</h3>
+    <p>A dependency-free slider/carousel. Initializes on any element with <code>data-slider</code>. Supports autoplay, looping, touch/drag, keyboard navigation, and dot indicators:</p>
+    <pre>&lt;div data-slider data-autoplay=<span class="string">"4000"</span> data-loop=<span class="string">"true"</span>&gt;
+  &lt;div class=<span class="string">"slider-track"</span>&gt;
+    &lt;div class=<span class="string">"slider-slide"</span>&gt;…&lt;/div&gt;
+    &lt;div class=<span class="string">"slider-slide"</span>&gt;…&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;button class=<span class="string">"slider-btn slider-btn--prev"</span> data-prev&gt;‹&lt;/button&gt;
+  &lt;button class=<span class="string">"slider-btn slider-btn--next"</span> data-next&gt;›&lt;/button&gt;
+  &lt;div class=<span class="string">"slider-dots"</span> data-dots&gt;&lt;/div&gt;
+&lt;/div&gt;</pre>
+
+    <!-- QUICK CHECKLIST -->
+    <h2>Quick Setup Checklist</h2>
+    <div class="callout callout--success">
+      <div class="callout-icon">✅</div>
+      <div class="callout-body">
+        <strong>Before going live, make sure you have:</strong>
+        <ul style="margin:.5rem 0 0 1.25rem;">
+          <li>Updated <code>SITE</code> object in <code>main.js</code> with your real contact info</li>
+          <li>Replaced all placeholder images in <code>assets/images/</code></li>
+          <li>Updated your company name, logo, and tagline</li>
+          <li>Set your brand color in <code>:root</code> inside <code>style.css</code></li>
+          <li>Updated the Google Fonts link to use your preferred typefaces (optional)</li>
+          <li>Connected your form submission endpoint in <code>quote-form.js</code> and <code>contact.html</code></li>
+          <li>Updated all page <code>&lt;title&gt;</code> and <code>&lt;meta name="description"&gt;</code> tags</li>
+          <li>Added your Google Analytics / tracking script (optional)</li>
+          <li>Tested on mobile and in dark mode</li>
+        </ul>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:1rem;margin-top:2.5rem;padding-top:2rem;border-top:1px solid var(--border);">
+      <a href="customization.html" style="background:var(--accent);color:#fff;padding:.75rem 1.5rem;border-radius:var(--radius);font-weight:700;text-decoration:none;font-size:.875rem;">Next: Customization Guide →</a>
+      <a href="deployment.html" style="background:var(--mid);color:var(--navy);padding:.75rem 1.5rem;border-radius:var(--radius);font-weight:700;text-decoration:none;font-size:.875rem;">Deployment Guide →</a>
+    </div>
+
+  </main>
+
+</body>
+</html>

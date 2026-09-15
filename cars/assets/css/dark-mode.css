@@ -1,0 +1,199 @@
+/* ============================================================
+   KENNE CARGO — DARK MODE STYLESHEET
+   dark-mode.css
+   ============================================================ */
+
+/* ----------------------------------------------------------
+   SYSTEM DARK MODE + manual class override
+   Toggle by adding/removing class="dark" on <html>
+   ---------------------------------------------------------- */
+
+@media (prefers-color-scheme: dark) {
+  html:not(.light) { --dark-mode: 1; }
+}
+html.dark { --dark-mode: 1; }
+
+/* Apply dark variables only when dark mode is active */
+:root:has(> body.dark-active),
+html.dark,
+@media (prefers-color-scheme: dark) { html:not(.light) }
+{
+  /* redefine tokens */
+}
+
+/* Combined selector for both prefers-color-scheme and manual class */
+html.dark,
+html:not(.light)[data-dark="true"] {
+  --color-white:       #12171F;
+  --color-off-white:   #181E28;
+  --color-light-gray:  #1E2736;
+  --color-mid-gray:    #2A3650;
+  --color-gray:        #566880;
+  --color-dark-gray:   #8A9BB5;
+  --color-text:        #D8E2F0;
+  --color-text-light:  #8A9BB5;
+
+  --color-navy:        #0A1628;
+  --color-navy-mid:    #0D1D35;
+
+  --border-light:      1px solid #1E2736;
+  --border-mid:        1px solid #2A3650;
+
+  --shadow-sm:  0 1px 4px rgba(0,0,0,0.3);
+  --shadow-md:  0 4px 16px rgba(0,0,0,0.4);
+  --shadow-lg:  0 8px 32px rgba(0,0,0,0.5);
+  --shadow-xl:  0 16px 64px rgba(0,0,0,0.6);
+  --shadow-card: 0 2px 12px rgba(0,0,0,0.35);
+}
+
+html.dark body {
+  background-color: #12171F;
+  color: #D8E2F0;
+}
+
+/* Cards */
+html.dark .card,
+html.dark .feature-card,
+html.dark .faq-question {
+  background: #181E28;
+  border-color: #1E2736;
+}
+
+html.dark .faq-answer {
+  background: #181E28;
+  border-color: #1E2736;
+}
+
+/* Forms */
+html.dark .form-control {
+  background: #1E2736;
+  border-color: #2A3650;
+  color: #D8E2F0;
+}
+html.dark .form-control:focus {
+  border-color: var(--color-accent);
+}
+html.dark .form-control::placeholder { color: #566880; }
+html.dark select.form-control { background-color: #1E2736; }
+
+/* Tracking */
+html.dark .tracking-form {
+  background: #181E28;
+  border-color: #1E2736;
+}
+html.dark .tracking-tabs { background: #1E2736; }
+html.dark .tracking-tab.active {
+  background: #262E3E;
+  color: #D8E2F0;
+}
+html.dark .tracking-result { border-color: #1E2736; }
+
+/* Sections */
+html.dark .why-us { background: #181E28; }
+html.dark .tracking-section { background: #181E28; }
+
+/* Header dropdowns */
+html.dark .nav-dropdown {
+  background: #181E28;
+  border-top-color: var(--color-accent);
+}
+html.dark .nav-dropdown a { color: #D8E2F0; }
+html.dark .nav-dropdown a:hover { background: #1E2736; }
+
+/* Blog cards */
+html.dark .blog-card { background: #181E28; }
+html.dark .blog-card__title a { color: #D8E2F0; }
+
+/* Pricing cards */
+html.dark .pricing-card:not(.featured) {
+  background: #181E28;
+  border-color: #1E2736;
+}
+html.dark .pricing-card:not(.featured) .pricing-price { color: #D8E2F0; }
+html.dark .pricing-divider { border-color: #1E2736; }
+
+/* Section titles in light mode */
+html.dark h1, html.dark h2, html.dark h3,
+html.dark h4, html.dark h5, html.dark h6 {
+  color: #D8E2F0;
+}
+
+/* Sections that are always dark remain unchanged */
+html.dark .stats-bar,
+html.dark .testimonials,
+html.dark .cta-banner,
+html.dark .site-footer,
+html.dark .site-header,
+html.dark .page-hero { /* these are already dark-bg */ }
+
+html.dark .bg-light { background: #181E28; }
+
+/* Footer */
+html.dark .footer-links a { color: rgba(216,226,240,0.45); }
+html.dark .footer-about { color: rgba(216,226,240,0.55); }
+
+/* Borders */
+html.dark hr { border-color: #1E2736; }
+
+/* Partners */
+html.dark .partners { border-color: #1E2736; }
+html.dark .partner-logo { filter: grayscale(1) opacity(0.3) invert(1); }
+html.dark .partner-logo:hover { filter: grayscale(0) opacity(0.9) invert(1); }
+
+/* Alerts */
+html.dark .alert--info    { background: rgba(74,159,212,0.12); }
+html.dark .alert--success { background: rgba(29,185,122,0.12); }
+html.dark .alert--warning { background: rgba(245,166,35,0.12); }
+
+/* Callouts */
+html.dark .callout--tip     { background: rgba(74,159,212,0.10); }
+html.dark .callout--warning { background: rgba(232,147,26,0.10); }
+html.dark .callout--success { background: rgba(29,185,122,0.10); }
+
+/* FAQ */
+html.dark .faq-question:hover { background: #1E2736; }
+html.dark .faq-item { border-color: #1E2736; }
+
+/* Tags */
+html.dark .tag--navy { background: rgba(200,210,240,0.1); color: #D8E2F0; }
+
+/* Why-us */
+html.dark .why-us-features .feature-card { background: #1E2736; }
+
+/* ----------------------------------------------------------
+   DARK MODE TOGGLE BUTTON
+   (position it wherever you like in the header)
+   ---------------------------------------------------------- */
+.dark-mode-toggle {
+  width: 36px;
+  height: 20px;
+  background: rgba(255,255,255,0.15);
+  border-radius: var(--radius-full);
+  position: relative;
+  cursor: pointer;
+  transition: background var(--transition-fast);
+  border: none;
+  flex-shrink: 0;
+}
+.dark-mode-toggle::after {
+  content: '';
+  position: absolute;
+  width: 14px; height: 14px;
+  background: var(--color-white);
+  border-radius: 50%;
+  top: 3px; left: 3px;
+  transition: transform var(--transition-fast);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+html.dark .dark-mode-toggle {
+  background: var(--color-accent);
+}
+html.dark .dark-mode-toggle::after {
+  transform: translateX(16px);
+}
+
+/* Icon swap for sun/moon */
+.dark-icon-sun  { display: none; }
+.dark-icon-moon { display: inline-block; }
+html.dark .dark-icon-sun  { display: inline-block; }
+html.dark .dark-icon-moon { display: none; }

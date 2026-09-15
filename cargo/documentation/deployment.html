@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Deployment Guide | Kenne Cargo Documentation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root{--navy:#0A1628;--accent:#E8931A;--text:#1E2D45;--light:#F7F9FC;--mid:#EDF1F7;--gray:#8A9BB5;--border:#E0E8F0;--white:#FFFFFF;--green:#1DB97A;--font-body:'Inter',sans-serif;--font-display:'Barlow Condensed',sans-serif;--font-mono:'JetBrains Mono',monospace;--radius:8px;--radius-lg:16px;}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{font-family:var(--font-body);color:var(--text);background:var(--white);display:flex;min-height:100vh;}
+    .doc-sidebar{width:280px;flex-shrink:0;background:var(--navy);color:#fff;position:sticky;top:0;height:100vh;overflow-y:auto;padding:2rem 1.5rem;display:flex;flex-direction:column;gap:2rem;}
+    .doc-logo{display:flex;align-items:center;gap:.75rem;text-decoration:none;}
+    .doc-logo-icon{width:36px;height:36px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;}
+    .doc-logo-text{font-family:var(--font-display);font-size:1.2rem;font-weight:800;color:#fff;text-transform:uppercase;letter-spacing:.05em;}
+    .doc-logo-sub{font-size:.65rem;color:var(--accent);font-weight:600;letter-spacing:.12em;text-transform:uppercase;}
+    .doc-nav-title{font-size:.65rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:.75rem;padding-bottom:.5rem;border-bottom:1px solid rgba(255,255,255,.08);}
+    .doc-nav-section{margin-bottom:1.5rem;}
+    .doc-nav-link{display:block;padding:.45rem .75rem;border-radius:var(--radius);font-size:.875rem;color:rgba(255,255,255,.6);text-decoration:none;transition:all .2s;margin-bottom:2px;}
+    .doc-nav-link:hover{color:#fff;background:rgba(255,255,255,.08);}
+    .doc-nav-link.active{color:#fff;background:var(--accent);}
+    .doc-nav-link-sub{padding-left:1.5rem;font-size:.8rem;}
+    .doc-main{flex:1;padding:3rem 4rem;max-width:900px;}
+    .doc-header{margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border);}
+    .doc-eyebrow{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:.5rem;}
+    h1.doc-title{font-family:var(--font-display);font-size:2.5rem;font-weight:900;color:var(--navy);letter-spacing:-.02em;margin-bottom:.5rem;}
+    .doc-description{font-size:1.05rem;color:var(--gray);line-height:1.7;}
+    h2{font-family:var(--font-display);font-size:1.5rem;font-weight:800;color:var(--navy);margin:2.5rem 0 1rem;padding-top:1rem;}
+    h3{font-size:1.1rem;font-weight:700;color:var(--navy);margin:1.75rem 0 .75rem;}
+    p{line-height:1.75;color:#445573;margin-bottom:1rem;}
+    ul,ol{margin:.75rem 0 1rem 1.5rem;display:flex;flex-direction:column;gap:.4rem;}
+    li{font-size:.9375rem;color:#445573;line-height:1.65;}
+    a{color:var(--accent);}
+    code{font-family:var(--font-mono);font-size:.82rem;background:var(--mid);border:1px solid var(--border);padding:.15em .45em;border-radius:4px;color:var(--navy);}
+    pre{background:var(--navy);color:#d4e0f0;border-radius:var(--radius-lg);padding:1.5rem;margin:1.25rem 0;overflow-x:auto;font-family:var(--font-mono);font-size:.82rem;line-height:1.7;position:relative;}
+    pre .comment{color:#6b8aad;}pre .keyword{color:var(--accent);}pre .string{color:#7ec8a0;}
+    .callout{display:flex;gap:.75rem;padding:1rem 1.25rem;border-radius:var(--radius);margin:1.25rem 0;}
+    .callout--info{background:#dbeafe;border-left:4px solid #3b82f6;}
+    .callout--warning{background:rgba(232,147,26,.1);border-left:4px solid var(--accent);}
+    .callout--success{background:rgba(29,185,122,.1);border-left:4px solid var(--green);}
+    .callout-icon{font-size:1.1rem;flex-shrink:0;}
+    .callout-body{font-size:.875rem;line-height:1.65;color:var(--text);}
+    .callout-body strong{display:block;margin-bottom:.2rem;}
+    .platform-card{display:flex;gap:1.25rem;align-items:flex-start;padding:1.25rem;background:var(--light);border:1px solid var(--border);border-radius:var(--radius-lg);margin-bottom:1rem;}
+    .platform-icon{font-size:2.5rem;flex-shrink:0;width:56px;text-align:center;}
+    .platform-name{font-size:1rem;font-weight:700;color:var(--navy);margin-bottom:.25rem;}
+    .platform-desc{font-size:.875rem;color:#445573;line-height:1.6;margin-bottom:.5rem;}
+    .platform-steps{font-size:.8rem;color:var(--gray);font-family:var(--font-mono);}
+    .badge{display:inline-flex;align-items:center;gap:4px;padding:2px 10px;border-radius:999px;font-size:.7rem;font-weight:700;text-transform:uppercase;}
+    .badge--green{background:rgba(29,185,122,.15);color:#0d6e48;}
+    .badge--blue{background:rgba(74,159,212,.15);color:#1060a0;}
+    .badge--gray{background:var(--mid);color:var(--gray);}
+    .copy-btn{position:absolute;top:.75rem;right:.75rem;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.7);font-size:.7rem;font-weight:600;padding:.3rem .7rem;border-radius:4px;cursor:pointer;transition:all .2s;font-family:var(--font-body);}
+    .copy-btn:hover{background:var(--accent);border-color:var(--accent);color:#fff;}
+    .doc-nav-footer{margin-top:auto;padding-top:1.5rem;border-top:1px solid rgba(255,255,255,.08);font-size:.75rem;color:rgba(255,255,255,.35);}
+    @media(max-width:900px){body{flex-direction:column;}.doc-sidebar{width:100%;height:auto;position:static;}.doc-main{padding:2rem 1.25rem;}}
+  </style>
+</head>
+<body>
+
+  <aside class="doc-sidebar">
+    <div>
+      <a href="../index.html" class="doc-logo">
+        <div class="doc-logo-icon">⚡</div>
+        <div><div class="doc-logo-text">Kenne Cargo</div><div class="doc-logo-sub">Documentation</div></div>
+      </a>
+    </div>
+    <nav>
+      <div class="doc-nav-section">
+        <div class="doc-nav-title">Getting Started</div>
+        <a href="installation.html" class="doc-nav-link">Installation</a>
+        <a href="customization.html" class="doc-nav-link">Customization</a>
+        <a href="deployment.html" class="doc-nav-link active">Deployment</a>
+      </div>
+      <div class="doc-nav-section">
+        <div class="doc-nav-title">Deploy To</div>
+        <a href="#netlify" class="doc-nav-link doc-nav-link-sub">Netlify</a>
+        <a href="#vercel" class="doc-nav-link doc-nav-link-sub">Vercel</a>
+        <a href="#github-pages" class="doc-nav-link doc-nav-link-sub">GitHub Pages</a>
+        <a href="#cpanel" class="doc-nav-link doc-nav-link-sub">cPanel / FTP</a>
+        <a href="#apache-nginx" class="doc-nav-link doc-nav-link-sub">Apache / Nginx</a>
+        <a href="#seo" class="doc-nav-link doc-nav-link-sub">SEO Checklist</a>
+        <a href="#performance" class="doc-nav-link doc-nav-link-sub">Performance</a>
+        <a href="#ssl" class="doc-nav-link doc-nav-link-sub">SSL / HTTPS</a>
+      </div>
+    </nav>
+    <div class="doc-nav-footer">Kenne Cargo Template v1.0.0</div>
+  </aside>
+
+  <main class="doc-main">
+
+    <div class="doc-header">
+      <div class="doc-eyebrow">Documentation</div>
+      <h1 class="doc-title">Deployment Guide</h1>
+      <p class="doc-description">How to go live — on Netlify, Vercel, GitHub Pages, cPanel, or any web server.</p>
+    </div>
+
+    <p>Kenne Cargo is a static HTML website, which means deployment is straightforward — just upload the files to any web host and you're live. No database, no PHP, no Node.js required.</p>
+
+    <!-- NETLIFY -->
+    <h2 id="netlify">Netlify <span class="badge badge--green">Recommended</span></h2>
+    <div class="platform-card">
+      <div class="platform-icon">🚀</div>
+      <div>
+        <div class="platform-name">Netlify — Free tier available</div>
+        <div class="platform-desc">The easiest way to deploy. Drag and drop your folder, get a live URL in under 30 seconds. Free SSL, CDN, and custom domain support included.</div>
+        <div class="platform-steps">netlify.com → Sites → Drag & drop folder</div>
+      </div>
+    </div>
+    <p><strong>Option 1: Drag & Drop (fastest)</strong></p>
+    <ol>
+      <li>Go to <a href="https://app.netlify.com" target="_blank">app.netlify.com</a> and create a free account</li>
+      <li>From the Sites dashboard, drag your entire <code>shipping-agency-pro/</code> folder into the deploy drop zone</li>
+      <li>Netlify deploys instantly and gives you a <code>*.netlify.app</code> URL</li>
+      <li>Add a custom domain under <strong>Site Settings → Domain Management</strong></li>
+    </ol>
+    <p><strong>Option 2: Git-connected deploy (automatic updates)</strong></p>
+    <ol>
+      <li>Push your project to a GitHub / GitLab / Bitbucket repo</li>
+      <li>In Netlify: New Site → Import from Git → Select your repo</li>
+      <li>Build command: <em>leave blank</em>. Publish directory: <code>./</code> (or the root)</li>
+      <li>Every push to <code>main</code> branch auto-deploys — zero configuration</li>
+    </ol>
+    <pre><span class="comment"># Optional: netlify.toml in project root</span>
+[build]
+  publish = <span class="string">"."</span>
+
+[[redirects]]
+  from = <span class="string">"/*"</span>
+  to = <span class="string">"/index.html"</span>
+  status = <span class="keyword">200</span></pre>
+
+    <!-- VERCEL -->
+    <h2 id="vercel">Vercel</h2>
+    <div class="platform-card">
+      <div class="platform-icon">▲</div>
+      <div>
+        <div class="platform-name">Vercel — Free tier available</div>
+        <div class="platform-desc">Lightning-fast global CDN with automatic HTTPS and Git-integrated deployments. Excellent performance analytics included.</div>
+        <div class="platform-steps">vercel.com → New Project → Import Git Repository</div>
+      </div>
+    </div>
+    <ol>
+      <li>Push your project to GitHub</li>
+      <li>Go to <a href="https://vercel.com" target="_blank">vercel.com</a> → New Project → Import</li>
+      <li>Select your repository. Framework Preset: <strong>Other</strong></li>
+      <li>Output directory: <code>./</code> (root). No build command needed.</li>
+      <li>Deploy. You'll get a <code>*.vercel.app</code> URL instantly.</li>
+    </ol>
+
+    <!-- GITHUB PAGES -->
+    <h2 id="github-pages">GitHub Pages <span class="badge badge--blue">Free</span></h2>
+    <div class="platform-card">
+      <div class="platform-icon">🐙</div>
+      <div>
+        <div class="platform-name">GitHub Pages — Completely free</div>
+        <div class="platform-desc">Ideal if your code is already on GitHub. Supports custom domains and free HTTPS via Let's Encrypt.</div>
+        <div class="platform-steps">repo → Settings → Pages → Deploy from branch</div>
+      </div>
+    </div>
+    <ol>
+      <li>Push your project to a public GitHub repository</li>
+      <li>Go to repo <strong>Settings → Pages</strong></li>
+      <li>Source: <strong>Deploy from a branch</strong> → Branch: <code>main</code> → Folder: <code>/ (root)</code></li>
+      <li>Your site is live at <code>https://username.github.io/repo-name/</code></li>
+    </ol>
+    <div class="callout callout--warning">
+      <div class="callout-icon">⚠️</div>
+      <div class="callout-body"><strong>Note on paths</strong> If deploying to a subdirectory (e.g. <code>/repo-name/</code>), update all relative paths in the HTML or use a root-relative base URL: <code>&lt;base href="/repo-name/"&gt;</code> in each <code>&lt;head&gt;</code>.</div>
+    </div>
+
+    <!-- CPANEL / FTP -->
+    <h2 id="cpanel">cPanel / FTP (Shared Hosting)</h2>
+    <div class="platform-card">
+      <div class="platform-icon">🖥️</div>
+      <div>
+        <div class="platform-name">cPanel / FTP — Any shared host</div>
+        <div class="platform-desc">Works with any shared hosting provider (GoDaddy, Bluehost, SiteGround, Hostinger, etc.). Upload via cPanel File Manager or FTP client.</div>
+      </div>
+    </div>
+    <p><strong>Via cPanel File Manager:</strong></p>
+    <ol>
+      <li>Log into your hosting control panel</li>
+      <li>Open <strong>File Manager</strong> → navigate to <code>public_html/</code></li>
+      <li>Upload and extract the <code>shipping-agency-pro.zip</code></li>
+      <li>If deploying to root: move all files from the extracted folder into <code>public_html/</code> directly</li>
+    </ol>
+    <p><strong>Via FTP (FileZilla):</strong></p>
+    <pre><span class="comment"># FileZilla connection settings</span>
+Host:     ftp.yourdomain.com
+Username: your_ftp_username
+Password: your_ftp_password
+Port:     21
+
+<span class="comment"># Upload to:</span>
+/public_html/           <span class="comment"># for root domain</span>
+/public_html/subdomain/ <span class="comment"># for subdomain/subfolder</span></pre>
+
+    <!-- APACHE / NGINX -->
+    <h2 id="apache-nginx">Apache / Nginx (VPS / Dedicated)</h2>
+    <h3>Apache</h3>
+    <pre><span class="comment"># /etc/apache2/sites-available/kennecargo.conf</span>
+&lt;VirtualHost *:80&gt;
+  ServerName   yourdomain.com
+  DocumentRoot /var/www/kennecargo
+  DirectoryIndex index.html
+
+  &lt;Directory /var/www/kennecargo&gt;
+    AllowOverride All
+    Require all granted
+  &lt;/Directory&gt;
+&lt;/VirtualHost&gt;</pre>
+    <pre><button class="copy-btn" onclick="navigator.clipboard.writeText('sudo a2ensite kennecargo\nsudo systemctl reload apache2');this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',1500);">Copy</button>sudo a2ensite kennecargo
+sudo systemctl reload apache2</pre>
+
+    <h3>Nginx</h3>
+    <pre><span class="comment"># /etc/nginx/sites-available/kennecargo</span>
+server {
+  listen 80;
+  server_name yourdomain.com www.yourdomain.com;
+  root /var/www/kennecargo;
+  index index.html;
+
+  location / {
+    try_files $uri $uri/ /index.html;
+  }
+
+  <span class="comment"># Cache static assets</span>
+  location ~* \.(css|js|jpg|webp|png|svg|woff2)$ {
+    expires 1y;
+    add_header Cache-Control <span class="string">"public, immutable"</span>;
+  }
+}</pre>
+    <pre>sudo ln -s /etc/nginx/sites-available/kennecargo /etc/nginx/sites-enabled/
+sudo nginx -t
+sudo systemctl reload nginx</pre>
+
+    <!-- SEO -->
+    <h2 id="seo">SEO Pre-Launch Checklist</h2>
+    <div class="callout callout--success">
+      <div class="callout-icon">🔍</div>
+      <div class="callout-body">
+        <strong>Complete these before going live:</strong>
+        <ul style="margin:.5rem 0 0 1.25rem;">
+          <li>Update <code>&lt;title&gt;</code> on every page — unique, under 60 chars</li>
+          <li>Update <code>&lt;meta name="description"&gt;</code> on every page — 150–160 chars</li>
+          <li>Add <code>&lt;meta property="og:title"&gt;</code>, <code>og:description</code>, <code>og:image</code> for social sharing</li>
+          <li>Create <code>sitemap.xml</code> and submit to Google Search Console</li>
+          <li>Create <code>robots.txt</code> in root (see below)</li>
+          <li>Add Google Analytics or Plausible tracking script</li>
+          <li>Set up Google Search Console and verify ownership</li>
+          <li>Ensure all images have meaningful <code>alt</code> attributes</li>
+          <li>Check page speed at <a href="https://pagespeed.web.dev" target="_blank">PageSpeed Insights</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>robots.txt</h3>
+    <pre>User-agent: *
+Allow: /
+Sitemap: https://yourdomain.com/sitemap.xml</pre>
+
+    <h3>Open Graph Meta Tags</h3>
+    <pre><span class="comment">&lt;!-- Add to &lt;head&gt; of each page --&gt;</span>
+&lt;meta property=<span class="string">"og:title"</span>       content=<span class="string">"Kenne Cargo | Global Logistics"</span>&gt;
+&lt;meta property=<span class="string">"og:description"</span>  content=<span class="string">"End-to-end freight solutions…"</span>&gt;
+&lt;meta property=<span class="string">"og:image"</span>        content=<span class="string">"https://yourdomain.com/assets/images/hero/og-image.jpg"</span>&gt;
+&lt;meta property=<span class="string">"og:url"</span>          content=<span class="string">"https://yourdomain.com/"</span>&gt;
+&lt;meta property=<span class="string">"og:type"</span>         content=<span class="string">"website"</span>&gt;
+&lt;meta name=<span class="string">"twitter:card"</span>        content=<span class="string">"summary_large_image"</span>&gt;</pre>
+
+    <!-- PERFORMANCE -->
+    <h2 id="performance">Performance Optimization</h2>
+    <p>The template is already optimized, but these steps will push scores higher:</p>
+    <ul>
+      <li><strong>Compress images</strong> — Convert JPGs to WebP. Target under 150KB per image.</li>
+      <li><strong>Enable Gzip/Brotli</strong> — On your server or through Cloudflare (free)</li>
+      <li><strong>Use a CDN</strong> — Cloudflare free tier adds global edge caching</li>
+      <li><strong>Self-host fonts</strong> — Download from Google Fonts and serve locally to avoid third-party DNS lookups</li>
+      <li><strong>Lazy load images</strong> — Already applied (<code>loading="lazy"</code> on all non-critical images)</li>
+      <li><strong>Minify CSS/JS</strong> — Use <a href="https://cssnano.co" target="_blank">CSSNano</a> + <a href="https://terser.org" target="_blank">Terser</a>, or a bundler like Vite</li>
+    </ul>
+
+    <h3>Self-hosting Google Fonts</h3>
+    <pre><span class="comment">/* 1. Download fonts from: https://fonts.google.com */</span>
+<span class="comment">/* 2. Place in assets/fonts/ */</span>
+<span class="comment">/* 3. Add to top of style.css */</span>
+@font-face {
+  font-family: <span class="string">'Barlow Condensed'</span>;
+  src: url(<span class="string">'../fonts/barlow-condensed-700.woff2'</span>) format(<span class="string">'woff2'</span>);
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap; <span class="comment">/* Critical for performance */</span>
+}</pre>
+
+    <!-- SSL -->
+    <h2 id="ssl">SSL / HTTPS</h2>
+    <p>Always serve your site over HTTPS. Options:</p>
+    <ul>
+      <li><strong>Netlify / Vercel / GitHub Pages</strong> — Free SSL certificates included automatically</li>
+      <li><strong>Cloudflare</strong> — Add your domain to Cloudflare free tier for instant SSL + CDN</li>
+      <li><strong>Let's Encrypt (VPS)</strong> — Use Certbot to auto-provision free certificates:</li>
+    </ul>
+    <pre><button class="copy-btn" onclick="navigator.clipboard.writeText('sudo apt install certbot python3-certbot-nginx\nsudo certbot --nginx -d yourdomain.com -d www.yourdomain.com');this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',1500);">Copy</button>sudo apt install certbot python3-certbot-nginx
+sudo certbot --nginx -d yourdomain.com -d www.yourdomain.com</pre>
+
+    <div class="callout callout--info">
+      <div class="callout-icon">ℹ️</div>
+      <div class="callout-body"><strong>HTTPS Redirect</strong> After enabling SSL, add this to your <code>.htaccess</code> (Apache) or Nginx config to force all HTTP traffic to HTTPS.</div>
+    </div>
+    <pre><span class="comment"># .htaccess — Force HTTPS (Apache)</span>
+RewriteEngine On
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]</pre>
+
+    <div style="display:flex;gap:1rem;margin-top:2.5rem;padding-top:2rem;border-top:1px solid var(--border);">
+      <a href="customization.html" style="background:var(--mid);color:var(--navy);padding:.75rem 1.5rem;border-radius:var(--radius);font-weight:700;text-decoration:none;font-size:.875rem;">← Customization Guide</a>
+      <a href="../index.html" style="background:var(--accent);color:#fff;padding:.75rem 1.5rem;border-radius:var(--radius);font-weight:700;text-decoration:none;font-size:.875rem;">View Template →</a>
+    </div>
+
+  </main>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Items KENNE Cargo cannot ship from China to Cameroon. Contact us before sending goods to our warehouse if you're unsure.">
+  <title>Prohibited Goods | KENNE Cargo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/animations.css">
+  <link rel="stylesheet" href="assets/css/themes.css">
+  <link rel="stylesheet" href="assets/css/dark-mode.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <link rel="canonical" href="https://www.kennegroup.com/cargo/prohibited-goods.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="KENNE">
+  <meta property="og:title" content="Prohibited Goods | KENNE Cargo">
+  <meta property="og:description" content="Items KENNE Cargo cannot ship from China to Cameroon. Contact us before sending goods to our warehouse if you're unsure.">
+  <meta property="og:url" content="https://www.kennegroup.com/cargo/prohibited-goods.html">
+  <meta property="og:image" content="https://www.kennegroup.com/favicon.svg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Prohibited Goods | KENNE Cargo">
+  <meta name="twitter:description" content="Items KENNE Cargo cannot ship from China to Cameroon. Contact us before sending goods to our warehouse if you're unsure.">
+  <meta name="theme-color" content="#0A0E27">
+</head>
+<body>
+
+  <div id="header-placeholder"></div>
+
+  <section class="page-hero">
+    <div class="container page-hero-content">
+      <div class="eyebrow" style="color:var(--color-accent-light);">Important Information</div>
+      <h1 class="page-hero-title">Prohibited Goods</h1>
+      <p class="page-hero-subtitle">Items KENNE Cargo cannot ship from China to Cameroon.</p>
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="index.html">Home</a><span class="breadcrumb-sep">›</span>
+        <span class="breadcrumb-current">Prohibited Goods</span>
+      </nav>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container" style="max-width:760px;">
+
+      <div class="card" style="padding:var(--space-6);margin-bottom:var(--space-8);background:rgba(206,17,38,0.06);border-color:rgba(206,17,38,0.25);">
+        <p style="font-size:var(--text-sm);margin:0;">
+          <strong>This is not an exhaustive legal list.</strong> Additional restrictions may apply depending on
+          current regulations. Please <a href="contact.html" style="color:var(--color-accent-dark);">contact KENNE Cargo</a>
+          before sending goods to our warehouse if you're unsure whether an item can be shipped.
+        </p>
+      </div>
+
+      <div id="prohibited-list" class="stagger-children"></div>
+
+    </div>
+  </section>
+
+  <div id="footer-placeholder"></div>
+  <button id="back-to-top" aria-label="Back to top">↑</button>
+
+  <script src="assets/js/notifications.js"></script>
+  <script src="assets/js/drawer.js"></script>
+  <script src="assets/js/cargo-shipping.js"></script>
+  <script src="assets/js/ai-support.js"></script>
+  <script src="assets/js/main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const list = window.KenneCargoShipping.getProhibitedGoods();
+      document.getElementById('prohibited-list').innerHTML = list.map(group => `
+        <div class="card" style="padding:var(--space-6);margin-bottom:var(--space-4);">
+          <h3 style="font-size:var(--text-base);color:var(--color-navy);margin-bottom:var(--space-3);">${group.category}</h3>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;">
+            ${group.items.map(item => `<span style="font-size:13px;padding:6px 14px;background:var(--color-off-white);border-radius:999px;">🚫 ${item}</span>`).join('')}
+          </div>
+        </div>
+      `).join('');
+    });
+  </script>
+  <script src="../assets/js/site-extras.js"></script>
+</body>
+</html>

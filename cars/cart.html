@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
+  <meta name="description" content="Review the cars, parts and accessories in your KENNE Cars cart before checkout.">
+  <title>Your Cart | Kenne Car Business</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/animations.css">
+  <link rel="stylesheet" href="assets/css/themes.css">
+  <link rel="stylesheet" href="assets/css/dark-mode.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+</head>
+<body>
+
+  <div id="header-placeholder"></div>
+
+  <section class="section" style="padding-top:calc(var(--header-height) + var(--space-8));">
+    <div class="container">
+      <h1 style="font-family:var(--font-display);font-size:var(--text-3xl);color:var(--color-navy);margin-bottom:var(--space-6);">Your Cart</h1>
+      <div id="cart-content"></div>
+    </div>
+  </section>
+
+  <div id="footer-placeholder"></div>
+  <button id="back-to-top" aria-label="Back to top">↑</button>
+
+  <script>window.CART_NAMESPACE = 'kenne_cars';</script>
+  <script src="assets/js/cars-data.js"></script>
+  <script src="assets/js/shop.js"></script>
+  <script src="assets/js/cart.js"></script>
+  <script src="assets/js/notifications.js"></script>
+  <script src="assets/js/drawer.js"></script>
+  <script src="assets/js/ai-support.js"></script>
+  <script src="assets/js/main.js"></script>
+  <script>
+    function renderCart() {
+      const items = window.KenneCart.getItems();
+      const host = document.getElementById('cart-content');
+      if (items.length === 0) {
+        host.innerHTML = `
+          <div class="card" style="padding:var(--space-12);text-align:center;">
+            <div style="font-size:2.5rem;margin-bottom:var(--space-4);">🛒</div>
+            <p style="color:var(--color-text-light);margin-bottom:var(--space-5);">Your cart is empty.</p>
+            <a href="inventory.html" class="btn btn--primary">Browse Cars</a>
+          </div>`;
+        return;
+      }
+      const total = window.KenneCart.getTotal();
+      host.innerHTML = `
+        <div class="grid grid-2" style="gap:var(--space-10);align-items:flex-start;">
+          <table class="cart-table">
+            <thead><tr><th>Item</th><th>Price</th><th>Qty</th><th>Subtotal</th><th></th></tr></thead>
+            <tbody>
+              ${items.map(i => `
+                <tr>
+                  <td>
+                    <div class="cart-row-product">
+                      <img src="${i.image}" alt="${i.name}">
+                      <span>${i.name}</span>
+                    </div>
+                  </td>
+                  <td>${window.KenneCart.formatMoney(i.price)}</td>
+                  <td>
+                    <div class="qty-stepper">
+                      <button type="button" onclick="changeQty('${i.lineId}', ${i.qty - 1})">−</button>
+                      <input type="text" value="${i.qty}" readonly>
+                      <button type="button" onclick="changeQty('${i.lineId}', ${i.qty + 1})">+</button>
+                    </div>
+                  </td>
+                  <td>${window.KenneCart.formatMoney(i.price * i.qty)}</td>
+                  <td><button class="cart-remove-btn" onclick="removeLine('${i.lineId}')">✕ Remove</button></td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+          <div class="cart-summary">
+            <div class="cart-summary-row"><span>Subtotal</span><span>${window.KenneCart.formatMoney(total)}</span></div>
+            <div class="cart-summary-row"><span>Delivery</span><span>Calculated at checkout</span></div>
+            <div class="cart-summary-row total"><span>Total</span><span>${window.KenneCart.formatMoney(total)}</span></div>
+            <a href="checkout.html" class="btn btn--primary btn--full btn--lg" style="margin-top:var(--space-4);">Proceed to Checkout →</a>
+            <a href="inventory.html" class="btn btn--outline btn--full" style="margin-top:var(--space-3);">Continue Browsing</a>
+          </div>
+        </div>
+      `;
+    }
+    function changeQty(lineId, qty) { window.KenneCart.setQty(lineId, qty); renderCart(); }
+    function removeLine(lineId) { window.KenneCart.removeItem(lineId); renderCart(); }
+    document.addEventListener('DOMContentLoaded', renderCart);
+  </script>
+  <script src="../assets/js/site-extras.js"></script>
+</body>
+</html>

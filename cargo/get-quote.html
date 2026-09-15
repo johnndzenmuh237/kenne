@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Get an instant KENNE Cargo shipping quote for air or sea freight from China to Cameroon. Enter your weight or volume for a live price estimate.">
+  <title>Get a Shipping Quote | KENNE Cargo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/animations.css">
+  <link rel="stylesheet" href="assets/css/themes.css">
+  <link rel="stylesheet" href="assets/css/dark-mode.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+  <style>
+    .method-toggle { display:flex; gap:var(--space-3); margin-bottom:var(--space-6); }
+    .method-btn { flex:1; padding:var(--space-4); border:2px solid var(--color-border); border-radius:var(--radius-lg); text-align:center; cursor:pointer; background:#fff; font-weight:700; }
+    .method-btn.active { border-color:var(--color-accent); background:rgba(242,185,12,0.08); }
+    .quote-result { background:var(--color-navy); color:#fff; border-radius:var(--radius-xl); padding:var(--space-8); }
+    .quote-result .amount { font-family:var(--font-display); font-size:var(--text-4xl); font-weight:900; color:var(--color-accent); }
+    .quote-row { display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.1); font-size:var(--text-sm); }
+    @media print {
+      .site-header, .header-ticker, .top-bar, #footer-placeholder, .no-print, #kc-ai-widget, #back-to-top { display:none !important; }
+    }
+  </style>
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <link rel="canonical" href="https://www.kennegroup.com/cargo/get-quote.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="KENNE">
+  <meta property="og:title" content="Get a Shipping Quote | KENNE Cargo">
+  <meta property="og:description" content="Get an instant KENNE Cargo shipping quote for air or sea freight from China to Cameroon. Enter your weight or volume for a live price estimate.">
+  <meta property="og:url" content="https://www.kennegroup.com/cargo/get-quote.html">
+  <meta property="og:image" content="https://www.kennegroup.com/favicon.svg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Get a Shipping Quote | KENNE Cargo">
+  <meta name="twitter:description" content="Get an instant KENNE Cargo shipping quote for air or sea freight from China to Cameroon. Enter your weight or volume for a live price estimate.">
+  <meta name="theme-color" content="#0A0E27">
+</head>
+<body>
+
+  <div id="header-placeholder"></div>
+
+  <section class="page-hero">
+    <div class="container page-hero-content">
+      <div class="eyebrow" style="color:var(--color-accent-light);">Instant Quote</div>
+      <h1 class="page-hero-title">Get a Shipping Quote</h1>
+      <p class="page-hero-subtitle">Air or sea freight, China to Cameroon — calculated live from our current rates.</p>
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="index.html">Home</a><span class="breadcrumb-sep">›</span>
+        <span class="breadcrumb-current">Get a Quote</span>
+      </nav>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container" style="max-width:760px;">
+
+      <div class="method-toggle no-print">
+        <div class="method-btn active" id="btn-air" onclick="setMethod('air')">✈️ Air Freight</div>
+        <div class="method-btn" id="btn-sea" onclick="setMethod('sea')">🚢 Sea Freight</div>
+      </div>
+
+      <form id="quote-form" class="card no-print" style="padding:var(--space-8);margin-bottom:var(--space-8);">
+        <div id="air-fields">
+          <div class="form-group" style="margin-bottom:var(--space-5);">
+            <label class="form-label">Total Weight (KG) *</label>
+            <input type="number" step="0.01" id="air-weight" class="form-control" required placeholder="e.g. 8">
+            <p style="font-size:12px;color:var(--color-text-light);margin-top:6px;" id="air-min-note"></p>
+          </div>
+        </div>
+
+        <div id="sea-fields" style="display:none;">
+          <div class="grid grid-2" style="gap:var(--space-4);margin-bottom:var(--space-5);">
+            <div class="form-group">
+              <label class="form-label">Volume (CBM) *</label>
+              <input type="number" step="0.01" id="sea-cbm" class="form-control" placeholder="e.g. 3.5">
+              <p style="font-size:12px;color:var(--color-text-light);margin-top:6px;" id="sea-min-note"></p>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Total Weight (KG) *</label>
+              <input type="number" step="0.01" id="sea-weight" class="form-control" placeholder="e.g. 450">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom:var(--space-5);">
+          <label class="form-label">Goods Description *</label>
+          <input type="text" id="goods-desc" class="form-control" required placeholder="e.g. Phone accessories, 40 cartons">
+        </div>
+
+        <h3 style="font-size:var(--text-sm);text-transform:uppercase;letter-spacing:.04em;color:var(--color-gray);margin-bottom:var(--space-3);">Your Contact Details</h3>
+        <div class="grid grid-2" style="gap:var(--space-4);margin-bottom:var(--space-4);">
+          <div class="form-group"><label class="form-label">Full Name *</label><input type="text" id="cust-name" class="form-control" required></div>
+          <div class="form-group"><label class="form-label">Phone / WhatsApp *</label><input type="tel" id="cust-phone" class="form-control" required></div>
+        </div>
+        <div class="form-group" style="margin-bottom:var(--space-6);"><label class="form-label">Email *</label><input type="email" id="cust-email" class="form-control" required></div>
+
+        <button type="submit" class="btn btn--primary btn--full btn--lg">Calculate My Quote →</button>
+      </form>
+
+      <div id="quote-output"></div>
+
+      <div class="card no-print" style="padding:var(--space-6);margin-top:var(--space-8);background:var(--color-off-white);">
+        <p style="font-size:var(--text-sm);color:var(--color-text-light);margin:0;">
+          <strong>Note:</strong> Bulky goods below <span id="min-air-inline">4 KG</span> are billed as the minimum weight.
+          Sea shipments below <span id="min-sea-inline">0.1 CBM</span> are billed as the minimum volume.
+          Sensitive goods and machinery are priced separately — <a href="prohibited-goods.html" style="color:var(--color-accent-dark);">see restricted items</a>
+          or <a href="contact.html" style="color:var(--color-accent-dark);">contact us</a> to confirm your category.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div id="footer-placeholder"></div>
+  <button id="back-to-top" aria-label="Back to top">↑</button>
+
+  <script src="assets/js/notifications.js"></script>
+  <script src="assets/js/drawer.js"></script>
+  <script src="assets/js/cargo-shipping.js"></script>
+  <script src="assets/js/ai-support.js"></script>
+  <script src="assets/js/main.js"></script>
+  <script>
+    const K = window.KenneCargoShipping;
+    let method = 'air';
+
+    function setMethod(m) {
+      method = m;
+      document.getElementById('btn-air').classList.toggle('active', m === 'air');
+      document.getElementById('btn-sea').classList.toggle('active', m === 'sea');
+      document.getElementById('air-fields').style.display = m === 'air' ? '' : 'none';
+      document.getElementById('sea-fields').style.display = m === 'sea' ? '' : 'none';
+      document.getElementById('air-weight').required = m === 'air';
+      document.getElementById('sea-cbm').required = m === 'sea';
+      document.getElementById('sea-weight').required = m === 'sea';
+    }
+
+    function renderNotes() {
+      const rates = K.getRates();
+      document.getElementById('air-min-note').textContent = `Bulky goods under ${rates.air.minBillableKg} KG are billed as ${rates.air.minBillableKg} KG.`;
+      document.getElementById('sea-min-note').textContent = `Shipments under ${rates.sea.minBillableCbm} CBM are billed as ${rates.sea.minBillableCbm} CBM.`;
+      document.getElementById('min-air-inline').textContent = rates.air.minBillableKg + ' KG';
+      document.getElementById('min-sea-inline').textContent = rates.sea.minBillableCbm + ' CBM';
+    }
+
+    document.getElementById('quote-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const customer = {
+        name: document.getElementById('cust-name').value.trim(),
+        phone: document.getElementById('cust-phone').value.trim(),
+        email: document.getElementById('cust-email').value.trim(),
+      };
+      const goodsDesc = document.getElementById('goods-desc').value.trim();
+
+      let result;
+      if (method === 'air') {
+        const weight = parseFloat(document.getElementById('air-weight').value);
+        result = K.calculateAirQuote(weight);
+      } else {
+        const cbm = parseFloat(document.getElementById('sea-cbm').value);
+        const weight = parseFloat(document.getElementById('sea-weight').value);
+        result = K.calculateSeaQuote(cbm, weight);
+      }
+
+      const quoteNumber = K.generateQuoteNumber();
+      const created = Date.now();
+      const expiry = created + 14 * 24 * 60 * 60 * 1000;
+
+      const record = { quoteNumber, method, result, customer, goodsDesc, createdAt: created, expiresAt: expiry, status: 'Quoted' };
+      K.saveQuoteRecord(record);
+
+      if (window.KenneNotifications) {
+        window.KenneNotifications.push({
+          icon: '📋',
+          title: `New quote request — ${quoteNumber}`,
+          message: `${customer.name} requested a ${method} freight quote for "${goodsDesc}" — ${K.formatMoney(result.total)}.`,
+        });
+      }
+
+      renderQuoteOutput(record);
+      window.scrollTo({ top: document.getElementById('quote-output').offsetTop - 100, behavior: 'smooth' });
+    });
+
+    function renderQuoteOutput(q) {
+      const r = q.result;
+      const rows = q.method === 'air'
+        ? `
+          <div class="quote-row"><span>Weight entered</span><span>${r.enteredWeight} KG</span></div>
+          <div class="quote-row"><span>Billable weight</span><span>${r.billableWeight} KG ${r.wasRoundedUp ? '(rounded up to minimum)' : ''}</span></div>
+          <div class="quote-row"><span>Rate applied</span><span>${K.formatMoney(r.pricePerKg)} / KG</span></div>
+          <div class="quote-row"><span>Estimated duration</span><span>${r.durationText}</span></div>
+        `
+        : `
+          <div class="quote-row"><span>Volume entered</span><span>${r.enteredCbm} CBM</span></div>
+          <div class="quote-row"><span>Billable volume</span><span>${r.billableCbm} CBM ${r.wasRoundedUp ? '(rounded up to minimum)' : ''}</span></div>
+          <div class="quote-row"><span>Weight</span><span>${r.weightKg} KG</span></div>
+          <div class="quote-row"><span>Rate tier</span><span>${r.tierLabel}</span></div>
+          <div class="quote-row"><span>Estimated duration</span><span>${r.durationText}</span></div>
+        `;
+
+      document.getElementById('quote-output').innerHTML = `
+        <div class="quote-result">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:var(--space-4);">
+            <div>
+              <div style="font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--color-accent);margin-bottom:4px;">Quote Number</div>
+              <div style="font-family:var(--font-mono);font-size:var(--text-lg);font-weight:700;">${q.quoteNumber}</div>
+            </div>
+            <div style="text-align:right;">
+              <div style="font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--color-accent);margin-bottom:4px;">Method</div>
+              <div>${q.method === 'air' ? '✈️ Air Freight' : '🚢 Sea Freight'}</div>
+            </div>
+          </div>
+          <div style="margin-bottom:var(--space-2);color:rgba(255,255,255,0.7);font-size:var(--text-sm);">Estimated Shipping Cost</div>
+          <div class="amount">${K.formatMoney(r.total)}</div>
+          <p style="font-size:12px;color:rgba(255,255,255,0.5);margin-top:6px;">Goods: ${q.goodsDesc}</p>
+          <div style="margin-top:var(--space-5);">${rows}</div>
+          <p style="font-size:11px;color:rgba(255,255,255,0.5);margin-top:var(--space-4);">
+            This quote is an estimate based on current KENNE Cargo rates and expires 14 days from today.
+            Final pricing is confirmed when your shipment is registered. Excludes customs duties where applicable.
+          </p>
+          <div class="no-print" style="display:flex;gap:var(--space-3);margin-top:var(--space-6);flex-wrap:wrap;">
+            <button class="btn btn--primary" onclick="window.print()">🖨️ Print / Save PDF</button>
+            <a href="https://wa.me/237670735947?text=${encodeURIComponent('Hi KENNE Cargo, I got quote ' + q.quoteNumber + ' for ' + q.goodsDesc + ' — I would like to proceed.')}" target="_blank" rel="noopener" class="btn btn--outline-white">💬 Proceed on WhatsApp</a>
+          </div>
+        </div>
+      `;
+    }
+
+    document.addEventListener('DOMContentLoaded', renderNotes);
+  </script>
+  <script src="../assets/js/site-extras.js"></script>
+</body>
+</html>

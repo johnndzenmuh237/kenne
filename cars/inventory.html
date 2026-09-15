@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Browse Kenne Car Business inventory — wholesale and retail cars of every make, model and budget, sourced from China and available across Cameroon.">
+  <title>Browse Cars | Kenne Car Business</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/animations.css">
+  <link rel="stylesheet" href="assets/css/themes.css">
+  <link rel="stylesheet" href="assets/css/dark-mode.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <link rel="canonical" href="https://www.kennegroup.com/cars/inventory.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="KENNE">
+  <meta property="og:title" content="Browse Cars | Kenne Car Business">
+  <meta property="og:description" content="Browse Kenne Car Business inventory — wholesale and retail cars of every make, model and budget, sourced from China and available across Cameroon.">
+  <meta property="og:url" content="https://www.kennegroup.com/cars/inventory.html">
+  <meta property="og:image" content="https://www.kennegroup.com/favicon.svg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Browse Cars | Kenne Car Business">
+  <meta name="twitter:description" content="Browse Kenne Car Business inventory — wholesale and retail cars of every make, model and budget, sourced from China and available across Cameroon.">
+  <meta name="theme-color" content="#0A0E27">
+</head>
+<body>
+
+  <div id="header-placeholder"></div>
+
+  <section class="page-hero">
+    <div class="container page-hero-content">
+      <div class="eyebrow" style="color:var(--color-accent-light);">Inventory</div>
+      <h1 class="page-hero-title">Browse Our Cars</h1>
+      <p class="page-hero-subtitle">Wholesale and retail vehicles, updated regularly. Filter to find exactly what you need.</p>
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="index.html">Home</a><span class="breadcrumb-sep">›</span>
+        <span class="breadcrumb-current">Inventory</span>
+      </nav>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="shop-layout">
+
+        <!-- FILTERS -->
+        <aside class="filter-panel">
+          <div class="filter-group">
+            <h4>Search</h4>
+            <input type="text" id="f-search" class="form-control" placeholder="Search make or model…">
+          </div>
+          <div class="filter-group">
+            <h4>Category</h4>
+            <label class="filter-option"><input type="radio" name="f-cat" value="" checked> All Cars</label>
+            <label class="filter-option"><input type="radio" name="f-cat" value="retail"> Retail</label>
+            <label class="filter-option"><input type="radio" name="f-cat" value="wholesale"> Wholesale Lot</label>
+          </div>
+          <div class="filter-group">
+            <h4>Body Type</h4>
+            <div class="filter-chip-row" id="f-body"></div>
+          </div>
+          <div class="filter-group">
+            <h4>Max Price</h4>
+            <input type="range" id="f-price" min="4000000" max="22000000" step="500000" value="22000000" style="width:100%;">
+            <div style="font-size:12px;color:var(--color-text-light);margin-top:4px;" id="f-price-label">Up to CFA 22,000,000</div>
+          </div>
+        </aside>
+
+        <!-- RESULTS -->
+        <div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-5);">
+            <span style="font-size:var(--text-sm);color:var(--color-text-light);" id="results-count"></span>
+          </div>
+          <div class="product-grid" id="results-grid"></div>
+          <p id="no-results" style="display:none;text-align:center;color:var(--color-text-light);padding:var(--space-12) 0;">No cars match those filters — try widening your search.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <div id="footer-placeholder"></div>
+  <button id="back-to-top" aria-label="Back to top">↑</button>
+
+  <script>window.CART_NAMESPACE = 'kenne_cars';</script>
+  <script src="assets/js/cars-data.js"></script>
+  <script src="assets/js/shop.js"></script>
+  <script src="assets/js/cart.js"></script>
+  <script src="assets/js/notifications.js"></script>
+  <script src="assets/js/drawer.js"></script>
+  <script src="assets/js/ai-support.js"></script>
+  <script src="assets/js/main.js"></script>
+  <script>
+    const POOL = CARS_DATA.filter(c => c.category !== 'rental');
+    const bodyTypes = [...new Set(POOL.map(c => c.bodyType))];
+    document.getElementById('f-body').innerHTML =
+      `<button type="button" class="filter-chip active" data-body="">All</button>` +
+      bodyTypes.map(b => `<button type="button" class="filter-chip" data-body="${b}">${b}</button>`).join('');
+
+    let state = { search: '', category: getQueryParam('category') || '', body: '', maxPrice: 22000000 };
+
+    if (state.category) {
+      document.querySelector(`input[name="f-cat"][value="${state.category}"]`).checked = true;
+    }
+
+    function applyFilters() {
+      let results = POOL.filter(c =>
+        (!state.category || c.category === state.category) &&
+        (!state.body || c.bodyType === state.body) &&
+        (c.price <= state.maxPrice) &&
+        (!state.search || c.name.toLowerCase().includes(state.search) || c.make.toLowerCase().includes(state.search))
+      );
+      document.getElementById('results-count').textContent = `${results.length} car${results.length !== 1 ? 's' : ''} found`;
+      document.getElementById('results-grid').innerHTML = results.map(renderCarCard).join('');
+      document.getElementById('no-results').style.display = results.length === 0 ? 'block' : 'none';
+    }
+
+    document.getElementById('f-search').addEventListener('input', (e) => { state.search = e.target.value.toLowerCase(); applyFilters(); });
+    document.querySelectorAll('input[name="f-cat"]').forEach(r => r.addEventListener('change', (e) => { state.category = e.target.value; applyFilters(); }));
+    document.getElementById('f-body').addEventListener('click', (e) => {
+      const btn = e.target.closest('.filter-chip'); if (!btn) return;
+      document.querySelectorAll('#f-body .filter-chip').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      state.body = btn.dataset.body; applyFilters();
+    });
+    document.getElementById('f-price').addEventListener('input', (e) => {
+      state.maxPrice = Number(e.target.value);
+      document.getElementById('f-price-label').textContent = `Up to ${formatCFA(state.maxPrice)}`;
+      applyFilters();
+    });
+
+    applyFilters();
+  </script>
+  <script src="../assets/js/site-extras.js"></script>
+</body>
+</html>
