@@ -2388,7 +2388,7 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
 
 }
 /* =====================================================
-   KENNE BUSINESS DIVISIONS
+   KENNE DIVISIONS
 ===================================================== */
 
 .kenne-divisions-grid {
@@ -2398,7 +2398,7 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
 
 
 /* =====================================================
-   MAIN CARD
+   CARD
 ===================================================== */
 
 .kenne-division-card {
@@ -2411,29 +2411,27 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
 
   text-decoration: none;
 
-  background: #ffffff;
+  background: #fff;
 
-  border: 1px solid rgba(0, 0, 0, 0.07);
+  border: 1px solid rgba(0,0,0,.07);
 
   border-radius: 20px;
 
-  box-shadow:
-    0 8px 25px rgba(0, 0, 0, 0.045);
+  box-shadow: 0 8px 25px rgba(0,0,0,.045);
 
   transition:
-    transform 0.45s cubic-bezier(.2,.7,.2,1),
-    box-shadow 0.45s ease,
-    border-color 0.35s ease;
+    transform .4s ease,
+    box-shadow .4s ease,
+    border-color .3s ease;
 }
 
-
 .kenne-division-card:hover {
-  transform: translateY(-9px);
-
-  border-color: rgba(0, 0, 0, 0.12);
+  transform: translateY(-8px);
 
   box-shadow:
-    0 25px 55px rgba(0, 0, 0, 0.12);
+    0 24px 55px rgba(0,0,0,.12);
+
+  border-color: rgba(0,0,0,.12);
 }
 
 
@@ -2448,27 +2446,25 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
 
   overflow: hidden;
 
-  background: #e9ecef;
+  background: #e5e7eb;
 }
 
-
 .kenne-division-image img {
+  display: block;
+
   width: 100%;
   height: 100%;
-
-  display: block;
 
   object-fit: cover;
 
   transition:
-    transform 0.8s cubic-bezier(.2,.7,.2,1),
-    filter 0.5s ease;
+    transform .8s cubic-bezier(.2,.7,.2,1),
+    filter .4s ease;
 }
-
 
 .kenne-division-card:hover
 .kenne-division-image img {
-  transform: scale(1.09);
+  transform: scale(1.08);
 
   filter: brightness(1.04);
 }
@@ -2486,17 +2482,15 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
   background:
     linear-gradient(
       to bottom,
-      rgba(0, 0, 0, 0.03) 20%,
-      rgba(0, 0, 0, 0.12) 50%,
-      rgba(0, 0, 0, 0.68) 100%
+      rgba(0,0,0,.02) 20%,
+      rgba(0,0,0,.15) 55%,
+      rgba(0,0,0,.7) 100%
     );
-
-  pointer-events: none;
 }
 
 
 /* =====================================================
-   DIVISION LABEL
+   LABELS
 ===================================================== */
 
 .kenne-division-label {
@@ -2505,8 +2499,7 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
   left: 18px;
   bottom: 17px;
 
-  display: inline-flex;
-
+  display: flex;
   align-items: center;
 
   gap: 8px;
@@ -2515,31 +2508,36 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
 
   border-radius: 8px;
 
-  background: rgba(255,255,255,0.94);
+  background: rgba(255,255,255,.95);
 
   backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
 
   font-size: 10px;
 
   font-weight: 800;
 
-  letter-spacing: .055em;
+  letter-spacing: .05em;
 
   text-transform: uppercase;
 
-  color: #111827;
-
-  box-shadow:
-    0 8px 25px rgba(0,0,0,.12);
+  box-shadow: 0 8px 25px rgba(0,0,0,.12);
 }
 
+.tech-label {
+  color: #1479e9;
+}
+
+.cargo-label {
+  color: #a47700;
+}
+
+.cars-label {
+  color: #d52e48;
+}
 
 .kenne-label-dot {
   width: 7px;
   height: 7px;
-
-  flex: 0 0 7px;
 
   border-radius: 50%;
 
@@ -2547,23 +2545,8 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
 }
 
 
-/* Individual label accents */
-
-.tech-label {
-  color: #1479e9;
-}
-
-.cargo-label {
-  color: #b18100;
-}
-
-.cars-label {
-  color: #d52e48;
-}
-
-
 /* =====================================================
-   FLOATING IMAGE ICON
+   FLOATING ICON
 ===================================================== */
 
 .kenne-image-icon {
@@ -2576,33 +2559,24 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
   height: 46px;
 
   display: flex;
-
   align-items: center;
   justify-content: center;
 
   border-radius: 13px;
 
-  background: rgba(255,255,255,.92);
+  background: rgba(255,255,255,.94);
 
   backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
 
-  box-shadow:
-    0 8px 25px rgba(0,0,0,.15);
-
-  opacity: .95;
-
-  transform: translateY(0);
+  box-shadow: 0 8px 25px rgba(0,0,0,.15);
 
   transition:
-    transform .35s ease,
-    background .35s ease;
+    transform .35s ease;
 }
 
-
 .kenne-image-icon svg {
-  width: 21px;
-  height: 21px;
+  width: 22px;
+  height: 22px;
 
   stroke: currentColor;
 
@@ -2612,12 +2586,9 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
   stroke-linejoin: round;
 }
 
-
 .kenne-division-card:hover
 .kenne-image-icon {
   transform: translateY(-4px) rotate(-3deg);
-
-  background: #ffffff;
 }
 
 
@@ -2631,13 +2602,8 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
   display: flex;
   flex-direction: column;
 
-  padding: 25px 25px 24px;
+  padding: 25px;
 }
-
-
-/* =====================================================
-   TITLE
-===================================================== */
 
 .kenne-division-content h3 {
   margin: 0 0 10px;
@@ -2646,22 +2612,14 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
 
   font-size: var(--text-xl);
 
-  line-height: 1.25;
+  line-height: 1.3;
 
   font-weight: 750;
-
-  letter-spacing: -.02em;
 }
-
 
 .kenne-division-content h3 span {
   display: inline;
 }
-
-
-/* =====================================================
-   DESCRIPTION
-===================================================== */
 
 .kenne-division-content p {
   flex: 1;
@@ -2677,7 +2635,8 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
 
 
 /* =====================================================
-   NAVIGATION BUTTON
+   BUTTONS
+   PERMANENT COLORS
 ===================================================== */
 
 .kenne-division-action {
@@ -2689,46 +2648,59 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
 
   gap: 10px;
 
-  padding: 10px 13px 10px 15px;
-
-  border: 1px solid rgba(0,0,0,.09);
+  padding: 10px 10px 10px 15px;
 
   border-radius: 9px;
-
-  color: var(--color-navy);
-
-  background: #ffffff;
 
   font-size: 12px;
 
   font-weight: 750;
 
+  color: #fff;
+
+  border: none;
+
+  box-shadow: 0 6px 16px rgba(0,0,0,.1);
+
   transition:
-    color .3s ease,
-    background .3s ease,
-    border-color .3s ease,
     transform .3s ease,
-    padding .3s ease;
+    box-shadow .3s ease;
 }
 
 
+/* TECH BUTTON */
+
+.tech-action {
+  background: #1479e9;
+}
+
+
+/* CARGO BUTTON */
+
+.cargo-action {
+  background: #a47700;
+}
+
+
+/* CARS BUTTON */
+
+.cars-action {
+  background: #d52e48;
+}
+
+
+/* Hover */
+
 .kenne-division-card:hover
 .kenne-division-action {
-  padding-left: 17px;
-  padding-right: 10px;
+  transform: translateX(4px);
 
-  background: var(--color-navy);
-
-  border-color: var(--color-navy);
-
-  color: #ffffff;
-
-  transform: translateX(2px);
+  box-shadow: 0 9px 22px rgba(0,0,0,.16);
 }
 
 
 /* =====================================================
-   ARROW ICON
+   ARROW
 ===================================================== */
 
 .kenne-action-icon {
@@ -2742,13 +2714,10 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
 
   border-radius: 7px;
 
-  background: rgba(0,0,0,.045);
+  background: rgba(255,255,255,.16);
 
-  transition:
-    transform .35s cubic-bezier(.2,.7,.2,1),
-    background .3s ease;
+  transition: transform .3s ease;
 }
-
 
 .kenne-action-icon svg {
   width: 16px;
@@ -2762,27 +2731,24 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
   stroke-linejoin: round;
 }
 
-
 .kenne-division-card:hover
 .kenne-action-icon {
   transform: translateX(4px);
-
-  background: rgba(255,255,255,.14);
 }
 
 
 /* =====================================================
-   SUBTLE IMAGE ANIMATION
+   IMAGE ANIMATION
 ===================================================== */
 
-@keyframes kenneImageFloat {
+@keyframes kenneImageMotion {
 
   0% {
     transform: scale(1);
   }
 
   50% {
-    transform: scale(1.015);
+    transform: scale(1.018);
   }
 
   100% {
@@ -2791,12 +2757,10 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
 
 }
 
-
 .kenne-division-image img {
   animation:
-    kenneImageFloat 8s ease-in-out infinite;
+    kenneImageMotion 8s ease-in-out infinite;
 }
-
 
 .kenne-division-card:hover
 .kenne-division-image img {
@@ -2805,37 +2769,29 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
 
 
 /* =====================================================
-   CARD ENTRY ANIMATION
-===================================================== */
-
-.kenne-division-card {
-  animation-duration: .7s;
-  animation-fill-mode: both;
-}
-
-
-/* =====================================================
-   RESPONSIVE
+   TABLET
 ===================================================== */
 
 @media (max-width: 1000px) {
 
   .kenne-divisions-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0,1fr));
   }
 
   .kenne-division-card:last-child {
     grid-column: 1 / -1;
 
-    max-width: 50%;
+    width: 50%;
 
-    margin: 0 auto;
-
-    width: 100%;
+    margin: auto;
   }
 
 }
 
+
+/* =====================================================
+   MOBILE
+===================================================== */
 
 @media (max-width: 700px) {
 
@@ -2848,7 +2804,7 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
   .kenne-division-card:last-child {
     grid-column: auto;
 
-    max-width: none;
+    width: 100%;
 
     margin: 0;
   }
@@ -2858,11 +2814,13 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
   }
 
   .kenne-division-content {
-    padding: 22px 20px 21px;
+    padding: 22px 20px;
   }
 
 }
 
+
+/* SMALL MOBILE */
 
 @media (max-width: 480px) {
 
@@ -2899,20 +2857,18 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
 
 
 /* =====================================================
-   ACCESSIBILITY
+   REDUCE MOTION
 ===================================================== */
 
 @media (prefers-reduced-motion: reduce) {
 
-  .kenne-division-card,
   .kenne-division-image img,
-  .kenne-image-icon,
+  .kenne-division-card,
   .kenne-division-action,
-  .kenne-action-icon {
+  .kenne-action-icon,
+  .kenne-image-icon {
     animation: none !important;
-
     transition: none !important;
   }
 
 }
-
