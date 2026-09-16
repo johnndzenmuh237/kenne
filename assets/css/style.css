@@ -3288,6 +3288,7 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
     animation: none !important;
     transition: none !important;
   }
+}
 /* =========================================================
    KENNE CONTACT SECTION
    ========================================================= */
