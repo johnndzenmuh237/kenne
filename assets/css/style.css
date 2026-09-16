@@ -2387,4 +2387,532 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
   }
 
 }
+/* =====================================================
+   KENNE BUSINESS DIVISIONS
+===================================================== */
+
+.kenne-divisions-grid {
+  margin-top: var(--space-10);
+  gap: 22px;
+}
+
+
+/* =====================================================
+   MAIN CARD
+===================================================== */
+
+.kenne-division-card {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+
+  overflow: hidden;
+
+  text-decoration: none;
+
+  background: #ffffff;
+
+  border: 1px solid rgba(0, 0, 0, 0.07);
+
+  border-radius: 20px;
+
+  box-shadow:
+    0 8px 25px rgba(0, 0, 0, 0.045);
+
+  transition:
+    transform 0.45s cubic-bezier(.2,.7,.2,1),
+    box-shadow 0.45s ease,
+    border-color 0.35s ease;
+}
+
+
+.kenne-division-card:hover {
+  transform: translateY(-9px);
+
+  border-color: rgba(0, 0, 0, 0.12);
+
+  box-shadow:
+    0 25px 55px rgba(0, 0, 0, 0.12);
+}
+
+
+/* =====================================================
+   IMAGE
+===================================================== */
+
+.kenne-division-image {
+  position: relative;
+
+  height: 270px;
+
+  overflow: hidden;
+
+  background: #e9ecef;
+}
+
+
+.kenne-division-image img {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
+
+  transition:
+    transform 0.8s cubic-bezier(.2,.7,.2,1),
+    filter 0.5s ease;
+}
+
+
+.kenne-division-card:hover
+.kenne-division-image img {
+  transform: scale(1.09);
+
+  filter: brightness(1.04);
+}
+
+
+/* =====================================================
+   IMAGE OVERLAY
+===================================================== */
+
+.kenne-image-overlay {
+  position: absolute;
+
+  inset: 0;
+
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.03) 20%,
+      rgba(0, 0, 0, 0.12) 50%,
+      rgba(0, 0, 0, 0.68) 100%
+    );
+
+  pointer-events: none;
+}
+
+
+/* =====================================================
+   DIVISION LABEL
+===================================================== */
+
+.kenne-division-label {
+  position: absolute;
+
+  left: 18px;
+  bottom: 17px;
+
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  padding: 9px 13px;
+
+  border-radius: 8px;
+
+  background: rgba(255,255,255,0.94);
+
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  font-size: 10px;
+
+  font-weight: 800;
+
+  letter-spacing: .055em;
+
+  text-transform: uppercase;
+
+  color: #111827;
+
+  box-shadow:
+    0 8px 25px rgba(0,0,0,.12);
+}
+
+
+.kenne-label-dot {
+  width: 7px;
+  height: 7px;
+
+  flex: 0 0 7px;
+
+  border-radius: 50%;
+
+  background: currentColor;
+}
+
+
+/* Individual label accents */
+
+.tech-label {
+  color: #1479e9;
+}
+
+.cargo-label {
+  color: #b18100;
+}
+
+.cars-label {
+  color: #d52e48;
+}
+
+
+/* =====================================================
+   FLOATING IMAGE ICON
+===================================================== */
+
+.kenne-image-icon {
+  position: absolute;
+
+  top: 18px;
+  right: 18px;
+
+  width: 46px;
+  height: 46px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 13px;
+
+  background: rgba(255,255,255,.92);
+
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  box-shadow:
+    0 8px 25px rgba(0,0,0,.15);
+
+  opacity: .95;
+
+  transform: translateY(0);
+
+  transition:
+    transform .35s ease,
+    background .35s ease;
+}
+
+
+.kenne-image-icon svg {
+  width: 21px;
+  height: 21px;
+
+  stroke: currentColor;
+
+  stroke-width: 1.7;
+
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+
+.kenne-division-card:hover
+.kenne-image-icon {
+  transform: translateY(-4px) rotate(-3deg);
+
+  background: #ffffff;
+}
+
+
+/* =====================================================
+   CONTENT
+===================================================== */
+
+.kenne-division-content {
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+
+  padding: 25px 25px 24px;
+}
+
+
+/* =====================================================
+   TITLE
+===================================================== */
+
+.kenne-division-content h3 {
+  margin: 0 0 10px;
+
+  color: var(--color-navy);
+
+  font-size: var(--text-xl);
+
+  line-height: 1.25;
+
+  font-weight: 750;
+
+  letter-spacing: -.02em;
+}
+
+
+.kenne-division-content h3 span {
+  display: inline;
+}
+
+
+/* =====================================================
+   DESCRIPTION
+===================================================== */
+
+.kenne-division-content p {
+  flex: 1;
+
+  margin: 0 0 22px;
+
+  color: var(--color-text-light);
+
+  font-size: var(--text-sm);
+
+  line-height: 1.75;
+}
+
+
+/* =====================================================
+   NAVIGATION BUTTON
+===================================================== */
+
+.kenne-division-action {
+  width: fit-content;
+
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  padding: 10px 13px 10px 15px;
+
+  border: 1px solid rgba(0,0,0,.09);
+
+  border-radius: 9px;
+
+  color: var(--color-navy);
+
+  background: #ffffff;
+
+  font-size: 12px;
+
+  font-weight: 750;
+
+  transition:
+    color .3s ease,
+    background .3s ease,
+    border-color .3s ease,
+    transform .3s ease,
+    padding .3s ease;
+}
+
+
+.kenne-division-card:hover
+.kenne-division-action {
+  padding-left: 17px;
+  padding-right: 10px;
+
+  background: var(--color-navy);
+
+  border-color: var(--color-navy);
+
+  color: #ffffff;
+
+  transform: translateX(2px);
+}
+
+
+/* =====================================================
+   ARROW ICON
+===================================================== */
+
+.kenne-action-icon {
+  width: 27px;
+  height: 27px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 7px;
+
+  background: rgba(0,0,0,.045);
+
+  transition:
+    transform .35s cubic-bezier(.2,.7,.2,1),
+    background .3s ease;
+}
+
+
+.kenne-action-icon svg {
+  width: 16px;
+  height: 16px;
+
+  stroke: currentColor;
+
+  stroke-width: 1.8;
+
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+
+.kenne-division-card:hover
+.kenne-action-icon {
+  transform: translateX(4px);
+
+  background: rgba(255,255,255,.14);
+}
+
+
+/* =====================================================
+   SUBTLE IMAGE ANIMATION
+===================================================== */
+
+@keyframes kenneImageFloat {
+
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.015);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+
+}
+
+
+.kenne-division-image img {
+  animation:
+    kenneImageFloat 8s ease-in-out infinite;
+}
+
+
+.kenne-division-card:hover
+.kenne-division-image img {
+  animation: none;
+}
+
+
+/* =====================================================
+   CARD ENTRY ANIMATION
+===================================================== */
+
+.kenne-division-card {
+  animation-duration: .7s;
+  animation-fill-mode: both;
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width: 1000px) {
+
+  .kenne-divisions-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .kenne-division-card:last-child {
+    grid-column: 1 / -1;
+
+    max-width: 50%;
+
+    margin: 0 auto;
+
+    width: 100%;
+  }
+
+}
+
+
+@media (max-width: 700px) {
+
+  .kenne-divisions-grid {
+    grid-template-columns: 1fr;
+
+    gap: 16px;
+  }
+
+  .kenne-division-card:last-child {
+    grid-column: auto;
+
+    max-width: none;
+
+    margin: 0;
+  }
+
+  .kenne-division-image {
+    height: 245px;
+  }
+
+  .kenne-division-content {
+    padding: 22px 20px 21px;
+  }
+
+}
+
+
+@media (max-width: 480px) {
+
+  .kenne-division-image {
+    height: 225px;
+  }
+
+  .kenne-division-label {
+    left: 13px;
+    bottom: 13px;
+
+    font-size: 9px;
+
+    padding: 8px 10px;
+  }
+
+  .kenne-image-icon {
+    top: 13px;
+    right: 13px;
+
+    width: 42px;
+    height: 42px;
+  }
+
+  .kenne-division-content h3 {
+    font-size: 18px;
+  }
+
+  .kenne-division-content p {
+    font-size: 12px;
+  }
+
+}
+
+
+/* =====================================================
+   ACCESSIBILITY
+===================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .kenne-division-card,
+  .kenne-division-image img,
+  .kenne-image-icon,
+  .kenne-division-action,
+  .kenne-action-icon {
+    animation: none !important;
+
+    transition: none !important;
+  }
+
+}
 
