@@ -148,232 +148,7 @@
     }
   ]
 }
- .about-section {
-  position: relative;
-}
 
-.about-image {
-  position: relative;
-  border-radius: var(--radius-xl);
-  overflow: hidden;
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.12);
-}
-
-.about-image img {
-  display: block;
-  width: 100%;
-  aspect-ratio: 4 / 3;
-  object-fit: cover;
-  transition: transform 0.6s ease;
-}
-
-.about-image:hover img {
-  transform: scale(1.03);
-}
-
-/* Image Badge */
-
-.about-image__badge {
-  position: absolute;
-  left: 22px;
-  bottom: 22px;
-
-  display: flex;
-  align-items: center;
-  gap: 12px;
-
-  padding: 13px 17px;
-
-  background: rgba(255, 255, 255, 0.94);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-
-  border: 1px solid rgba(255, 255, 255, 0.8);
-  border-radius: 14px;
-
-  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
-}
-
-.about-image__badge-icon {
-  width: 40px;
-  height: 40px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  border-radius: 10px;
-
-  background: var(--color-primary, #111827);
-  color: white;
-}
-
-.about-image__badge-icon svg {
-  width: 21px;
-  height: 21px;
-  stroke: currentColor;
-  stroke-width: 1.7;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.about-image__badge strong {
-  display: block;
-  font-size: 14px;
-  font-weight: 700;
-  line-height: 1.2;
-}
-
-.about-image__badge span {
-  display: block;
-  margin-top: 3px;
-  font-size: 11px;
-  color: var(--color-text-light, #6b7280);
-}
-
-/* Description */
-
-.about-description {
-  color: var(--color-text-light);
-  line-height: 1.8;
-  margin-bottom: var(--space-4);
-}
-
-/* Feature Grid */
-
-.kenne-features {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
-  margin-top: var(--space-6);
-}
-
-/* Feature Cards */
-
-.feature-card {
-  display: flex;
-  align-items: flex-start;
-  gap: 13px;
-
-  padding: 15px;
-
-  border: 1px solid rgba(0, 0, 0, 0.07);
-  border-radius: 14px;
-
-  background: rgba(255, 255, 255, 0.7);
-
-  transition:
-    transform 0.25s ease,
-    box-shadow 0.25s ease,
-    border-color 0.25s ease;
-}
-
-.feature-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
-  border-color: rgba(0, 0, 0, 0.13);
-}
-
-/* Icon */
-
-.feature-card__icon {
-  flex: 0 0 42px;
-  width: 42px;
-  height: 42px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  border-radius: 11px;
-
-  background: rgba(0, 0, 0, 0.045);
-}
-
-.feature-card__icon svg {
-  width: 21px;
-  height: 21px;
-
-  stroke: currentColor;
-  stroke-width: 1.7;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-/* Text */
-
-.feature-card strong {
-  display: block;
-
-  font-size: 14px;
-  font-weight: 700;
-  line-height: 1.35;
-
-  color: var(--color-text, #111827);
-}
-
-.feature-card span {
-  display: block;
-
-  margin-top: 4px;
-
-  font-size: 11.5px;
-  line-height: 1.45;
-
-  color: var(--color-text-light, #6b7280);
-}
-
-/* =========================================
-   RESPONSIVE
-========================================= */
-
-@media (max-width: 900px) {
-
-  .kenne-features {
-    grid-template-columns: 1fr;
-  }
-
-}
-
-@media (max-width: 768px) {
-
-  .about-section {
-    gap: var(--space-8) !important;
-  }
-
-  .about-image__badge {
-    left: 14px;
-    bottom: 14px;
-  }
-
-}
-
-@media (max-width: 480px) {
-
-  .kenne-features {
-    gap: 10px;
-  }
-
-  .feature-card {
-    padding: 13px;
-  }
-
-  .feature-card__icon {
-    width: 38px;
-    height: 38px;
-    flex-basis: 38px;
-  }
-
-  .feature-card__icon svg {
-    width: 19px;
-    height: 19px;
-  }
-
-  .feature-card span {
-    font-size: 11px;
-  }
-
-}   
   </script>
 </head>
 <body>
@@ -627,46 +402,175 @@
   <!-- ================================================
        WHY CHOOSE KENNE
   ================================================= -->
-  <section class="section">
-    <div class="container">
-      <div class="section-header section-header--center reveal">
-        <div class="eyebrow">Why Choose KENNE</div>
-        <h2 class="section-title">One Business. Multiple Solutions. <span>Global Connections.</span></h2>
-      </div>
-      <div class="grid grid-3 stagger-children">
-        <div class="card" style="padding:var(--space-6);">
-          <div style="font-size:2.2rem;margin-bottom:var(--space-3);">🤝</div>
-          <h4 style="margin-bottom:6px;">Reliability</h4>
-          <p style="font-size:var(--text-sm);color:var(--color-text-light);">We focus on building long-term relationships with our customers and business partners.</p>
-        </div>
-        <div class="card" style="padding:var(--space-6);">
-          <div style="font-size:2.2rem;margin-bottom:var(--space-3);">✅</div>
-          <h4 style="margin-bottom:6px;">Quality</h4>
-          <p style="font-size:var(--text-sm);color:var(--color-text-light);">We aim to provide products and services that meet customer expectations.</p>
-        </div>
-        <div class="card" style="padding:var(--space-6);">
-          <div style="font-size:2.2rem;margin-bottom:var(--space-3);">💰</div>
-          <h4 style="margin-bottom:6px;">Competitive Pricing</h4>
-          <p style="font-size:var(--text-sm);color:var(--color-text-light);">Our international sourcing and business connections allow us to pursue competitive pricing.</p>
-        </div>
-        <div class="card" style="padding:var(--space-6);">
-          <div style="font-size:2.2rem;margin-bottom:var(--space-3);">🧩</div>
-          <h4 style="margin-bottom:6px;">Convenience</h4>
-          <p style="font-size:var(--text-sm);color:var(--color-text-light);">We bring multiple business solutions together under one brand.</p>
-        </div>
-        <div class="card" style="padding:var(--space-6);">
-          <div style="font-size:2.2rem;margin-bottom:var(--space-3);">🎧</div>
-          <h4 style="margin-bottom:6px;">Professional Service</h4>
-          <p style="font-size:var(--text-sm);color:var(--color-text-light);">Our team works to make every transaction clear, efficient, and customer-focused.</p>
-        </div>
-        <div class="card" style="padding:var(--space-6);">
-          <div style="font-size:2.2rem;margin-bottom:var(--space-3);">🌍</div>
-          <h4 style="margin-bottom:6px;">International Reach</h4>
-          <p style="font-size:var(--text-sm);color:var(--color-text-light);">Business connections involving China and international markets bridge you to global opportunities.</p>
-        </div>
-      </div>
+<section class="section kenne-why-section">
+  <div class="container">
+
+    <!-- Section Header -->
+    <div class="section-header section-header--center reveal">
+      <div class="eyebrow">Why Choose KENNE</div>
+
+      <h2 class="section-title">
+        One Business. Multiple Solutions.
+        <span>Global Connections.</span>
+      </h2>
+
+      <p class="kenne-why-intro">
+        KENNE brings technology, trade, sourcing, and mobility solutions
+        together to create a simpler and more connected experience for
+        individuals, entrepreneurs, and businesses.
+      </p>
     </div>
-  </section>
+
+    <!-- Features -->
+    <div class="grid grid-3 kenne-why-grid stagger-children">
+
+      <!-- Reliability -->
+      <div class="card kenne-value-card">
+
+        <div class="kenne-value-icon">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M20 11.5c0 5-3.5 8.3-8 10-4.5-1.7-8-5-8-10V6l8-3 8 3v5.5z"></path>
+            <path d="M8.5 12l2.2 2.2 4.8-4.8"></path>
+          </svg>
+        </div>
+
+        <div class="kenne-value-content">
+          <span class="kenne-value-number">01</span>
+          <h4>Reliability</h4>
+          <p>
+            We focus on building long-term relationships with our
+            customers and business partners through dependable service
+            and clear communication.
+          </p>
+        </div>
+
+      </div>
+
+
+      <!-- Quality -->
+      <div class="card kenne-value-card">
+
+        <div class="kenne-value-icon">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M12 3l2.1 2.1 3-.2.9 2.9 2.6 1.5-1.1 2.8 1.1 2.8-2.6 1.5-.9 2.9-3-.2L12 21l-2.1-2.1-3 .2-.9-2.9-2.6-1.5 1.1-2.8-1.1-2.8L6 7.8l.9-2.9 3 .2L12 3z"></path>
+            <path d="M8.5 12l2.2 2.2 4.8-4.8"></path>
+          </svg>
+        </div>
+
+        <div class="kenne-value-content">
+          <span class="kenne-value-number">02</span>
+          <h4>Quality</h4>
+          <p>
+            We aim to provide products and services that meet customer
+            expectations while maintaining attention to quality and value.
+          </p>
+        </div>
+
+      </div>
+
+
+      <!-- Competitive Pricing -->
+      <div class="card kenne-value-card">
+
+        <div class="kenne-value-icon">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <circle cx="12" cy="12" r="9"></circle>
+            <path d="M12 7v10"></path>
+            <path d="M15 9.5c0-1.1-1.3-2-3-2s-3 .9-3 2 1.3 2 3 2 3 .9 3 2-1.3 2-3 2-3-.9-3-2"></path>
+          </svg>
+        </div>
+
+        <div class="kenne-value-content">
+          <span class="kenne-value-number">03</span>
+          <h4>Competitive Pricing</h4>
+          <p>
+            Our international sourcing and business connections allow
+            us to pursue competitive pricing across our range of
+            products and services.
+          </p>
+        </div>
+
+      </div>
+
+
+      <!-- Convenience -->
+      <div class="card kenne-value-card">
+
+        <div class="kenne-value-icon">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <rect x="3" y="3" width="7" height="7" rx="1"></rect>
+            <rect x="14" y="3" width="7" height="7" rx="1"></rect>
+            <rect x="3" y="14" width="7" height="7" rx="1"></rect>
+            <rect x="14" y="14" width="7" height="7" rx="1"></rect>
+          </svg>
+        </div>
+
+        <div class="kenne-value-content">
+          <span class="kenne-value-number">04</span>
+          <h4>Convenience</h4>
+          <p>
+            We bring multiple business solutions together under one
+            brand, making it easier to access the services you need.
+          </p>
+        </div>
+
+      </div>
+
+
+      <!-- Professional Service -->
+      <div class="card kenne-value-card">
+
+        <div class="kenne-value-icon">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M21 15.5a2 2 0 0 1-2 2h-1.2a2 2 0 0 0-1.7 1l-.5.8a2 2 0 0 1-3.2 0l-.5-.8a2 2 0 0 0-1.7-1H9a2 2 0 0 1-2-2V8.5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v7z"></path>
+            <path d="M7 10H5a2 2 0 0 0-2 2v5"></path>
+            <path d="M7 7H5a2 2 0 0 1-2-2V4"></path>
+            <circle cx="12" cy="12" r="1"></circle>
+            <circle cx="16" cy="12" r="1"></circle>
+          </svg>
+        </div>
+
+        <div class="kenne-value-content">
+          <span class="kenne-value-number">05</span>
+          <h4>Professional Service</h4>
+          <p>
+            Our team works to make every transaction clear, efficient,
+            organized, and focused on the needs of our customers.
+          </p>
+        </div>
+
+      </div>
+
+
+      <!-- International Reach -->
+      <div class="card kenne-value-card">
+
+        <div class="kenne-value-icon">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <circle cx="12" cy="12" r="9"></circle>
+            <path d="M3 12h18"></path>
+            <path d="M12 3c2.4 2.6 3.5 5.7 3.5 9s-1.1 6.4-3.5 9"></path>
+            <path d="M12 3c-2.4 2.6-3.5 5.7-3.5 9s1.1 6.4 3.5 9"></path>
+            <path d="M5.5 6.5h13"></path>
+            <path d="M5.5 17.5h13"></path>
+          </svg>
+        </div>
+
+        <div class="kenne-value-content">
+          <span class="kenne-value-number">06</span>
+          <h4>International Reach</h4>
+          <p>
+            Business connections involving China and international
+            markets help connect customers with global sourcing and
+            trade opportunities.
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</section
 
   <!-- ================================================
        HOW KENNE WORKS
