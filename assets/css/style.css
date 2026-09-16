@@ -2872,3 +2872,422 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
   }
 
 }
+<style>
+
+/* =====================================================
+   KENNE — VISION & MISSION
+===================================================== */
+
+.kenne-vision-mission {
+  position: relative;
+}
+
+
+/* =====================================================
+   GRID
+===================================================== */
+
+.kenne-vm-grid {
+  gap: 26px;
+}
+
+
+/* =====================================================
+   CARD
+===================================================== */
+
+.kenne-vm-card {
+  overflow: hidden;
+
+  padding: 0;
+
+  background: #ffffff;
+
+  border: 1px solid rgba(0,0,0,.07);
+
+  border-radius: 20px;
+
+  box-shadow:
+    0 8px 28px rgba(0,0,0,.05);
+
+  transition:
+    transform .45s cubic-bezier(.2,.7,.2,1),
+    box-shadow .45s ease,
+    border-color .3s ease;
+}
+
+
+.kenne-vm-card:hover {
+  transform: translateY(-8px);
+
+  border-color: rgba(0,0,0,.12);
+
+  box-shadow:
+    0 25px 55px rgba(0,0,0,.11);
+}
+
+
+/* =====================================================
+   IMAGE
+===================================================== */
+
+.kenne-vm-image {
+  position: relative;
+
+  height: 285px;
+
+  overflow: hidden;
+
+  background: #e5e7eb;
+}
+
+
+.kenne-vm-image img {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
+
+  transition:
+    transform .9s cubic-bezier(.2,.7,.2,1),
+    filter .5s ease;
+}
+
+
+.kenne-vm-card:hover
+.kenne-vm-image img {
+  transform: scale(1.08);
+
+  filter: brightness(1.05);
+}
+
+
+/* =====================================================
+   IMAGE OVERLAY
+===================================================== */
+
+.kenne-vm-overlay {
+  position: absolute;
+
+  inset: 0;
+
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(0,0,0,.05) 15%,
+      rgba(0,0,0,.15) 45%,
+      rgba(0,0,0,.72) 100%
+    );
+}
+
+
+/* =====================================================
+   IMAGE TITLE
+===================================================== */
+
+.kenne-vm-image-title {
+  position: absolute;
+
+  left: 24px;
+  bottom: 22px;
+
+  color: #ffffff;
+
+  font-size: 11px;
+
+  font-weight: 800;
+
+  letter-spacing: .15em;
+}
+
+
+.kenne-vm-image-title span {
+  position: relative;
+
+  display: inline-block;
+
+  padding-left: 13px;
+}
+
+
+.kenne-vm-image-title span::before {
+  content: "";
+
+  position: absolute;
+
+  left: 0;
+  top: 50%;
+
+  width: 4px;
+  height: 20px;
+
+  transform: translateY(-50%);
+
+  border-radius: 5px;
+
+  background: currentColor;
+}
+
+
+/* =====================================================
+   FLOATING ICON
+===================================================== */
+
+.kenne-vm-icon {
+  position: absolute;
+
+  top: 20px;
+  right: 20px;
+
+  width: 52px;
+  height: 52px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 14px;
+
+  background: rgba(255,255,255,.94);
+
+  backdrop-filter: blur(10px);
+
+  box-shadow:
+    0 10px 30px rgba(0,0,0,.16);
+
+  transition:
+    transform .4s ease;
+}
+
+
+.kenne-vm-icon svg {
+  width: 25px;
+  height: 25px;
+
+  stroke: currentColor;
+
+  stroke-width: 1.6;
+
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+
+.vision-icon {
+  color: #1479e9;
+}
+
+
+.mission-icon {
+  color: #a47700;
+}
+
+
+.kenne-vm-card:hover
+.kenne-vm-icon {
+  transform:
+    translateY(-5px)
+    rotate(-4deg);
+}
+
+
+/* =====================================================
+   CONTENT
+===================================================== */
+
+.kenne-vm-content {
+  padding: 29px 30px 30px;
+}
+
+
+.kenne-vm-content .eyebrow {
+  margin-bottom: 9px;
+}
+
+
+/* =====================================================
+   HEADINGS
+===================================================== */
+
+.kenne-vm-content h3 {
+  margin: 0 0 15px;
+
+  color: var(--color-navy);
+
+  font-size: var(--text-xl);
+
+  line-height: 1.35;
+
+  font-weight: 750;
+
+  letter-spacing: -.02em;
+}
+
+
+.kenne-vm-content h3 span {
+  display: inline;
+}
+
+
+/* =====================================================
+   PARAGRAPHS
+===================================================== */
+
+.kenne-vm-content p {
+  margin: 0 0 13px;
+
+  color: var(--color-text-light);
+
+  font-size: var(--text-sm);
+
+  line-height: 1.8;
+}
+
+
+/* =====================================================
+   BOTTOM ACCENT
+===================================================== */
+
+.kenne-vm-line {
+  width: 45px;
+
+  height: 3px;
+
+  margin-top: 23px;
+
+  border-radius: 10px;
+
+  background: var(--color-navy);
+
+  transition:
+    width .4s ease;
+}
+
+
+.kenne-vm-card:hover
+.kenne-vm-line {
+  width: 80px;
+}
+
+
+/* =====================================================
+   SUBTLE IMAGE MOTION
+===================================================== */
+
+@keyframes kenneVisionImage {
+
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.018);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+
+}
+
+
+.kenne-vm-image img {
+  animation:
+    kenneVisionImage 9s ease-in-out infinite;
+}
+
+
+.kenne-vm-card:hover
+.kenne-vm-image img {
+  animation: none;
+}
+
+
+/* =====================================================
+   TABLET
+===================================================== */
+
+@media (max-width: 850px) {
+
+  .kenne-vm-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .kenne-vm-card {
+    max-width: 750px;
+
+    margin: 0 auto;
+
+    width: 100%;
+  }
+
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 600px) {
+
+  .kenne-vm-grid {
+    gap: 17px;
+  }
+
+  .kenne-vm-image {
+    height: 235px;
+  }
+
+  .kenne-vm-content {
+    padding: 23px 21px 24px;
+  }
+
+  .kenne-vm-content h3 {
+    font-size: 19px;
+  }
+
+  .kenne-vm-content p {
+    font-size: 12.5px;
+    line-height: 1.75;
+  }
+
+  .kenne-vm-icon {
+    width: 45px;
+    height: 45px;
+
+    top: 14px;
+    right: 14px;
+  }
+
+  .kenne-vm-icon svg {
+    width: 21px;
+    height: 21px;
+  }
+
+  .kenne-vm-image-title {
+    left: 18px;
+    bottom: 17px;
+  }
+
+}
+
+
+/* =====================================================
+   REDUCED MOTION
+===================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .kenne-vm-image img,
+  .kenne-vm-card,
+  .kenne-vm-icon,
+  .kenne-vm-line {
+    animation: none !important;
+    transition: none !important;
+  }
+
+}
+
