@@ -4341,3 +4341,22 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
   }
 
 }
+/* KENNE MOBILE HERO — COMPACT HEIGHT */
+@media (max-width: 768px) {
+
+  .hero {
+    min-height: 680px;
+    height: 680px;
+  }
+
+  .hero-video-bg,
+  .hero-slide {
+    height: 680px;
+  }
+
+  .hero-slide {
+    background-position: center top;
+    background-size: cover;
+  }
+
+}
