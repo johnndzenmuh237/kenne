@@ -222,14 +222,33 @@ function injectHeader() {
         <a href="#faq" class="drawer-link">FAQ</a>
         <a href="#contact" class="drawer-link">Contact</a>
 
-        <div class="drawer-group open">
-          <button class="drawer-group-toggle">Our Divisions <span class="chevron">▾</span></button>
-          <div class="drawer-submenu">
-            <a href="smart-tech/index.html">📱 Kenne Smart Technology</a>
-            <a href="cargo/index.html">🚢 Kenne Cargo</a>
-            <a href="cars/index.html">🚗 Kenne Car Business</a>
-          </div>
-        </div>
+<div class="drawer-group open">
+  <button class="drawer-group-toggle">
+    <span>
+      <i class="fa-solid fa-building-columns"></i>
+      Our Divisions
+    </span>
+    <span class="chevron">⌄</span>
+  </button>
+
+  <div class="drawer-submenu">
+    <a href="smart-tech/index.html">
+      <i class="fa-solid fa-mobile-screen-button"></i>
+      Kenne Smart Technology
+    </a>
+
+    <a href="cargo/index.html">
+      <i class="fa-solid fa-ship"></i>
+      Kenne Cargo
+    </a>
+
+    <a href="cars/index.html">
+      <i class="fa-solid fa-car-side"></i>
+      Kenne Car Business
+    </a>
+  </div>
+</div>
+
       </nav>
       <div class="drawer-cta">
         <a href="#divisions" class="btn btn--primary btn--full">Explore Divisions</a>
