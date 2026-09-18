@@ -34,18 +34,51 @@ const KENNE_LOGO_SVG = `
     <path d="M14 30V14h3.4v6.9L23.6 14h4.2L21 22l7 8h-4.3l-5-5.9-1.3 1.4V30H14z" fill="white"/>
   </svg>`;
 
+
 const TICKER_ITEMS = [
-  { icon: '📱', text: 'KENNE Smart Technology — Phones, Electronics & Accessories' },
-  { icon: '🚢', text: 'KENNE Cargo — China Sourcing, Importation & Cargo Services' },
-  { icon: '🚗', text: 'KENNE Car Business — Vehicle Sales, Rentals, Parts & Accessories' },
-  { icon: '💱', text: 'Money Exchange Solutions Available' },
-  { icon: '🌍', text: 'Connecting Cameroon, China & International Markets' },
-  { icon: '✅', text: 'One Business. Multiple Solutions.' },
-  { icon: '📍', text: 'Douala, Cameroon' },
-  { icon: '☎', text: `${SITE.phone}` },
-  { icon: '✉', text: SITE.email },
-  { icon: '⭐', text: 'Connect. Source. Import. Drive.' },
+  {
+    icon: '<i class="fa-solid fa-mobile-screen-button"></i>',
+    text: 'KENNE Smart Technology — Phones, Electronics & Accessories'
+  },
+  {
+    icon: '<i class="fa-solid fa-ship"></i>',
+    text: 'KENNE Cargo — China Sourcing, Importation & Cargo Services'
+  },
+  {
+    icon: '<i class="fa-solid fa-car"></i>',
+    text: 'KENNE Car Business — Vehicle Sales, Rentals, Parts & Accessories'
+  },
+  {
+    icon: '<i class="fa-solid fa-money-bill-transfer"></i>',
+    text: 'Money Exchange Solutions Available'
+  },
+  {
+    icon: '<i class="fa-solid fa-globe"></i>',
+    text: 'Connecting Cameroon, China & International Markets'
+  },
+  {
+    icon: '<i class="fa-solid fa-circle-check"></i>',
+    text: 'One Business. Multiple Solutions.'
+  },
+  {
+    icon: '<i class="fa-solid fa-location-dot"></i>',
+    text: 'Douala, Cameroon'
+  },
+  {
+    icon: '<i class="fa-solid fa-phone"></i>',
+    text: `${SITE.phone}`
+  },
+  {
+    icon: '<i class="fa-solid fa-envelope"></i>',
+    text: SITE.email
+  },
+  {
+    icon: '<i class="fa-solid fa-arrow-right"></i>',
+    text: 'Connect. Source. Import. Drive.'
+  },
 ];
+
+
 
 function buildTickerTrack() {
   const renderItems = (items) => items.map(item =>
