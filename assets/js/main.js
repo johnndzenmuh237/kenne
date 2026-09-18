@@ -297,32 +297,51 @@ function injectFooter() {
             </nav>
           </div>
 
-          <!-- Contact + Newsletter -->
-          <div class="footer-col">
-            <h4 class="footer-col-title">Get in Touch</h4>
-            <div class="footer-contact">
-              <div class="footer-contact-item">
-                <div class="footer-contact-icon">📍</div>
-                <div>
-                  <strong>Location</strong><br>
-                  ${SITE.address}
-                </div>
-              </div>
-              <div class="footer-contact-item">
-                <div class="footer-contact-icon">📞</div>
-                <div>
-                  <strong>Phone / WhatsApp</strong><br>
-                  <a href="tel:${SITE.phoneHref}">${SITE.phone}</a>
-                </div>
-              </div>
-              <div class="footer-contact-item">
-                <div class="footer-contact-icon">✉️</div>
-                <div>
-                  <strong>Email</strong><br>
-                  <a href="mailto:${SITE.email}">${SITE.email}</a>
-                </div>
-              </div>
-            </div>
+      
+<!-- Contact + Newsletter -->
+<div class="footer-col">
+  <h4 class="footer-col-title">Get in Touch</h4>
+
+  <div class="footer-contact">
+
+    <div class="footer-contact-item">
+      <div class="footer-contact-icon">
+        <i class="fa-solid fa-location-dot"></i>
+      </div>
+
+      <div>
+        <strong>Location</strong><br>
+        ${SITE.address}
+      </div>
+    </div>
+
+
+    <div class="footer-contact-item">
+      <div class="footer-contact-icon">
+        <i class="fa-solid fa-phone"></i>
+      </div>
+
+      <div>
+        <strong>Phone / WhatsApp</strong><br>
+        <a href="tel:${SITE.phoneHref}">${SITE.phone}</a>
+      </div>
+    </div>
+
+
+    <div class="footer-contact-item">
+      <div class="footer-contact-icon">
+        <i class="fa-solid fa-envelope"></i>
+      </div>
+
+      <div>
+        <strong>Email</strong><br>
+        <a href="mailto:${SITE.email}">${SITE.email}</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
 
             <div style="margin-top: var(--space-6);">
               <p style="font-size:var(--text-sm);margin-bottom:var(--space-3);">Subscribe to our newsletter:</p>
