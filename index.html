@@ -147,38 +147,7 @@
       }
     }
   ]
-}
-
-/* =========================================================
-   KENNE CINEMATIC HERO SLIDESHOW
-   ========================================================= */
-
-(function () {
-
-  const slides = document.querySelectorAll('.hero-slide');
-
-  if (!slides.length) return;
-
-  let currentSlide = 0;
-
-  const slideDuration = 6500;
-
-  function showNextSlide() {
-
-    slides[currentSlide].classList.remove('active');
-
-    currentSlide++;
-
-    if (currentSlide >= slides.length) {
-      currentSlide = 0;
-    }
-
-    slides[currentSlide].classList.add('active');
-  }
-
-  setInterval(showNextSlide, slideDuration);
-
-})();    
+}  
  </script>
 </head>
 <body>
