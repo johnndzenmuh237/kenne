@@ -304,9 +304,13 @@ function injectFooter() {
 
   <div class="footer-contact">
 
+    <!-- LOCATION -->
     <div class="footer-contact-item">
       <div class="footer-contact-icon">
-        <i class="fa-solid fa-location-dot"></i>
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"></path>
+          <circle cx="12" cy="10" r="2.5"></circle>
+        </svg>
       </div>
 
       <div>
@@ -316,9 +320,24 @@ function injectFooter() {
     </div>
 
 
+    <!-- PHONE -->
     <div class="footer-contact-item">
       <div class="footer-contact-icon">
-        <i class="fa-solid fa-phone"></i>
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M22 16.92v3a2 2 0 0 1-2.18 2
+          19.79 19.79 0 0 1-8.63-3.07
+          19.5 19.5 0 0 1-6-6
+          A19.79 19.79 0 0 1 2.12 4.18
+          2 2 0 0 1 4.11 2h3
+          a2 2 0 0 1 2 1.72
+          12.84 12.84 0 0 0 .7 2.81
+          2 2 0 0 1-.45 2.11L8.09 9.91
+          a16 16 0 0 0 6 6l1.27-1.27
+          a2 2 0 0 1 2.11-.45
+          12.84 12.84 0 0 0 2.81.7
+          A2 2 0 0 1 22 16.92Z">
+          </path>
+        </svg>
       </div>
 
       <div>
@@ -328,9 +347,13 @@ function injectFooter() {
     </div>
 
 
+    <!-- EMAIL -->
     <div class="footer-contact-item">
       <div class="footer-contact-icon">
-        <i class="fa-solid fa-envelope"></i>
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="3" y="5" width="18" height="14" rx="2"></rect>
+          <path d="m3 7 9 6 9-6"></path>
+        </svg>
       </div>
 
       <div>
