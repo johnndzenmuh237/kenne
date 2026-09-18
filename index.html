@@ -1,4311 +1,1345 @@
-/* ============================================================
-   KENNE CARGO — CORE STYLESHEET
-   style.css
-   ============================================================ */
-
-/* ----------------------------------------------------------
-   1. CSS CUSTOM PROPERTIES (DESIGN TOKENS)
-   ---------------------------------------------------------- */
-:root {
-  /* Brand Colors */
-  --color-navy:        #0B1E4D;
-  --color-navy-mid:    #122A63;
-  --color-navy-light:  #1D3B82;
-  --color-steel:       #2C4A7C;
-  --color-accent:      #F2B90C;
-  --color-accent-dark: #D9A200;
-  --color-accent-light:#F7CE4D;
-  --color-sky:         #3E7CB8;
-  --color-sky-light:   #E3EEF7;
-  --color-cameroon-green: #007A5E;
-  --color-cameroon-red:   #CE1126;
-  --color-china-red:      #DE2910;
-
-  /* Neutrals */
-  --color-white:       #FFFFFF;
-  --color-off-white:   #F7F9FC;
-  --color-light-gray:  #EDF1F7;
-  --color-mid-gray:    #C8D4E3;
-  --color-gray:        #8A9BB5;
-  --color-dark-gray:   #445573;
-  --color-text:        #1E2D45;
-  --color-text-light:  #5A6E8A;
-  /* FIX: --color-border was referenced throughout the stylesheet
-     (buttons, chips, contact form, AI widget) but was never defined,
-     so those borders were silently invalid/invisible. */
-  --color-border:       var(--color-mid-gray);
-  --color-primary:      var(--color-navy);
-
-  /* Status */
-  --color-success:     #1DB97A;
-  --color-warning:     #F5A623;
-  --color-danger:      #E84040;
-  --color-info:        #4A9FD4;
-
-  /* Typography */
-  --font-display:      'Barlow Condensed', 'Arial Narrow', sans-serif;
-  --font-body:         'Inter', 'Helvetica Neue', Arial, sans-serif;
-  --font-mono:         'JetBrains Mono', 'Courier New', monospace;
-
-  /* Type Scale */
-  --text-xs:    0.75rem;
-  --text-sm:    0.875rem;
-  --text-base:  1rem;
-  --text-md:    1.125rem;
-  --text-lg:    1.25rem;
-  --text-xl:    1.5rem;
-  --text-2xl:   1.875rem;
-  --text-3xl:   2.5rem;
-  --text-4xl:   3.25rem;
-  --text-5xl:   4.5rem;
-  --text-hero:  6rem;
-
-  /* Spacing */
-  --space-1:   0.25rem;
-  --space-2:   0.5rem;
-  --space-3:   0.75rem;
-  --space-4:   1rem;
-  --space-5:   1.25rem;
-  --space-6:   1.5rem;
-  --space-8:   2rem;
-  --space-10:  2.5rem;
-  --space-12:  3rem;
-  --space-16:  4rem;
-  --space-20:  5rem;
-  --space-24:  6rem;
-  --space-32:  8rem;
-
-  /* Layout */
-  --container-max:    1320px;
-  --container-narrow: 900px;
-  --gutter:           1.5rem;
-
-  /* Borders & Radius */
-  --radius-sm:   4px;
-  --radius-md:   8px;
-  --radius-lg:   16px;
-  --radius-xl:   24px;
-  --radius-full: 9999px;
-  --border-light: 1px solid var(--color-light-gray);
-  --border-mid:   1px solid var(--color-mid-gray);
-
-  /* Shadows */
-  --shadow-sm:  0 1px 4px rgba(10,22,40,0.06);
-  --shadow-md:  0 4px 16px rgba(10,22,40,0.10);
-  --shadow-lg:  0 8px 32px rgba(10,22,40,0.14);
-  --shadow-xl:  0 16px 64px rgba(10,22,40,0.18);
-  --shadow-card: 0 2px 12px rgba(10,22,40,0.08), 0 1px 3px rgba(10,22,40,0.06);
-
-  /* Transitions */
-  --transition-fast:   150ms ease;
-  --transition-base:   250ms ease;
-  --transition-slow:   400ms ease;
-
-  /* Header */
-  --nav-height:        80px;
-  --ticker-height:      36px;
-  --header-height:     calc(var(--nav-height) + var(--ticker-height));
-}
-
-/* ----------------------------------------------------------
-   2. RESET & BASE
-   ---------------------------------------------------------- */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-html {
-  scroll-behavior: smooth;
-  font-size: 16px;
-  -webkit-text-size-adjust: 100%;
-  overflow-x: hidden;
-  max-width: 100%;
-}
-
-body {
-  max-width: 100%;
-  font-family: var(--font-body);
-  font-size: var(--text-base);
-  line-height: 1.65;
-  color: var(--color-text);
-  background-color: var(--color-white);
-  overflow-x: hidden;
-  -webkit-font-smoothing: antialiased;
-}
-
-img, video { display: block; max-width: 100%; height: auto; }
-a { color: inherit; text-decoration: none; }
-ul, ol { list-style: none; }
-button, input, select, textarea { font: inherit; }
-button { cursor: pointer; border: none; background: none; }
-table { border-collapse: collapse; width: 100%; }
-hr { border: none; border-top: var(--border-light); }
-
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-display);
-  font-weight: 700;
-  line-height: 1.15;
-  color: var(--color-navy);
-  letter-spacing: -0.01em;
-}
-
-/* ----------------------------------------------------------
-   3. LAYOUT UTILITIES
-   ---------------------------------------------------------- */
-.container {
-  width: 100%;
-  max-width: var(--container-max);
-  margin-inline: auto;
-  padding-inline: var(--gutter);
-}
-
-.container--narrow {
-  max-width: var(--container-narrow);
-  margin-inline: auto;
-  padding-inline: var(--gutter);
-}
-
-.section { padding-block: var(--space-24); }
-.section--lg { padding-block: var(--space-32); }
-.section--sm { padding-block: var(--space-16); }
-
-.grid { display: grid; }
-.grid-2 { grid-template-columns: repeat(2, 1fr); gap: var(--space-8); }
-.grid-3 { grid-template-columns: repeat(3, 1fr); gap: var(--space-8); }
-.grid-4 { grid-template-columns: repeat(4, 1fr); gap: var(--space-6); }
-.grid-5 { grid-template-columns: repeat(5, 1fr); gap: var(--space-4); }
-
-.flex { display: flex; }
-.flex-center { display: flex; align-items: center; justify-content: center; }
-.flex-between { display: flex; align-items: center; justify-content: space-between; }
-.gap-4 { gap: var(--space-4); }
-.gap-6 { gap: var(--space-6); }
-.gap-8 { gap: var(--space-8); }
-
-/* ----------------------------------------------------------
-   4. TYPOGRAPHY UTILITIES
-   ---------------------------------------------------------- */
-.eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  font-family: var(--font-body);
-  font-size: var(--text-xs);
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--color-accent);
-}
-.eyebrow::before {
-  content: '';
-  display: block;
-  width: 24px;
-  height: 2px;
-  background: var(--color-accent);
-  flex-shrink: 0;
-}
-
-.section-title {
-  font-size: var(--text-4xl);
-  font-weight: 800;
-  color: var(--color-navy);
-  letter-spacing: -0.02em;
-  margin-bottom: var(--space-4);
-}
-.section-title span { color: var(--color-accent); }
-
-.section-subtitle {
-  font-size: var(--text-md);
-  color: var(--color-text-light);
-  line-height: 1.7;
-  max-width: 560px;
-}
-
-.section-header {
-  margin-bottom: var(--space-16);
-}
-.section-header--center {
-  text-align: center;
-}
-.section-header--center .section-subtitle {
-  margin-inline: auto;
-}
-.section-header--center .eyebrow {
-  justify-content: center;
-}
-.section-header--center .eyebrow::before { display: none; }
-.section-header--center .eyebrow::after {
-  content: '';
-  display: block;
-  width: 24px;
-  height: 2px;
-  background: var(--color-accent);
-  flex-shrink: 0;
-}
-
-/* ----------------------------------------------------------
-   5. BUTTON COMPONENTS
-   ---------------------------------------------------------- */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  padding: 0.75rem 1.75rem;
-  border-radius: var(--radius-sm);
-  font-size: var(--text-sm);
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  transition: all var(--transition-base);
-  white-space: nowrap;
-  position: relative;
-  overflow: hidden;
-}
-
-.btn::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: rgba(255,255,255,0);
-  transition: background var(--transition-fast);
-}
-.btn:hover::after { background: rgba(255,255,255,0.08); }
-
-.btn--primary {
-  background: var(--color-accent);
-  color: var(--color-white);
-  box-shadow: 0 4px 16px rgba(232,147,26,0.35);
-}
-.btn--primary:hover {
-  background: var(--color-accent-dark);
-  box-shadow: 0 6px 24px rgba(232,147,26,0.45);
-  transform: translateY(-1px);
-}
-
-.btn--secondary {
-  background: var(--color-navy);
-  color: var(--color-white);
-}
-.btn--secondary:hover {
-  background: var(--color-navy-light);
-  transform: translateY(-1px);
-}
-
-.btn--outline {
-  background: transparent;
-  color: var(--color-navy);
-  border: 2px solid var(--color-navy);
-}
-.btn--outline:hover {
-  background: var(--color-navy);
-  color: var(--color-white);
-}
-
-.btn--outline-white {
-  background: transparent;
-  color: var(--color-white);
-  border: 2px solid rgba(255,255,255,0.5);
-}
-.btn--outline-white:hover {
-  background: rgba(255,255,255,0.12);
-  border-color: rgba(255,255,255,0.8);
-}
-
-.btn--lg {
-  padding: 1rem 2.25rem;
-  font-size: var(--text-base);
-}
-
-.btn--sm {
-  padding: 0.5rem 1.25rem;
-  font-size: var(--text-xs);
-}
-
-.btn--full { width: 100%; justify-content: center; }
-
-/* ----------------------------------------------------------
-   6. HEADER & NAVIGATION
-   ---------------------------------------------------------- */
-.site-header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 1000;
-  height: var(--header-height);
-  display: flex;
-  flex-direction: column;
-  transition: all var(--transition-base);
-}
-
-/* ----------------------------------------------------------
-   HEADER TICKER — scrolling strip of shipment/company details,
-   continuously animating right to left.
-   ---------------------------------------------------------- */
-.header-ticker {
-  height: var(--ticker-height);
-  flex-shrink: 0;
-  overflow: hidden;
-  position: relative;
-  background: linear-gradient(90deg, var(--color-navy) 0%, var(--color-navy-mid) 100%);
-  border-bottom: 1px solid rgba(242,185,12,0.25);
-  z-index: 2;
-}
-.header-ticker-track {
-  position: absolute;
-  top: 0; left: 0;
-  display: flex;
-  align-items: center;
-  height: 100%;
-  white-space: nowrap;
-  width: max-content;
-  animation: ticker-scroll 32s linear infinite;
-  will-change: transform;
-}
-.header-ticker:hover .header-ticker-track { animation-play-state: paused; }
-@keyframes ticker-scroll {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
-}
-.header-ticker-item {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 0 var(--space-6);
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: .01em;
-  color: rgba(255,255,255,0.92);
-  flex-shrink: 0;
-}
-.header-ticker-item .ticker-icon { color: var(--color-accent); font-size: 13px; }
-.header-ticker-sep { color: var(--color-accent); opacity: .5; flex-shrink: 0; }
-@media (prefers-reduced-motion: reduce) {
-  .header-ticker-track { animation: none; }
-}
-
-.header-inner {
-  display: flex;
-  align-items: center;
-  height: var(--nav-height);
-  gap: var(--space-8);
-}
-
-/* Transparent state (over hero) */
-.site-header.header--transparent {
-  background: transparent;
-}
-
-/* Scrolled state */
-.site-header.header--scrolled {
-  background: var(--color-navy);
-  box-shadow: 0 2px 20px rgba(10,22,40,0.25);
-}
-
-/* Solid state (inner pages) */
-.site-header.header--solid {
-  background: var(--color-navy);
-  position: relative;
-}
-
-/* Logo */
-.header-logo {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-  flex-shrink: 0;
-  text-decoration: none;
-}
-
-.logo-icon {
-  width: 40px;
-  height: 40px;
-}
-
-.logo-text {
-  display: flex;
-  flex-direction: column;
-  line-height: 1;
-}
-.logo-text strong {
-  font-family: var(--font-display);
-  font-size: 1.35rem;
-  font-weight: 800;
-  letter-spacing: 0.04em;
-  color: var(--color-white);
-  text-transform: uppercase;
-}
-.logo-text span {
-  font-size: var(--text-xs);
-  font-weight: 500;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--color-accent);
-  margin-top: 2px;
-}
-
-/* Primary Nav */
-.primary-nav { margin-left: auto; display: flex; align-items: center; }
-.nav-list { display: flex; align-items: center; gap: 0; }
-.nav-item { position: relative; }
-
-.nav-link {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  padding: var(--space-3) var(--space-4);
-  font-size: var(--text-sm);
-  font-weight: 500;
-  color: rgba(255,255,255,0.85);
-  transition: color var(--transition-fast);
-  white-space: nowrap;
-}
-.nav-link:hover,
-.nav-link.active { color: var(--color-white); }
-
-.nav-link svg.chevron {
-  width: 12px; height: 12px;
-  transition: transform var(--transition-fast);
-}
-.nav-item:hover .nav-link svg.chevron { transform: rotate(180deg); }
-
-.nav-link::after {
-  content: '';
-  position: absolute;
-  bottom: 8px;
-  left: 50%;
-  transform: translateX(-50%) scaleX(0);
-  width: calc(100% - 2rem);
-  height: 2px;
-  background: var(--color-accent);
-  transition: transform var(--transition-fast);
-}
-.nav-link:hover::after,
-.nav-link.active::after { transform: translateX(-50%) scaleX(1); }
-
-/* Dropdown */
-.nav-dropdown {
-  position: absolute;
-  top: calc(100% + 8px);
-  left: 50%;
-  transform: translateX(-50%) translateY(-8px);
-  min-width: 220px;
-  background: var(--color-white);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-xl);
-  padding: var(--space-2) 0;
-  opacity: 0;
-  visibility: hidden;
-  transition: all var(--transition-base);
-  pointer-events: none;
-  border-top: 3px solid var(--color-accent);
-}
-.nav-item:hover .nav-dropdown {
-  opacity: 1;
-  visibility: visible;
-  transform: translateX(-50%) translateY(0);
-  pointer-events: auto;
-}
-.nav-dropdown a {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-  padding: var(--space-3) var(--space-5);
-  font-size: var(--text-sm);
-  color: var(--color-text);
-  transition: all var(--transition-fast);
-}
-.nav-dropdown a:hover {
-  background: var(--color-off-white);
-  color: var(--color-accent);
-  padding-left: var(--space-6);
-}
-.nav-dropdown a span {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  background: var(--color-light-gray);
-  border-radius: var(--radius-sm);
-  font-size: 14px;
-}
-
-/* Header CTA */
-.header-cta {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-  margin-left: var(--space-4);
-}
-
-/* Mobile toggle */
-.nav-toggle {
-  display: none;
-  flex-direction: column;
-  gap: 5px;
-  width: 28px;
-  padding: 4px;
-  cursor: pointer;
-  margin-left: auto;
-}
-.nav-toggle span {
-  display: block;
-  height: 2px;
-  background: var(--color-white);
-  border-radius: 2px;
-  transition: all var(--transition-base);
-}
-.nav-toggle.open span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
-.nav-toggle.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
-.nav-toggle.open span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
-
-/* Top bar */
-.top-bar {
-  background: var(--color-navy);
-  padding: var(--space-2) 0;
-  font-size: var(--text-xs);
-  color: rgba(255,255,255,0.65);
-  border-bottom: 1px solid rgba(255,255,255,0.08);
-}
-.top-bar .container { display: flex; align-items: center; justify-content: space-between; }
-.top-bar a { color: rgba(255,255,255,0.65); transition: color var(--transition-fast); }
-.top-bar a:hover { color: var(--color-accent); }
-.top-bar-left, .top-bar-right { display: flex; align-items: center; gap: var(--space-6); }
-.top-bar-item { display: flex; align-items: center; gap: var(--space-2); }
-.top-bar-item svg { width: 14px; height: 14px; color: var(--color-accent); flex-shrink: 0; }
-
-/* ----------------------------------------------------------
-   6b. NOTIFICATION BELL
-   ---------------------------------------------------------- */
-.notif-wrap { position: relative; }
-.notif-bell {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 38px; height: 38px;
-  border-radius: 50%;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  color: inherit;
-  transition: background var(--transition-fast);
-}
-.notif-bell:hover { background: rgba(255,255,255,0.1); }
-.header--scrolled .notif-bell:hover,
-.header--solid .notif-bell:hover { background: var(--color-off-white); }
-.notif-bell svg { width: 20px; height: 20px; }
-.notif-badge {
-  position: absolute; top: 3px; right: 3px;
-  min-width: 16px; height: 16px; padding: 0 3px;
-  background: var(--color-accent); color: var(--color-navy);
-  font-size: 10px; font-weight: 800; line-height: 16px; text-align: center;
-  border-radius: 999px; border: 2px solid var(--color-navy);
-}
-.header--solid .notif-badge, .header--scrolled .notif-badge { border-color: var(--color-white); }
-.notif-panel {
-  position: absolute; top: calc(100% + 10px); right: 0;
-  width: 340px; max-width: 88vw;
-  background: var(--color-white);
-  border-radius: var(--radius-lg);
-  box-shadow: 0 16px 48px rgba(10,22,40,0.22);
-  border: var(--border-light);
-  z-index: 2000;
-  overflow: hidden;
-}
-.notif-panel-head {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: var(--space-4) var(--space-5);
-  border-bottom: var(--border-light);
-  color: var(--color-navy);
-}
-.notif-panel-head strong { font-size: var(--text-sm); }
-.notif-panel-head button {
-  background: none; border: none; cursor: pointer;
-  font-size: var(--text-xs); font-weight: 600; color: var(--color-accent-dark);
-}
-.notif-list { max-height: 360px; overflow-y: auto; }
-.notif-empty { padding: var(--space-8) var(--space-5); text-align: center; font-size: var(--text-sm); color: var(--color-text-light); }
-.notif-item { display: flex; gap: var(--space-3); padding: var(--space-4) var(--space-5); border-bottom: var(--border-light); }
-.notif-item:last-child { border-bottom: none; }
-.notif-item.unread { background: var(--color-off-white); }
-.notif-item-icon { font-size: 1.1rem; line-height: 1; }
-.notif-item-title { font-size: var(--text-sm); font-weight: 700; color: var(--color-navy); margin-bottom: 2px; }
-.notif-item-message { font-size: var(--text-xs); color: var(--color-text-light); line-height: 1.5; }
-.notif-item-time { font-size: 10px; color: var(--color-gray); margin-top: 4px; text-transform: uppercase; letter-spacing: .04em; }
-
-
-/* ----------------------------------------------------------
-   7. HERO
-   FIX: the hero previously combined `min-height:100vh` on desktop
-   with a separate `height:680px` fixed block on mobile, PLUS
-   `background-size:contain` on the slides (letterboxing) and THREE
-   separate, overlapping mobile media-query blocks further down this
-   file. Together this made the hero abnormally tall/long on both
-   desktop and small phones and inconsistent between the two. It is
-   now driven by one rule set with sane, responsive caps, using
-   dvh/svh so mobile browser chrome doesn't cause jumpiness.
-   ---------------------------------------------------------- */
-.hero {
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  background: var(--color-navy);
-  min-height: 640px;
-  height: 88vh;
-  height: 88dvh;
-  max-height: 820px;
-}
-
-.hero-bg {
-  position: absolute;
-  inset: 0;
-  background: url('https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
-  opacity: 1;
-}
-
-.hero-overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    90deg,
-    rgba(11,30,77,0.97) 0%,
-    rgba(11,30,77,0.93) 30%,
-    rgba(11,30,77,0.68) 55%,
-    rgba(11,30,77,0.30) 78%,
-    rgba(11,30,77,0.08) 100%
-  );
-}
-
-/* Animated cargo track lines */
-.hero-track {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  pointer-events: none;
-}
-.hero-track-line {
-  position: absolute;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(232,147,26,0.3), transparent);
-  animation: trackMove 6s linear infinite;
-}
-
-.hero-content {
-  position: relative;
-  z-index: 2;
-  padding-top: var(--space-16);
-  padding-bottom: var(--space-16);
-  max-width: 780px;
-}
-
-.hero-eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-3);
-  margin-bottom: var(--space-6);
-  padding: var(--space-2) var(--space-4);
-  background: rgba(232,147,26,0.15);
-  border: 1px solid rgba(232,147,26,0.3);
-  border-radius: var(--radius-full);
-  font-size: var(--text-xs);
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--color-accent-light);
-}
-.hero-eyebrow-dot {
-  width: 6px; height: 6px;
-  background: var(--color-accent);
-  border-radius: 50%;
-  animation: pulse 2s ease-in-out infinite;
-}
-
-.hero-title {
-  font-family: var(--font-display);
-  font-size: clamp(2.5rem, 6vw, var(--text-hero));
-  font-weight: 900;
-  line-height: 0.95;
-  letter-spacing: -0.03em;
-  color: var(--color-white);
-  margin-bottom: var(--space-6);
-  text-transform: uppercase;
-}
-.hero-title .accent { color: var(--color-accent); }
-.hero-title .outline {
-  -webkit-text-stroke: 2px rgba(255,255,255,0.3);
-  color: transparent;
-}
-
-.hero-subtitle {
-  font-size: var(--text-lg);
-  color: rgba(255,255,255,0.75);
-  line-height: 1.6;
-  margin-bottom: var(--space-8);
-  max-width: 560px;
-}
-
-.hero-actions {
-  display: flex;
-  align-items: center;
-  gap: var(--space-4);
-  flex-wrap: wrap;
-  margin-bottom: var(--space-10);
-}
-
-.hero-stats {
-  display: flex;
-  gap: var(--space-10);
-  padding-top: var(--space-6);
-  border-top: 1px solid rgba(255,255,255,0.12);
-  flex-wrap: wrap;
-}
-.hero-stat-number {
-  font-family: var(--font-display);
-  font-size: var(--text-3xl);
-  font-weight: 900;
-  color: var(--color-white);
-  line-height: 1;
-}
-.hero-stat-number span { color: var(--color-accent); }
-.hero-stat-label {
-  font-size: var(--text-xs);
-  font-weight: 500;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,0.5);
-  margin-top: var(--space-1);
-}
-
-/* Hero tracking bar */
-.hero-tracking-bar {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: rgba(255,255,255,0.05);
-  backdrop-filter: blur(12px);
-  border-top: 1px solid rgba(255,255,255,0.1);
-  padding: var(--space-5) 0;
-  z-index: 3;
-}
-.hero-tracking-form {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.15);
-  border-radius: var(--radius-sm);
-  padding: var(--space-2) var(--space-3);
-  flex: 1;
-  max-width: 600px;
-}
-.hero-tracking-form label {
-  font-size: var(--text-xs);
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--color-accent);
-  white-space: nowrap;
-}
-.hero-tracking-form input {
-  flex: 1;
-  background: none;
-  border: none;
-  outline: none;
-  color: var(--color-white);
-  font-size: var(--text-sm);
-  caret-color: var(--color-accent);
-}
-.hero-tracking-form input::placeholder { color: rgba(255,255,255,0.4); }
-.hero-tracking-wrapper {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-}
-.hero-tracking-label {
-  font-size: var(--text-sm);
-  color: rgba(255,255,255,0.6);
-  white-space: nowrap;
-  display: none;
-}
-
-/* ----------------------------------------------------------
-   8. CARDS
-   ---------------------------------------------------------- */
-.card {
-  background: var(--color-white);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  box-shadow: var(--shadow-card);
-  border: var(--border-light);
-  transition: all var(--transition-base);
-}
-.card:hover {
-  box-shadow: var(--shadow-lg);
-  transform: translateY(-4px);
-}
-
-/* Service Card */
-.service-card {
-  padding: var(--space-8);
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
-}
-
-.service-card__icon {
-  width: 56px; height: 56px;
-  background: linear-gradient(135deg, var(--color-navy), var(--color-steel));
-  border-radius: var(--radius-md);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--color-white);
-  font-size: 24px;
-  flex-shrink: 0;
-  transition: all var(--transition-base);
-}
-.card:hover .service-card__icon {
-  background: linear-gradient(135deg, var(--color-accent), var(--color-accent-dark));
-  transform: scale(1.08);
-}
-
-.service-card__title {
-  font-size: var(--text-xl);
-  font-weight: 700;
-  color: var(--color-navy);
-}
-
-.service-card__text {
-  font-size: var(--text-sm);
-  color: var(--color-text-light);
-  line-height: 1.7;
-}
-
-.service-card__link {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  font-size: var(--text-sm);
-  font-weight: 600;
-  color: var(--color-accent);
-  margin-top: auto;
-  transition: gap var(--transition-fast);
-}
-.service-card__link:hover { gap: var(--space-3); }
-
-/* Feature Card */
-.feature-card {
-  padding: var(--space-6);
-  display: flex;
-  align-items: flex-start;
-  gap: var(--space-4);
-  border-radius: var(--radius-lg);
-  border: var(--border-light);
-  background: var(--color-white);
-  transition: all var(--transition-base);
-}
-.feature-card:hover { box-shadow: var(--shadow-md); border-color: var(--color-accent); }
-
-.feature-card__icon {
-  width: 48px; height: 48px;
-  background: var(--color-sky-light);
-  border-radius: var(--radius-md);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  flex-shrink: 0;
-}
-
-/* Team Card */
-.team-card {
-  text-align: center;
-  padding-bottom: var(--space-6);
-}
-.team-card__photo {
-  aspect-ratio: 1;
-  overflow: hidden;
-}
-.team-card__photo img {
-  width: 100%; height: 100%;
-  object-fit: cover;
-  transition: transform var(--transition-slow);
-}
-.team-card:hover .team-card__photo img { transform: scale(1.06); }
-.team-card__body { padding: var(--space-5) var(--space-4) 0; }
-.team-card__name { font-size: var(--text-lg); font-weight: 700; margin-bottom: var(--space-1); }
-.team-card__role { font-size: var(--text-sm); color: var(--color-accent); font-weight: 600; margin-bottom: var(--space-3); }
-.team-card__bio { font-size: var(--text-sm); color: var(--color-text-light); line-height: 1.65; }
-
-/* Blog Card */
-.blog-card { overflow: hidden; }
-.blog-card__image {
-  aspect-ratio: 16/9;
-  overflow: hidden;
-}
-.blog-card__image img {
-  width: 100%; height: 100%;
-  object-fit: cover;
-  transition: transform var(--transition-slow);
-}
-.blog-card:hover .blog-card__image img { transform: scale(1.05); }
-.blog-card__body { padding: var(--space-6); }
-.blog-card__category {
-  display: inline-block;
-  padding: 2px 10px;
-  background: var(--color-sky-light);
-  color: var(--color-sky);
-  border-radius: var(--radius-full);
-  font-size: var(--text-xs);
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  margin-bottom: var(--space-3);
-}
-.blog-card__title {
-  font-size: var(--text-lg);
-  font-weight: 700;
-  margin-bottom: var(--space-3);
-  line-height: 1.35;
-}
-.blog-card__title a { color: var(--color-navy); transition: color var(--transition-fast); }
-.blog-card__title a:hover { color: var(--color-accent); }
-.blog-card__meta { font-size: var(--text-xs); color: var(--color-gray); display: flex; gap: var(--space-4); }
-
-/* Destination Card */
-.destination-card { position: relative; border-radius: var(--radius-lg); overflow: hidden; aspect-ratio: 4/5; }
-.destination-card__image { width: 100%; height: 100%; object-fit: cover; transition: transform var(--transition-slow); }
-.destination-card:hover .destination-card__image { transform: scale(1.08); }
-.destination-card__overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to top, rgba(10,22,40,0.85) 0%, transparent 60%);
-}
-.destination-card__body {
-  position: absolute;
-  bottom: 0; left: 0; right: 0;
-  padding: var(--space-6);
-  color: var(--color-white);
-}
-.destination-card__country {
-  font-size: var(--text-xs);
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--color-accent-light);
-  margin-bottom: var(--space-1);
-}
-.destination-card__city { font-size: var(--text-2xl); font-weight: 800; }
-.destination-card__routes { font-size: var(--text-xs); color: rgba(255,255,255,0.6); margin-top: var(--space-1); }
-
-/* Pricing Card */
-.pricing-card {
-  padding: var(--space-8);
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-5);
-  position: relative;
-}
-.pricing-card.featured {
-  border-color: var(--color-accent);
-  background: linear-gradient(160deg, var(--color-navy), var(--color-navy-light));
-  color: var(--color-white);
-}
-.pricing-card.featured h3,
-.pricing-card.featured .pricing-price { color: var(--color-white); }
-.pricing-badge {
-  position: absolute;
-  top: -14px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: var(--color-accent);
-  color: var(--color-white);
-  font-size: var(--text-xs);
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  padding: 4px 16px;
-  border-radius: var(--radius-full);
-}
-.pricing-name { font-size: var(--text-sm); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-accent); }
-.pricing-price {
-  font-family: var(--font-display);
-  font-size: var(--text-4xl);
-  font-weight: 900;
-  color: var(--color-navy);
-  line-height: 1;
-}
-.pricing-price sub, .pricing-price sup { font-size: 0.45em; font-family: var(--font-body); font-weight: 600; }
-.pricing-price sup { vertical-align: super; }
-.pricing-period { font-size: var(--text-sm); color: var(--color-gray); }
-.pricing-divider { border-top: 1px solid var(--color-light-gray); }
-.pricing-card.featured .pricing-divider { border-color: rgba(255,255,255,0.15); }
-.pricing-features { display: flex; flex-direction: column; gap: var(--space-3); }
-.pricing-feature {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--space-3);
-  font-size: var(--text-sm);
-  color: var(--color-text-light);
-}
-.pricing-card.featured .pricing-feature { color: rgba(255,255,255,0.75); }
-.pricing-feature-icon { color: var(--color-success); flex-shrink: 0; font-size: 16px; margin-top: 2px; }
-.pricing-feature.disabled { opacity: 0.4; }
-.pricing-feature.disabled .pricing-feature-icon { color: var(--color-gray); }
-.pricing-card .btn { margin-top: auto; }
-
-/* ----------------------------------------------------------
-   9. SECTIONS
-   ---------------------------------------------------------- */
-
-/* -- Why Choose Us -- */
-.why-us { background: var(--color-off-white); }
-.why-us-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--space-16);
-  align-items: center;
-}
-.why-us-image {
-  position: relative;
-  border-radius: var(--radius-xl);
-  overflow: hidden;
-}
-.why-us-image img { width: 100%; aspect-ratio: 4/5; object-fit: cover; }
-.why-us-badge {
-  position: absolute;
-  bottom: var(--space-6);
-  right: var(--space-6);
-  background: var(--color-accent);
-  color: var(--color-white);
-  border-radius: var(--radius-lg);
-  padding: var(--space-4) var(--space-5);
-  text-align: center;
-  box-shadow: 0 8px 24px rgba(232,147,26,0.4);
-}
-.why-us-badge strong {
-  font-family: var(--font-display);
-  font-size: var(--text-3xl);
-  font-weight: 900;
-  display: block;
-  line-height: 1;
-}
-.why-us-badge span { font-size: var(--text-xs); font-weight: 600; opacity: 0.9; }
-.why-us-features { display: flex; flex-direction: column; gap: var(--space-5); margin-top: var(--space-8); }
-
-/* -- Stats Bar -- */
-.stats-bar {
-  background: var(--color-navy);
-  padding: var(--space-12) 0;
-}
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: var(--space-8);
-}
-.stat-item { text-align: center; }
-.stat-number {
-  font-family: var(--font-display);
-  font-size: var(--text-5xl);
-  font-weight: 900;
-  color: var(--color-white);
-  line-height: 1;
-}
-.stat-number span { color: var(--color-accent); }
-.stat-label {
-  font-size: var(--text-sm);
-  font-weight: 500;
-  letter-spacing: 0.06em;
-  color: rgba(255,255,255,0.55);
-  margin-top: var(--space-2);
-  text-transform: uppercase;
-}
-
-/* -- Testimonials -- */
-.testimonials { background: var(--color-navy); }
-.testimonials .section-title { color: var(--color-white); }
-.testimonials .section-subtitle { color: rgba(255,255,255,0.6); }
-.testimonials .eyebrow { color: var(--color-accent-light); }
-.testimonials .eyebrow::before,
-.testimonials .eyebrow::after { background: var(--color-accent-light); }
-
-.testimonial-card {
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: var(--radius-xl);
-  padding: var(--space-8);
-}
-.testimonial-quote {
-  font-size: var(--text-lg);
-  color: rgba(255,255,255,0.85);
-  line-height: 1.7;
-  font-style: italic;
-  margin-bottom: var(--space-6);
-}
-.testimonial-stars { color: var(--color-accent); font-size: 1.1rem; margin-bottom: var(--space-4); letter-spacing: 2px; }
-.testimonial-author { display: flex; align-items: center; gap: var(--space-4); }
-.testimonial-avatar { width: 48px; height: 48px; border-radius: 50%; overflow: hidden; flex-shrink: 0; }
-.testimonial-avatar img { width: 100%; height: 100%; object-fit: cover; }
-.testimonial-name { font-size: var(--text-base); font-weight: 700; color: var(--color-white); }
-.testimonial-company { font-size: var(--text-xs); color: var(--color-accent); font-weight: 600; }
-
-/* -- Tracking Section -- */
-.tracking-section { background: var(--color-off-white); }
-.tracking-form {
-  background: var(--color-white);
-  border-radius: var(--radius-xl);
-  padding: var(--space-10);
-  box-shadow: var(--shadow-lg);
-  border: var(--border-light);
-}
-.tracking-tabs {
-  display: flex;
-  gap: var(--space-2);
-  margin-bottom: var(--space-8);
-  padding: var(--space-2);
-  background: var(--color-light-gray);
-  border-radius: var(--radius-md);
-}
-.tracking-tab {
-  flex: 1;
-  padding: var(--space-3) var(--space-4);
-  border-radius: var(--radius-sm);
-  font-size: var(--text-sm);
-  font-weight: 600;
-  color: var(--color-text-light);
-  cursor: pointer;
-  transition: all var(--transition-fast);
-  text-align: center;
-}
-.tracking-tab.active {
-  background: var(--color-white);
-  color: var(--color-navy);
-  box-shadow: var(--shadow-sm);
-}
-
-/* -- Partners -- */
-.partners { padding-block: var(--space-12); border-top: var(--border-light); border-bottom: var(--border-light); }
-.partners-label {
-  font-size: var(--text-xs);
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--color-gray);
-  text-align: center;
-  margin-bottom: var(--space-8);
-}
-.partners-logos {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: var(--space-10);
-}
-.partner-logo {
-  height: 36px;
-  filter: grayscale(1) opacity(0.45);
-  transition: filter var(--transition-base);
-}
-.partner-logo:hover { filter: grayscale(0) opacity(1); }
-
-/* -- CTA Banner -- */
-.cta-banner {
-  background: linear-gradient(135deg, var(--color-navy) 0%, var(--color-steel) 100%);
-  position: relative;
-  overflow: hidden;
-}
-.cta-banner::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  right: -10%;
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(circle, rgba(232,147,26,0.12) 0%, transparent 70%);
-  pointer-events: none;
-}
-.cta-banner .section-title { color: var(--color-white); }
-.cta-banner .section-subtitle { color: rgba(255,255,255,0.7); max-width: 600px; }
-.cta-inner { text-align: center; position: relative; z-index: 1; }
-.cta-actions { display: flex; gap: var(--space-4); justify-content: center; flex-wrap: wrap; margin-top: var(--space-8); }
-
-/* -- Page Hero (inner pages) -- */
-.page-hero {
-  background: linear-gradient(135deg, var(--color-navy) 0%, var(--color-navy-light) 100%);
-  padding: var(--space-20) 0 var(--space-16);
-  position: relative;
-  overflow: hidden;
-}
-.page-hero::after {
-  content: '';
-  position: absolute;
-  bottom: -1px;
-  left: 0; right: 0;
-  height: 80px;
-  background: linear-gradient(to bottom, transparent, var(--color-white));
-}
-.page-hero-content { position: relative; z-index: 1; }
-.page-hero-title {
-  font-family: var(--font-display);
-  font-size: var(--text-5xl);
-  font-weight: 900;
-  color: var(--color-white);
-  letter-spacing: -0.02em;
-  margin-bottom: var(--space-3);
-}
-.page-hero-subtitle { font-size: var(--text-lg); color: rgba(255,255,255,0.7); }
-.breadcrumb {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  margin-top: var(--space-4);
-  font-size: var(--text-sm);
-}
-.breadcrumb a { color: rgba(255,255,255,0.5); transition: color var(--transition-fast); }
-.breadcrumb a:hover { color: var(--color-accent); }
-.breadcrumb-sep { color: rgba(255,255,255,0.3); }
-.breadcrumb-current { color: var(--color-accent); font-weight: 600; }
-
-/* ----------------------------------------------------------
-   10. FORMS
-   ---------------------------------------------------------- */
-.form-group { margin-bottom: var(--space-5); }
-.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-5); }
-.form-label {
-  display: block;
-  font-size: var(--text-sm);
-  font-weight: 600;
-  color: var(--color-text);
-  margin-bottom: var(--space-2);
-}
-.form-label span { color: var(--color-accent); }
-
-.form-control {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  border: 1.5px solid var(--color-mid-gray);
-  border-radius: var(--radius-md);
-  font-size: var(--text-sm);
-  color: var(--color-text);
-  background: var(--color-white);
-  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
-  outline: none;
-}
-.form-control:focus {
-  border-color: var(--color-accent);
-  box-shadow: 0 0 0 3px rgba(232,147,26,0.12);
-}
-.form-control::placeholder { color: var(--color-gray); }
-
-select.form-control { cursor: pointer; appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' viewBox='0 0 24 24'%3E%3Cpath stroke='%238A9BB5' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 12px center;
-  padding-right: 2.5rem;
-}
-
-textarea.form-control { resize: vertical; min-height: 140px; }
-
-.form-hint { font-size: var(--text-xs); color: var(--color-gray); margin-top: var(--space-1); }
-
-.form-check { display: flex; align-items: flex-start; gap: var(--space-3); }
-.form-check-input {
-  width: 18px; height: 18px;
-  border: 1.5px solid var(--color-mid-gray);
-  border-radius: var(--radius-sm);
-  background: var(--color-white);
-  cursor: pointer;
-  flex-shrink: 0;
-  margin-top: 2px;
-  accent-color: var(--color-accent);
-}
-.form-check-label { font-size: var(--text-sm); color: var(--color-text-light); }
-
-/* ----------------------------------------------------------
-   11. TRACKING PAGE
-   ---------------------------------------------------------- */
-.tracking-result {
-  background: var(--color-white);
-  border-radius: var(--radius-xl);
-  border: var(--border-light);
-  overflow: hidden;
-}
-.tracking-result-header {
-  background: var(--color-navy);
-  padding: var(--space-6) var(--space-8);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.tracking-id {
-  font-family: var(--font-mono);
-  font-size: var(--text-xl);
-  color: var(--color-white);
-  font-weight: 700;
-}
-.tracking-status-badge {
-  padding: var(--space-2) var(--space-4);
-  border-radius: var(--radius-full);
-  font-size: var(--text-xs);
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-.status--in-transit { background: rgba(74,159,212,0.2); color: var(--color-sky); }
-.status--delivered { background: rgba(29,185,122,0.2); color: var(--color-success); }
-.status--pending { background: rgba(232,147,26,0.2); color: var(--color-accent); }
-
-.tracking-timeline {
-  padding: var(--space-8);
-}
-.timeline-step {
-  display: flex;
-  gap: var(--space-4);
-  position: relative;
-  padding-bottom: var(--space-8);
-}
-.timeline-step:last-child { padding-bottom: 0; }
-.timeline-step::before {
-  content: '';
-  position: absolute;
-  left: 15px;
-  top: 28px;
-  bottom: 0;
-  width: 2px;
-  background: var(--color-light-gray);
-}
-.timeline-step:last-child::before { display: none; }
-.timeline-dot {
-  width: 32px; height: 32px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  font-size: 14px;
-  position: relative;
-  z-index: 1;
-}
-.timeline-dot--done { background: var(--color-success); color: var(--color-white); }
-.timeline-dot--active { background: var(--color-accent); color: var(--color-white); }
-.timeline-dot--pending { background: var(--color-light-gray); color: var(--color-gray); }
-.timeline-content { flex: 1; }
-.timeline-date { font-size: var(--text-xs); color: var(--color-gray); margin-bottom: var(--space-1); }
-.timeline-event { font-size: var(--text-base); font-weight: 600; color: var(--color-navy); }
-.timeline-location { font-size: var(--text-sm); color: var(--color-text-light); }
-
-/* ----------------------------------------------------------
-   12. FAQ
-   ---------------------------------------------------------- */
-.faq-item {
-  border: var(--border-light);
-  border-radius: var(--radius-md);
-  overflow: hidden;
-  margin-bottom: var(--space-3);
-  transition: box-shadow var(--transition-fast);
-}
-.faq-item.open { box-shadow: var(--shadow-md); }
-
-.faq-question {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: var(--space-5) var(--space-6);
-  cursor: pointer;
-  background: var(--color-white);
-  font-size: var(--text-base);
-  font-weight: 600;
-  color: var(--color-navy);
-  transition: background var(--transition-fast);
-}
-.faq-question:hover { background: var(--color-off-white); }
-.faq-icon {
-  width: 28px; height: 28px;
-  border-radius: 50%;
-  background: var(--color-light-gray);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  color: var(--color-navy);
-  flex-shrink: 0;
-  transition: all var(--transition-fast);
-}
-.faq-item.open .faq-icon {
-  background: var(--color-accent);
-  color: var(--color-white);
-  transform: rotate(45deg);
-}
-.faq-answer {
-  display: none;
-  padding: var(--space-2) var(--space-6) var(--space-5);
-  font-size: var(--text-sm);
-  color: var(--color-text-light);
-  line-height: 1.75;
-  border-top: var(--border-light);
-}
-.faq-item.open .faq-answer { display: block; }
-
-/* ----------------------------------------------------------
-   13. FOOTER
-   ---------------------------------------------------------- */
-.site-footer {
-  background: var(--color-navy);
-  color: rgba(255,255,255,0.6);
-}
-.footer-top {
-  padding: var(--space-20) 0 var(--space-12);
-  display: grid;
-  grid-template-columns: 1.5fr 1fr 1fr 1.2fr;
-  gap: var(--space-10);
-}
-
-.footer-brand .footer-logo { margin-bottom: var(--space-4); }
-.footer-about { font-size: var(--text-sm); line-height: 1.7; margin-bottom: var(--space-6); }
-.footer-socials { display: flex; gap: var(--space-3); }
-.footer-social {
-  width: 36px; height: 36px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.08);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: rgba(255,255,255,0.6);
-  font-size: 14px;
-  transition: all var(--transition-fast);
-}
-.footer-social:hover { background: var(--color-accent); color: var(--color-white); transform: translateY(-2px); }
-
-.footer-col-title {
-  font-family: var(--font-display);
-  font-size: var(--text-base);
-  font-weight: 700;
-  color: var(--color-white);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  margin-bottom: var(--space-5);
-  padding-bottom: var(--space-3);
-  border-bottom: 2px solid var(--color-accent);
-  display: inline-block;
-}
-.footer-links { display: flex; flex-direction: column; gap: var(--space-3); }
-.footer-links a {
-  font-size: var(--text-sm);
-  color: rgba(255,255,255,0.55);
-  transition: all var(--transition-fast);
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-}
-.footer-links a::before {
-  content: '›';
-  color: var(--color-accent);
-  font-size: 16px;
-}
-.footer-links a:hover { color: var(--color-white); padding-left: var(--space-2); }
-
-.footer-contact { display: flex; flex-direction: column; gap: var(--space-4); }
-.footer-contact-item {
-  display: flex;
-  gap: var(--space-3);
-  align-items: flex-start;
-  font-size: var(--text-sm);
-}
-.footer-contact-item strong { color: var(--color-white); }
-
-.footer-newsletter-form {
-  display: flex;
-  gap: var(--space-2);
-  margin-top: var(--space-4);
-}
-.footer-newsletter-input {
-  flex: 1;
-  padding: 0.6rem 1rem;
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.15);
-  border-radius: var(--radius-sm);
-  color: var(--color-white);
-  font-size: var(--text-sm);
-  outline: none;
-  transition: border-color var(--transition-fast);
-}
-.footer-newsletter-input:focus { border-color: var(--color-accent); }
-.footer-newsletter-input::placeholder { color: rgba(255,255,255,0.35); }
-
-.footer-bottom {
-  border-top: 1px solid rgba(255,255,255,0.08);
-  padding: var(--space-5) 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-size: var(--text-xs);
-  gap: var(--space-6);
-  flex-wrap: wrap;
-}
-.footer-bottom-links { display: flex; gap: var(--space-6); }
-.footer-bottom-links a { color: rgba(255,255,255,0.4); transition: color var(--transition-fast); }
-.footer-bottom-links a:hover { color: var(--color-white); }
-
-/* ----------------------------------------------------------
-   14. UTILITIES
-   ---------------------------------------------------------- */
-.text-center { text-align: center; }
-.text-right { text-align: right; }
-.text-accent { color: var(--color-accent); }
-.text-white { color: var(--color-white); }
-.text-muted { color: var(--color-text-light); }
-.text-sm { font-size: var(--text-sm); }
-.text-xs { font-size: var(--text-xs); }
-.font-bold { font-weight: 700; }
-.mt-4 { margin-top: var(--space-4); }
-.mt-8 { margin-top: var(--space-8); }
-.mb-4 { margin-bottom: var(--space-4); }
-.mb-8 { margin-bottom: var(--space-8); }
-.pt-0 { padding-top: 0; }
-.pb-0 { padding-bottom: 0; }
-.hidden { display: none !important; }
-.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; }
-.bg-light { background: var(--color-off-white); }
-.bg-navy { background: var(--color-navy); }
-
-/* Tag / Chip */
-.tag {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-1);
-  padding: 2px 10px;
-  border-radius: var(--radius-full);
-  font-size: var(--text-xs);
-  font-weight: 600;
-}
-.tag--navy { background: rgba(10,22,40,0.08); color: var(--color-navy); }
-.tag--accent { background: rgba(232,147,26,0.12); color: var(--color-accent); }
-.tag--green { background: rgba(29,185,122,0.12); color: var(--color-success); }
-
-/* Separator */
-.section-separator {
-  display: flex;
-  align-items: center;
-  gap: var(--space-4);
-  margin-block: var(--space-12);
-}
-.section-separator::before,
-.section-separator::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: var(--color-light-gray);
-}
-.section-separator span {
-  font-size: var(--text-xs);
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--color-gray);
-  white-space: nowrap;
-}
-
-/* Alert / Notice */
-.alert {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--space-3);
-  padding: var(--space-4) var(--space-5);
-  border-radius: var(--radius-md);
-  font-size: var(--text-sm);
-}
-.alert--info { background: var(--color-sky-light); color: var(--color-navy); border-left: 4px solid var(--color-sky); }
-.alert--success { background: rgba(29,185,122,0.1); color: var(--color-text); border-left: 4px solid var(--color-success); }
-.alert--warning { background: rgba(245,166,35,0.1); color: var(--color-text); border-left: 4px solid var(--color-warning); }
-
-/* Back to top */
-#back-to-top {
-  position: fixed;
-  bottom: var(--space-8);
-  right: var(--space-8);
-  width: 44px; height: 44px;
-  background: var(--color-accent);
-  color: var(--color-white);
-  border-radius: var(--radius-md);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  box-shadow: 0 4px 16px rgba(232,147,26,0.4);
-  opacity: 0;
-  visibility: hidden;
-  transition: all var(--transition-base);
-  z-index: 900;
-  font-size: 18px;
-  border: none;
-}
-#back-to-top.visible { opacity: 1; visibility: visible; }
-#back-to-top:hover { background: var(--color-accent-dark); transform: translateY(-2px); }
-
-/* ----------------------------------------------------------
-   15. SVG ICONS INLINE HELPERS
-   ---------------------------------------------------------- */
-.icon { display: inline-flex; align-items: center; justify-content: center; }
-.icon svg { width: 1em; height: 1em; fill: currentColor; }
-
-/* ----------------------------------------------------------
-   16. AI SUPPORT / WHATSAPP CRM WIDGET
-   ---------------------------------------------------------- */
-#kc-ai-widget { position: fixed; right: 20px; bottom: 20px; z-index: 3000; font-family: var(--font-body); }
-
-.kc-ai-launcher { display: flex; flex-direction: column; align-items: flex-end; gap: 12px; }
-
-.kc-ai-btn {
-  width: 56px; height: 56px; border-radius: 50%; border: none; cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 8px 24px rgba(10,22,40,0.28);
-  transition: transform var(--transition-fast);
-}
-.kc-ai-btn:hover { transform: translateY(-2px) scale(1.04); }
-
-.kc-ai-btn--wa { background: #25D366; color: #fff; }
-.kc-ai-btn--wa svg { width: 28px; height: 28px; }
-
-.kc-ai-btn--main { background: var(--color-navy); color: var(--color-accent); position: relative; }
-.kc-ai-btn--main svg { width: 26px; height: 26px; position: absolute; transition: opacity .15s, transform .15s; }
-.kc-ai-btn--main .kc-ai-icon-close { opacity: 0; transform: scale(.6) rotate(-90deg); }
-.kc-ai-btn--main.kc-ai-open .kc-ai-icon-chat { opacity: 0; transform: scale(.6) rotate(90deg); }
-.kc-ai-btn--main.kc-ai-open .kc-ai-icon-close { opacity: 1; transform: scale(1) rotate(0deg); }
-
-.kc-ai-panel {
-  position: fixed; right: 20px; bottom: 92px;
-  width: 360px; max-width: calc(100vw - 40px);
-  height: 500px; max-height: 70vh;
-  background: var(--color-white);
-  border-radius: var(--radius-xl);
-  box-shadow: 0 24px 64px rgba(10,22,40,0.32);
-  display: flex; flex-direction: column;
-  overflow: hidden;
-  animation: kc-ai-pop .18s ease-out;
-}
-.kc-ai-panel[hidden] { display: none !important; }
-@keyframes kc-ai-pop { from { opacity: 0; transform: translateY(12px) scale(.97);} to { opacity: 1; transform: translateY(0) scale(1);} }
-
-.kc-ai-header {
-  background: var(--color-navy);
-  color: #fff;
-  padding: var(--space-4) var(--space-5);
-  display: flex; align-items: center; gap: var(--space-3);
-  flex-shrink: 0;
-}
-.kc-ai-header-avatar {
-  width: 38px; height: 38px; border-radius: 50%;
-  background: var(--color-accent); color: var(--color-navy);
-  display: flex; align-items: center; justify-content: center;
-  font-weight: 900; font-family: var(--font-display); flex-shrink: 0;
-}
-.kc-ai-header-text { display: flex; flex-direction: column; gap: 2px; font-size: var(--text-sm); }
-.kc-ai-header-text span { font-size: 11px; color: rgba(255,255,255,0.65); display: flex; align-items: center; gap: 5px; }
-.kc-ai-dot { width: 7px; height: 7px; border-radius: 50%; background: #3ECF6C; display: inline-block; }
-
-.kc-ai-messages { flex: 1; overflow-y: auto; padding: var(--space-4) var(--space-4); display: flex; flex-direction: column; gap: var(--space-3); background: var(--color-off-white); }
-.kc-ai-bubble { max-width: 84%; }
-.kc-ai-bubble--bot { align-self: flex-start; }
-.kc-ai-bubble--user { align-self: flex-end; }
-.kc-ai-bubble-text {
-  padding: 10px 14px; border-radius: 14px; font-size: var(--text-sm); line-height: 1.5;
-}
-.kc-ai-bubble--bot .kc-ai-bubble-text { background: #fff; color: var(--color-text); border-bottom-left-radius: 4px; box-shadow: 0 1px 3px rgba(10,22,40,0.08); }
-.kc-ai-bubble--user .kc-ai-bubble-text { background: var(--color-navy); color: #fff; border-bottom-right-radius: 4px; }
-.kc-ai-cta {
-  display: inline-block; margin-top: 6px; font-size: var(--text-xs); font-weight: 700;
-  color: var(--color-accent-dark); text-decoration: underline;
-}
-
-.kc-ai-quick { display: flex; flex-wrap: wrap; gap: 6px; padding: 0 var(--space-4) var(--space-3); flex-shrink: 0; }
-.kc-ai-quick button {
-  font-size: 11px; padding: 6px 10px; border-radius: 999px; border: 1px solid var(--color-border);
-  background: #fff; color: var(--color-navy); cursor: pointer; font-weight: 600;
-}
-.kc-ai-quick button:hover { border-color: var(--color-accent); color: var(--color-accent-dark); }
-
-.kc-ai-input-row { display: flex; gap: 8px; padding: var(--space-3) var(--space-4); border-top: var(--border-light); flex-shrink: 0; }
-.kc-ai-input-row input {
-  flex: 1; border: 1px solid var(--color-border); border-radius: 999px; padding: 9px 14px; font-size: var(--text-sm);
-  font-family: var(--font-body);
-}
-.kc-ai-input-row input:focus { outline: none; border-color: var(--color-accent); }
-.kc-ai-input-row button {
-  width: 36px; height: 36px; border-radius: 50%; border: none; background: var(--color-navy); color: var(--color-accent);
-  cursor: pointer; flex-shrink: 0; font-size: 15px;
-}
-
-.kc-ai-wa-footer {
-  display: block; text-align: center; font-size: 11px; font-weight: 700;
-  color: #0a6e46; background: rgba(37,211,102,0.1); padding: 9px; flex-shrink: 0;
-}
-
-@media (max-width: 480px) {
-  #kc-ai-widget { right: 12px; bottom: 12px; }
-  .kc-ai-panel { right: 12px; left: 12px; width: auto; bottom: 84px; }
-}
-
-/* ----------------------------------------------------------
-   17. WHO-WE-SERVE CHIPS (static tag pills)
-   ---------------------------------------------------------- */
-.filter-chip {
-  display: inline-block;
-  font-size: 12px;
-  font-weight: 700;
-  padding: 8px 16px;
-  border-radius: 999px;
-  background: var(--color-off-white);
-  color: var(--color-navy);
-  border: 1px solid var(--color-border);
-}
-.filter-chip.active { background: var(--color-navy); color: #fff; border-color: var(--color-navy); }
-
-/* ----------------------------------------------------------
-   18. MOBILE SIDE DRAWER — real slide-in navigation
-   ---------------------------------------------------------- */
-.drawer-backdrop {
-  position: fixed; inset: 0;
-  background: rgba(6,10,24,0.55);
-  z-index: 2998;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity .3s ease, visibility .3s ease;
-}
-.drawer-backdrop.open { opacity: 1; visibility: visible; }
-
-.mobile-drawer {
-  position: fixed;
-  top: 0; right: 0; bottom: 0;
-  width: min(86vw, 400px);
-  background: var(--color-navy);
-  color: #fff;
-  z-index: 2999;
-  display: flex;
-  flex-direction: column;
-  transform: translateX(100%);
-  transition: transform .32s cubic-bezier(.4,0,.2,1);
-  box-shadow: -12px 0 40px rgba(0,0,0,0.3);
-}
-.mobile-drawer.open { transform: translateX(0); }
-
-.drawer-header {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: var(--space-5) var(--space-5);
-  border-bottom: 1px solid rgba(255,255,255,0.1);
-  flex-shrink: 0;
-}
-.drawer-header .header-logo { gap: 10px; }
-.drawer-header .logo-text strong { font-size: var(--text-base); }
-.drawer-header .logo-text span { display: none; }
-.drawer-close {
-  width: 38px; height: 38px; border-radius: 50%;
-  background: rgba(255,255,255,0.08); border: none; color: #fff;
-  font-size: 18px; cursor: pointer; flex-shrink: 0;
-  display: flex; align-items: center; justify-content: center;
-  transition: background .15s;
-}
-.drawer-close:hover { background: rgba(255,255,255,0.18); }
-
-.drawer-search { padding: var(--space-4) var(--space-5); flex-shrink: 0; }
-.drawer-search input {
-  width: 100%; padding: 12px 16px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.18);
-  background: rgba(255,255,255,0.06); color: #fff; font-size: var(--text-sm);
-}
-.drawer-search input::placeholder { color: rgba(255,255,255,0.4); }
-.drawer-search input:focus { outline: none; border-color: var(--color-accent); }
-
-.drawer-nav { flex: 1; overflow-y: auto; padding: 0 var(--space-3) var(--space-4); -webkit-overflow-scrolling: touch; }
-
-.drawer-section-title {
-  font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase;
-  color: rgba(255,255,255,0.4); padding: var(--space-4) var(--space-3) var(--space-2);
-}
-.drawer-link {
-  display: block; padding: 13px var(--space-3); border-radius: var(--radius-md);
-  color: rgba(255,255,255,0.88); font-size: var(--text-sm); font-weight: 600;
-  transition: background .15s;
-}
-.drawer-link:hover, .drawer-link:active { background: rgba(255,255,255,0.08); color: var(--color-accent); }
-
-.drawer-group { border-top: 1px solid rgba(255,255,255,0.06); margin-top: 4px; padding-top: 4px; }
-.drawer-group-toggle {
-  width: 100%; display: flex; align-items: center; justify-content: space-between;
-  padding: 14px var(--space-3); background: none; border: none; color: #fff;
-  font-size: var(--text-sm); font-weight: 800; letter-spacing: .02em; cursor: pointer;
-  text-transform: uppercase; font-size: 12.5px;
-}
-.drawer-group-toggle .chevron { transition: transform .25s ease; color: var(--color-accent); font-size: 12px; }
-.drawer-group.open .drawer-group-toggle .chevron { transform: rotate(180deg); }
-
-.drawer-submenu {
-  max-height: 0; overflow: hidden;
-  transition: max-height .32s ease;
-  padding-left: var(--space-2);
-}
-.drawer-group.open .drawer-submenu { max-height: 900px; }
-.drawer-submenu a {
-  display: block; padding: 10px var(--space-3); font-size: 13.5px;
-  color: rgba(255,255,255,0.65); border-radius: var(--radius-sm);
-}
-.drawer-submenu a:hover, .drawer-submenu a:active { color: var(--color-accent); background: rgba(255,255,255,0.06); }
-
-.drawer-cta { padding: var(--space-4) var(--space-5) var(--space-6); flex-shrink: 0; border-top: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; gap: 10px; }
-
-body.drawer-locked { overflow: hidden; }
-
-@media (min-width: 1025px) {
-  .drawer-backdrop, .mobile-drawer { display: none; }
-}
-
-/* ----------------------------------------------------------
-   19. COMPLIANCE, CONVERSION & ACCESSIBILITY
-   ---------------------------------------------------------- */
-
-/* Skip link — visible only when focused via keyboard */
-.skip-link {
-  position: absolute; left: 8px; top: -60px;
-  z-index: 6000; background: var(--color-accent); color: #14121a;
-  padding: 12px 20px; border-radius: 0 0 8px 8px; font-weight: 700;
-  transition: top .18s ease;
-}
-.skip-link:focus { top: 0; }
-
-/* Visible keyboard focus everywhere (accessibility) */
-a:focus-visible, button:focus-visible, input:focus-visible,
-select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
-  outline: 3px solid var(--color-accent);
-  outline-offset: 2px;
-  border-radius: 4px;
-}
-
-/* Cookie consent banner */
-.cookie-banner {
-  position: fixed; left: 0; right: 0; bottom: 0;
-  background: var(--color-navy); color: #fff;
-  z-index: 5500; padding: var(--space-4) var(--space-5);
-  box-shadow: 0 -6px 24px rgba(0,0,0,.28);
-  transform: translateY(110%); transition: transform .35s ease;
-}
-.cookie-banner.show { transform: translateY(0); }
-.cookie-banner-inner {
-  max-width: 1100px; margin: 0 auto;
-  display: flex; align-items: center; gap: var(--space-5); flex-wrap: wrap;
-  justify-content: space-between;
-}
-.cookie-banner p { font-size: 13px; line-height: 1.6; margin: 0; flex: 1 1 320px; color: rgba(255,255,255,.82); }
-.cookie-banner a { color: var(--color-accent); text-decoration: underline; }
-.cookie-banner-actions { display: flex; gap: 10px; flex-shrink: 0; }
-
-/* Sticky mobile contact bar */
-.sticky-mobile-cta { display: none; }
-@media (max-width: 768px) {
-  .sticky-mobile-cta {
-    position: fixed; left: 0; right: 0; bottom: 0; z-index: 2900;
-    display: grid; grid-template-columns: repeat(3, 1fr);
-    background: var(--color-navy);
-    border-top: 1px solid rgba(255,255,255,.12);
-    box-shadow: 0 -4px 18px rgba(0,0,0,.25);
-  }
-  .sticky-mobile-cta a {
-    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
-    padding: 10px 4px; font-size: 11px; font-weight: 700; color: #fff;
-    min-height: 56px; /* comfortable touch target */
-  }
-  .sticky-mobile-cta a span { font-size: 17px; }
-  .sticky-mobile-cta a:active { background: rgba(255,255,255,.1); }
-  /* Keep the sticky bar from covering page content or the chat widget */
-  body { padding-bottom: 56px; }
-  #kc-ai-widget { bottom: 68px; }
-  #back-to-top { bottom: 68px; }
-  .cookie-banner { bottom: 56px; }
-}
-
-/* =========================================
-   KENNE ABOUT SECTION
-========================================= */
-
-.about-section {
-  position: relative;
-}
-
-.about-image {
-  position: relative;
-  border-radius: var(--radius-xl);
-  overflow: hidden;
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.12);
-}
-
-.about-image img {
-  display: block;
-  width: 100%;
-  aspect-ratio: 4 / 3;
-  object-fit: cover;
-  transition: transform 0.6s ease;
-}
-
-.about-image:hover img {
-  transform: scale(1.03);
-}
-
-/* Image Badge */
-
-.about-image__badge {
-  position: absolute;
-  left: 22px;
-  bottom: 22px;
-
-  display: flex;
-  align-items: center;
-  gap: 12px;
-
-  padding: 13px 17px;
-
-  background: rgba(255, 255, 255, 0.94);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-
-  border: 1px solid rgba(255, 255, 255, 0.8);
-  border-radius: 14px;
-
-  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
-}
-
-.about-image__badge-icon {
-  width: 40px;
-  height: 40px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  border-radius: 10px;
-
-  background: var(--color-primary, #111827);
-  color: white;
-}
-
-.about-image__badge-icon svg {
-  width: 21px;
-  height: 21px;
-  stroke: currentColor;
-  stroke-width: 1.7;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.about-image__badge strong {
-  display: block;
-  font-size: 14px;
-  font-weight: 700;
-  line-height: 1.2;
-}
-
-.about-image__badge span {
-  display: block;
-  margin-top: 3px;
-  font-size: 11px;
-  color: var(--color-text-light, #6b7280);
-}
-
-/* Description */
-
-.about-description {
-  color: var(--color-text-light);
-  line-height: 1.8;
-  margin-bottom: var(--space-4);
-}
-
-/* Feature Grid */
-
-.kenne-features {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
-  margin-top: var(--space-6);
-}
-
-/* Feature Cards */
-
-.feature-card {
-  display: flex;
-  align-items: flex-start;
-  gap: 13px;
-
-  padding: 15px;
-
-  border: 1px solid rgba(0, 0, 0, 0.07);
-  border-radius: 14px;
-
-  background: rgba(255, 255, 255, 0.7);
-
-  transition:
-    transform 0.25s ease,
-    box-shadow 0.25s ease,
-    border-color 0.25s ease;
-}
-
-.feature-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
-  border-color: rgba(0, 0, 0, 0.13);
-}
-
-/* Icon */
-
-.feature-card__icon {
-  flex: 0 0 42px;
-  width: 42px;
-  height: 42px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  border-radius: 11px;
-
-  background: rgba(0, 0, 0, 0.045);
-}
-
-.feature-card__icon svg {
-  width: 21px;
-  height: 21px;
-
-  stroke: currentColor;
-  stroke-width: 1.7;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-/* Text */
-
-.feature-card strong {
-  display: block;
-
-  font-size: 14px;
-  font-weight: 700;
-  line-height: 1.35;
-
-  color: var(--color-text, #111827);
-}
-
-.feature-card span {
-  display: block;
-
-  margin-top: 4px;
-
-  font-size: 11.5px;
-  line-height: 1.45;
-
-  color: var(--color-text-light, #6b7280);
-}
-
-/* =========================================
-   RESPONSIVE
-========================================= */
-
-@media (max-width: 900px) {
-
-  .kenne-features {
-    grid-template-columns: 1fr;
-  }
-
-}
-
-@media (max-width: 768px) {
-
-  .about-section {
-    gap: var(--space-8) !important;
-  }
-
-  .about-image__badge {
-    left: 14px;
-    bottom: 14px;
-  }
-
-}
-
-@media (max-width: 480px) {
-
-  .kenne-features {
-    gap: 10px;
-  }
-
-  .feature-card {
-    padding: 13px;
-  }
-
-  .feature-card__icon {
-    width: 38px;
-    height: 38px;
-    flex-basis: 38px;
-  }
-
-  .feature-card__icon svg {
-    width: 19px;
-    height: 19px;
-  }
-
-  .feature-card span {
-    font-size: 11px;
-  }
-
-}
-
-/* =========================================
-   KENNE — WHY CHOOSE US
-========================================= */
-
-.kenne-why-section {
-  position: relative;
-}
-
-/* Intro */
-
-.kenne-why-intro {
-  max-width: 680px;
-  margin: 14px auto 0;
-
-  color: var(--color-text-light, #6b7280);
-
-  font-size: var(--text-sm, 0.95rem);
-  line-height: 1.75;
-}
-
-
-/* =========================================
-   GRID
-========================================= */
-
-.kenne-why-grid {
-  margin-top: var(--space-10);
-  gap: 18px;
-}
-
-
-/* =========================================
-   VALUE CARD
-========================================= */
-
-.kenne-value-card {
-  position: relative;
-
-  padding: var(--space-6);
-
-  min-height: 245px;
-
-  overflow: hidden;
-
-  border: 1px solid rgba(0, 0, 0, 0.07);
-
-  background:
-    linear-gradient(
-      145deg,
-      rgba(255, 255, 255, 0.98),
-      rgba(248, 250, 252, 0.95)
-    );
-
-  border-radius: 18px;
-
-  transition:
-    transform 0.3s ease,
-    box-shadow 0.3s ease,
-    border-color 0.3s ease;
-}
-
-
-/* Decorative background element */
-
-.kenne-value-card::after {
-  content: "";
-
-  position: absolute;
-
-  width: 120px;
-  height: 120px;
-
-  right: -55px;
-  bottom: -55px;
-
-  border-radius: 50%;
-
-  background: rgba(0, 0, 0, 0.025);
-
-  transition: transform 0.4s ease;
-}
-
-
-.kenne-value-card:hover {
-  transform: translateY(-6px);
-
-  border-color: rgba(0, 0, 0, 0.12);
-
-  box-shadow:
-    0 18px 45px rgba(0, 0, 0, 0.09);
-}
-
-
-.kenne-value-card:hover::after {
-  transform: scale(1.5);
-}
-
-
-/* =========================================
-   ICON
-========================================= */
-
-.kenne-value-icon {
-  width: 48px;
-  height: 48px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  margin-bottom: 22px;
-
-  border-radius: 13px;
-
-  background: rgba(0, 0, 0, 0.045);
-
-  transition:
-    transform 0.3s ease,
-    background 0.3s ease;
-}
-
-
-.kenne-value-card:hover .kenne-value-icon {
-  transform: translateY(-2px);
-
-  background: rgba(0, 0, 0, 0.07);
-}
-
-
-.kenne-value-icon svg {
-  width: 23px;
-  height: 23px;
-
-  stroke: currentColor;
-
-  stroke-width: 1.7;
-
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-
-/* =========================================
-   NUMBER
-========================================= */
-
-.kenne-value-number {
-  display: block;
-
-  margin-bottom: 5px;
-
-  font-size: 10px;
-
-  font-weight: 700;
-
-  letter-spacing: 0.14em;
-
-  color: var(--color-text-light, #9ca3af);
-}
-
-
-/* =========================================
-   TITLE
-========================================= */
-
-.kenne-value-content h4 {
-  margin: 0 0 8px;
-
-  font-size: 17px;
-
-  font-weight: 700;
-
-  line-height: 1.3;
-
-  color: var(--color-text, #111827);
-}
-
-
-/* =========================================
-   DESCRIPTION
-========================================= */
-
-.kenne-value-content p {
-  margin: 0;
-
-  max-width: 340px;
-
-  font-size: var(--text-sm, 0.875rem);
-
-  line-height: 1.7;
-
-  color: var(--color-text-light, #6b7280);
-}
-
-
-/* =========================================
-   RESPONSIVE
-========================================= */
-
-@media (max-width: 1000px) {
-
-  .kenne-why-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-}
-
-
-@media (max-width: 650px) {
-
-  .kenne-why-grid {
-    grid-template-columns: 1fr;
-
-    gap: 13px;
-  }
-
-  .kenne-value-card {
-    min-height: auto;
-
-    padding: 22px;
-  }
-
-  .kenne-value-icon {
-    width: 44px;
-    height: 44px;
-
-    margin-bottom: 18px;
-  }
-
-  .kenne-value-icon svg {
-    width: 21px;
-    height: 21px;
-  }
-
-  .kenne-value-content h4 {
-    font-size: 16px;
-  }
-
-  .kenne-value-content p {
-    font-size: 12.5px;
-  }
-
-}
-
-/* =====================================================
-   KENNE DIVISIONS
-===================================================== */
-
-.kenne-divisions-grid {
-  margin-top: var(--space-10);
-  gap: 22px;
-}
-
-
-/* =====================================================
-   CARD
-===================================================== */
-
-.kenne-division-card {
-  position: relative;
-
-  display: flex;
-  flex-direction: column;
-
-  overflow: hidden;
-
-  text-decoration: none;
-
-  background: #fff;
-
-  border: 1px solid rgba(0,0,0,.07);
-
-  border-radius: 20px;
-
-  box-shadow: 0 8px 25px rgba(0,0,0,.045);
-
-  transition:
-    transform .4s ease,
-    box-shadow .4s ease,
-    border-color .3s ease;
-}
-
-.kenne-division-card:hover {
-  transform: translateY(-8px);
-
-  box-shadow:
-    0 24px 55px rgba(0,0,0,.12);
-
-  border-color: rgba(0,0,0,.12);
-}
-
-
-/* =====================================================
-   IMAGE
-===================================================== */
-
-.kenne-division-image {
-  position: relative;
-
-  height: 270px;
-
-  overflow: hidden;
-
-  background: #e5e7eb;
-}
-
-.kenne-division-image img {
-  display: block;
-
-  width: 100%;
-  height: 100%;
-
-  object-fit: cover;
-
-  transition:
-    transform .8s cubic-bezier(.2,.7,.2,1),
-    filter .4s ease;
-}
-
-.kenne-division-card:hover
-.kenne-division-image img {
-  transform: scale(1.08);
-
-  filter: brightness(1.04);
-}
-
-
-/* =====================================================
-   IMAGE OVERLAY
-===================================================== */
-
-.kenne-image-overlay {
-  position: absolute;
-
-  inset: 0;
-
-  background:
-    linear-gradient(
-      to bottom,
-      rgba(0,0,0,.02) 20%,
-      rgba(0,0,0,.15) 55%,
-      rgba(0,0,0,.7) 100%
-    );
-}
-
-
-/* =====================================================
-   LABELS
-===================================================== */
-
-.kenne-division-label {
-  position: absolute;
-
-  left: 18px;
-  bottom: 17px;
-
-  display: flex;
-  align-items: center;
-
-  gap: 8px;
-
-  padding: 9px 13px;
-
-  border-radius: 8px;
-
-  background: rgba(255,255,255,.95);
-
-  backdrop-filter: blur(10px);
-
-  font-size: 10px;
-
-  font-weight: 800;
-
-  letter-spacing: .05em;
-
-  text-transform: uppercase;
-
-  box-shadow: 0 8px 25px rgba(0,0,0,.12);
-}
-
-.tech-label {
-  color: #1479e9;
-}
-
-.cargo-label {
-  color: #a47700;
-}
-
-.cars-label {
-  color: #d52e48;
-}
-
-.kenne-label-dot {
-  width: 7px;
-  height: 7px;
-
-  border-radius: 50%;
-
-  background: currentColor;
-}
-
-
-/* =====================================================
-   FLOATING ICON
-===================================================== */
-
-.kenne-image-icon {
-  position: absolute;
-
-  top: 18px;
-  right: 18px;
-
-  width: 46px;
-  height: 46px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  border-radius: 13px;
-
-  background: rgba(255,255,255,.94);
-
-  backdrop-filter: blur(10px);
-
-  box-shadow: 0 8px 25px rgba(0,0,0,.15);
-
-  transition:
-    transform .35s ease;
-}
-
-.kenne-image-icon svg {
-  width: 22px;
-  height: 22px;
-
-  stroke: currentColor;
-
-  stroke-width: 1.7;
-
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.kenne-division-card:hover
-.kenne-image-icon {
-  transform: translateY(-4px) rotate(-3deg);
-}
-
-
-/* =====================================================
-   CONTENT
-===================================================== */
-
-.kenne-division-content {
-  flex: 1;
-
-  display: flex;
-  flex-direction: column;
-
-  padding: 25px;
-}
-
-.kenne-division-content h3 {
-  margin: 0 0 10px;
-
-  color: var(--color-navy);
-
-  font-size: var(--text-xl);
-
-  line-height: 1.3;
-
-  font-weight: 750;
-}
-
-.kenne-division-content h3 span {
-  display: inline;
-}
-
-.kenne-division-content p {
-  flex: 1;
-
-  margin: 0 0 22px;
-
-  color: var(--color-text-light);
-
-  font-size: var(--text-sm);
-
-  line-height: 1.75;
-}
-
-
-/* =====================================================
-   BUTTONS
-   PERMANENT COLORS
-===================================================== */
-
-.kenne-division-action {
-  width: fit-content;
-
-  display: inline-flex;
-
-  align-items: center;
-
-  gap: 10px;
-
-  padding: 10px 10px 10px 15px;
-
-  border-radius: 9px;
-
-  font-size: 12px;
-
-  font-weight: 750;
-
-  color: #fff;
-
-  border: none;
-
-  box-shadow: 0 6px 16px rgba(0,0,0,.1);
-
-  transition:
-    transform .3s ease,
-    box-shadow .3s ease;
-}
-
-
-/* TECH BUTTON */
-
-.tech-action {
-  background: #1479e9;
-}
-
-
-/* CARGO BUTTON */
-
-.cargo-action {
-  background: #a47700;
-}
-
-
-/* CARS BUTTON */
-
-.cars-action {
-  background: #d52e48;
-}
-
-
-/* Hover */
-
-.kenne-division-card:hover
-.kenne-division-action {
-  transform: translateX(4px);
-
-  box-shadow: 0 9px 22px rgba(0,0,0,.16);
-}
-
-
-/* =====================================================
-   ARROW
-===================================================== */
-
-.kenne-action-icon {
-  width: 27px;
-  height: 27px;
-
-  display: flex;
-
-  align-items: center;
-  justify-content: center;
-
-  border-radius: 7px;
-
-  background: rgba(255,255,255,.16);
-
-  transition: transform .3s ease;
-}
-
-.kenne-action-icon svg {
-  width: 16px;
-  height: 16px;
-
-  stroke: currentColor;
-
-  stroke-width: 1.8;
-
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.kenne-division-card:hover
-.kenne-action-icon {
-  transform: translateX(4px);
-}
-
-
-/* =====================================================
-   IMAGE ANIMATION
-===================================================== */
-
-@keyframes kenneImageMotion {
-
-  0% {
-    transform: scale(1);
-  }
-
-  50% {
-    transform: scale(1.018);
-  }
-
-  100% {
-    transform: scale(1);
-  }
-
-}
-
-.kenne-division-image img {
-  animation:
-    kenneImageMotion 8s ease-in-out infinite;
-}
-
-.kenne-division-card:hover
-.kenne-division-image img {
-  animation: none;
-}
-
-
-/* =====================================================
-   TABLET
-===================================================== */
-
-@media (max-width: 1000px) {
-
-  .kenne-divisions-grid {
-    grid-template-columns: repeat(2, minmax(0,1fr));
-  }
-
-  .kenne-division-card:last-child {
-    grid-column: 1 / -1;
-
-    width: 50%;
-
-    margin: auto;
-  }
-
-}
-
-
-/* =====================================================
-   MOBILE
-===================================================== */
-
-@media (max-width: 700px) {
-
-  .kenne-divisions-grid {
-    grid-template-columns: 1fr;
-
-    gap: 16px;
-  }
-
-  .kenne-division-card:last-child {
-    grid-column: auto;
-
-    width: 100%;
-
-    margin: 0;
-  }
-
-  .kenne-division-image {
-    height: 245px;
-  }
-
-  .kenne-division-content {
-    padding: 22px 20px;
-  }
-
-}
-
-
-/* SMALL MOBILE */
-
-@media (max-width: 480px) {
-
-  .kenne-division-image {
-    height: 225px;
-  }
-
-  .kenne-division-label {
-    left: 13px;
-    bottom: 13px;
-
-    font-size: 9px;
-
-    padding: 8px 10px;
-  }
-
-  .kenne-image-icon {
-    top: 13px;
-    right: 13px;
-
-    width: 42px;
-    height: 42px;
-  }
-
-  .kenne-division-content h3 {
-    font-size: 18px;
-  }
-
-  .kenne-division-content p {
-    font-size: 12px;
-  }
-
-}
-
-
-/* =====================================================
-   REDUCE MOTION
-===================================================== */
-
-@media (prefers-reduced-motion: reduce) {
-
-  .kenne-division-image img,
-  .kenne-division-card,
-  .kenne-division-action,
-  .kenne-action-icon,
-  .kenne-image-icon {
-    animation: none !important;
-    transition: none !important;
-  }
-
-}
-
-/* =====================================================
-   KENNE — VISION & MISSION
-===================================================== */
-
-.kenne-vision-mission {
-  position: relative;
-}
-
-
-/* =====================================================
-   GRID
-===================================================== */
-
-.kenne-vm-grid {
-  gap: 26px;
-}
-
-
-/* =====================================================
-   CARD
-===================================================== */
-
-.kenne-vm-card {
-  overflow: hidden;
-
-  padding: 0;
-
-  background: #ffffff;
-
-  border: 1px solid rgba(0,0,0,.07);
-
-  border-radius: 20px;
-
-  box-shadow:
-    0 8px 28px rgba(0,0,0,.05);
-
-  transition:
-    transform .45s cubic-bezier(.2,.7,.2,1),
-    box-shadow .45s ease,
-    border-color .3s ease;
-}
-
-
-.kenne-vm-card:hover {
-  transform: translateY(-8px);
-
-  border-color: rgba(0,0,0,.12);
-
-  box-shadow:
-    0 25px 55px rgba(0,0,0,.11);
-}
-
-
-/* =====================================================
-   IMAGE
-===================================================== */
-
-.kenne-vm-image {
-  position: relative;
-
-  height: 285px;
-
-  overflow: hidden;
-
-  background: #e5e7eb;
-}
-
-
-.kenne-vm-image img {
-  width: 100%;
-  height: 100%;
-
-  display: block;
-
-  object-fit: cover;
-
-  transition:
-    transform .9s cubic-bezier(.2,.7,.2,1),
-    filter .5s ease;
-}
-
-
-.kenne-vm-card:hover
-.kenne-vm-image img {
-  transform: scale(1.08);
-
-  filter: brightness(1.05);
-}
-
-
-/* =====================================================
-   IMAGE OVERLAY
-===================================================== */
-
-.kenne-vm-overlay {
-  position: absolute;
-
-  inset: 0;
-
-  background:
-    linear-gradient(
-      to bottom,
-      rgba(0,0,0,.05) 15%,
-      rgba(0,0,0,.15) 45%,
-      rgba(0,0,0,.72) 100%
-    );
-}
-
-
-/* =====================================================
-   IMAGE TITLE
-===================================================== */
-
-.kenne-vm-image-title {
-  position: absolute;
-
-  left: 24px;
-  bottom: 22px;
-
-  color: #ffffff;
-
-  font-size: 11px;
-
-  font-weight: 800;
-
-  letter-spacing: .15em;
-}
-
-
-.kenne-vm-image-title span {
-  position: relative;
-
-  display: inline-block;
-
-  padding-left: 13px;
-}
-
-
-.kenne-vm-image-title span::before {
-  content: "";
-
-  position: absolute;
-
-  left: 0;
-  top: 50%;
-
-  width: 4px;
-  height: 20px;
-
-  transform: translateY(-50%);
-
-  border-radius: 5px;
-
-  background: currentColor;
-}
-
-
-/* =====================================================
-   FLOATING ICON
-===================================================== */
-
-.kenne-vm-icon {
-  position: absolute;
-
-  top: 20px;
-  right: 20px;
-
-  width: 52px;
-  height: 52px;
-
-  display: flex;
-
-  align-items: center;
-  justify-content: center;
-
-  border-radius: 14px;
-
-  background: rgba(255,255,255,.94);
-
-  backdrop-filter: blur(10px);
-
-  box-shadow:
-    0 10px 30px rgba(0,0,0,.16);
-
-  transition:
-    transform .4s ease;
-}
-
-
-.kenne-vm-icon svg {
-  width: 25px;
-  height: 25px;
-
-  stroke: currentColor;
-
-  stroke-width: 1.6;
-
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-
-.vision-icon {
-  color: #1479e9;
-}
-
-
-.mission-icon {
-  color: #a47700;
-}
-
-
-.kenne-vm-card:hover
-.kenne-vm-icon {
-  transform:
-    translateY(-5px)
-    rotate(-4deg);
-}
-
-
-/* =====================================================
-   CONTENT
-===================================================== */
-
-.kenne-vm-content {
-  padding: 29px 30px 30px;
-}
-
-
-.kenne-vm-content .eyebrow {
-  margin-bottom: 9px;
-}
-
-
-/* =====================================================
-   HEADINGS
-===================================================== */
-
-.kenne-vm-content h3 {
-  margin: 0 0 15px;
-
-  color: var(--color-navy);
-
-  font-size: var(--text-xl);
-
-  line-height: 1.35;
-
-  font-weight: 750;
-
-  letter-spacing: -.02em;
-}
-
-
-.kenne-vm-content h3 span {
-  display: inline;
-}
-
-
-/* =====================================================
-   PARAGRAPHS
-===================================================== */
-
-.kenne-vm-content p {
-  margin: 0 0 13px;
-
-  color: var(--color-text-light);
-
-  font-size: var(--text-sm);
-
-  line-height: 1.8;
-}
-
-
-/* =====================================================
-   BOTTOM ACCENT
-===================================================== */
-
-.kenne-vm-line {
-  width: 45px;
-
-  height: 3px;
-
-  margin-top: 23px;
-
-  border-radius: 10px;
-
-  background: var(--color-navy);
-
-  transition:
-    width .4s ease;
-}
-
-
-.kenne-vm-card:hover
-.kenne-vm-line {
-  width: 80px;
-}
-
-
-/* =====================================================
-   SUBTLE IMAGE MOTION
-===================================================== */
-
-@keyframes kenneVisionImage {
-
-  0% {
-    transform: scale(1);
-  }
-
-  50% {
-    transform: scale(1.018);
-  }
-
-  100% {
-    transform: scale(1);
-  }
-
-}
-
-
-.kenne-vm-image img {
-  animation:
-    kenneVisionImage 9s ease-in-out infinite;
-}
-
-
-.kenne-vm-card:hover
-.kenne-vm-image img {
-  animation: none;
-}
-
-
-/* =====================================================
-   TABLET
-===================================================== */
-
-@media (max-width: 850px) {
-
-  .kenne-vm-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .kenne-vm-card {
-    max-width: 750px;
-
-    margin: 0 auto;
-
-    width: 100%;
-  }
-
-}
-
-
-/* =====================================================
-   MOBILE
-===================================================== */
-
-@media (max-width: 600px) {
-
-  .kenne-vm-grid {
-    gap: 17px;
-  }
-
-  .kenne-vm-image {
-    height: 235px;
-  }
-
-  .kenne-vm-content {
-    padding: 23px 21px 24px;
-  }
-
-  .kenne-vm-content h3 {
-    font-size: 19px;
-  }
-
-  .kenne-vm-content p {
-    font-size: 12.5px;
-    line-height: 1.75;
-  }
-
-  .kenne-vm-icon {
-    width: 45px;
-    height: 45px;
-
-    top: 14px;
-    right: 14px;
-  }
-
-  .kenne-vm-icon svg {
-    width: 21px;
-    height: 21px;
-  }
-
-  .kenne-vm-image-title {
-    left: 18px;
-    bottom: 17px;
-  }
-
-}
-
-
-/* =====================================================
-   REDUCED MOTION
-===================================================== */
-
-@media (prefers-reduced-motion: reduce) {
-
-  .kenne-vm-image img,
-  .kenne-vm-card,
-  .kenne-vm-icon,
-  .kenne-vm-line {
-    animation: none !important;
-    transition: none !important;
-  }
-}
-
-/* =========================================================
-   KENNE CONTACT SECTION
-   ========================================================= */
-
-.contact-section {
-  position: relative;
-  overflow: hidden;
-}
-
-/* Subtle background glow */
-.contact-section::before {
-  content: "";
-  position: absolute;
-  width: 420px;
-  height: 420px;
-  left: -220px;
-  top: 180px;
-  background: rgba(242, 185, 12, 0.07);
-  filter: blur(100px);
-  border-radius: 50%;
-  pointer-events: none;
-}
-
-.contact-section::after {
-  content: "";
-  position: absolute;
-  width: 380px;
-  height: 380px;
-  right: -200px;
-  bottom: 0;
-  background: rgba(242, 185, 12, 0.05);
-  filter: blur(100px);
-  border-radius: 50%;
-  pointer-events: none;
-}
-
-
-/* =========================================================
-   MAIN GRID
-   ========================================================= */
-
-.contact-grid {
-  position: relative;
-  z-index: 2;
-
-  display: grid;
-  grid-template-columns: 0.85fr 1.15fr;
-  gap: 70px;
-
-  align-items: start;
-
-  margin-top: 55px;
-}
-
-
-/* =========================================================
-   LEFT SIDE
-   ========================================================= */
-
-.contact-info {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-
-/* INTRO */
-
-.contact-intro {
-  display: flex;
-  gap: 18px;
-  align-items: flex-start;
-
-  padding: 8px 0 24px;
-}
-
-.contact-intro-icon {
-  width: 52px;
-  height: 52px;
-
-  flex: 0 0 52px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  border-radius: 15px;
-
-  background: rgba(242, 185, 12, 0.12);
-  border: 1px solid rgba(242, 185, 12, 0.22);
-
-  color: var(--color-accent);
-  font-size: 20px;
-}
-
-.contact-intro h3 {
-  margin: 0 0 6px;
-
-  font-size: 1.35rem;
-  font-weight: 700;
-}
-
-.contact-intro p {
-  margin: 0;
-
-  max-width: 430px;
-
-  color: var(--color-text-light);
-  font-size: 0.92rem;
-  line-height: 1.7;
-}
-
-
-/* CONTACT ITEMS */
-
-.contact-item {
-  position: relative;
-
-  display: flex;
-  align-items: center;
-  gap: 17px;
-
-  width: 100%;
-
-  padding: 18px;
-
-  border-radius: 16px;
-
-  background: rgba(255, 255, 255, 0.025);
-  border: 1px solid rgba(255, 255, 255, 0.07);
-
-  text-decoration: none;
-
-  transition:
-    transform 0.25s ease,
-    border-color 0.25s ease,
-    background 0.25s ease,
-    box-shadow 0.25s ease;
-}
-
-.contact-item:hover {
-  transform: translateX(5px);
-
-  background: rgba(242, 185, 12, 0.045);
-
-  border-color: rgba(242, 185, 12, 0.25);
-
-  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
-}
-
-
-/* ICON */
-
-.contact-icon {
-  width: 48px;
-  height: 48px;
-
-  flex: 0 0 48px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  border-radius: 13px;
-
-  background: rgba(242, 185, 12, 0.11);
-
-  color: var(--color-accent);
-
-  font-size: 17px;
-
-  transition: all 0.25s ease;
-}
-
-.contact-item:hover .contact-icon {
-  background: var(--color-accent);
-  color: #111;
-
-  transform: scale(1.04);
-}
-
-
-/* TEXT */
-
-.contact-item-content {
-  display: flex;
-  flex-direction: column;
-
-  min-width: 0;
-
-  flex: 1;
-}
-
-.contact-label {
-  margin-bottom: 4px;
-
-  color: var(--color-text-light);
-
-  font-size: 0.72rem;
-  font-weight: 600;
-
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-
-.contact-item-content strong {
-  color: var(--color-text);
-
-  font-size: 0.94rem;
-  font-weight: 600;
-
-  line-height: 1.4;
-
-  overflow-wrap: anywhere;
-}
-
-.contact-item-content small {
-  margin-top: 2px;
-
-  color: var(--color-text-light);
-
-  font-size: 0.78rem;
-}
-
-
-/* ARROW */
-
-.contact-arrow {
-  color: rgba(255, 255, 255, 0.28);
-  font-size: 12px;
-
-  transition: all 0.25s ease;
-}
-
-.contact-item:hover .contact-arrow {
-  color: var(--color-accent);
-  transform: translate(2px, -2px);
-}
-
-
-/* =========================================================
-   TRUST BOX
-   ========================================================= */
-
-.contact-trust {
-  display: flex;
-  align-items: center;
-  gap: 13px;
-
-  margin-top: 8px;
-  padding: 16px 18px;
-
-  border-radius: 15px;
-
-  background: rgba(242, 185, 12, 0.045);
-  border: 1px solid rgba(242, 185, 12, 0.14);
-}
-
-.trust-check {
-  width: 34px;
-  height: 34px;
-
-  flex: 0 0 34px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  border-radius: 50%;
-
-  background: rgba(242, 185, 12, 0.14);
-
-  color: var(--color-accent);
-
-  font-size: 13px;
-}
-
-.contact-trust div:last-child {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-
-.contact-trust strong {
-  font-size: 0.82rem;
-}
-
-.contact-trust span {
-  color: var(--color-text-light);
-  font-size: 0.74rem;
-  line-height: 1.5;
-}
-
-
-/* =========================================================
-   FORM CONTAINER
-   ========================================================= */
-
-.contact-form-wrapper {
-  padding: 32px;
-
-  border-radius: 22px;
-
-  background:
-    linear-gradient(
-      145deg,
-      rgba(255, 255, 255, 0.055),
-      rgba(255, 255, 255, 0.018)
-    );
-
-  border: 1px solid rgba(255, 255, 255, 0.09);
-
-  box-shadow:
-    0 25px 70px rgba(0, 0, 0, 0.18),
-    inset 0 1px 0 rgba(255, 255, 255, 0.035);
-
-  backdrop-filter: blur(18px);
-}
-
-
-/* FORM HEADER */
-
-.contact-form-header {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-
-  padding-bottom: 24px;
-  margin-bottom: 25px;
-
-  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-}
-
-.form-icon {
-  width: 46px;
-  height: 46px;
-
-  flex: 0 0 46px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  border-radius: 13px;
-
-  background: var(--color-accent);
-  color: #111;
-
-  font-size: 17px;
-
-  box-shadow: 0 8px 25px rgba(242, 185, 12, 0.16);
-}
-
-.contact-form-header h3 {
-  margin: 0 0 4px;
-
-  font-size: 1.15rem;
-  font-weight: 700;
-}
-
-.contact-form-header p {
-  margin: 0;
-
-  color: var(--color-text-light);
-
-  font-size: 0.82rem;
-}
-
-
-/* =========================================================
-   FORM FIELDS
-   ========================================================= */
-
-.contact-form {
-  display: flex;
-  flex-direction: column;
-  gap: 19px;
-}
-
-.form-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 17px;
-}
-
-.form-field {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.form-field label {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-
-  color: var(--color-text);
-
-  font-size: 0.78rem;
-  font-weight: 600;
-}
-
-.form-field label i {
-  color: var(--color-accent);
-  font-size: 12px;
-}
-
-.form-field label span {
-  color: var(--color-accent);
-}
-
-
-/* =========================================================
-   INPUTS
-   ========================================================= */
-
-.input-wrapper {
-  position: relative;
-}
-
-.input-icon {
-  position: absolute;
-
-  left: 16px;
-  top: 50%;
-
-  transform: translateY(-50%);
-
-  color: rgba(255, 255, 255, 0.32);
-
-  font-size: 14px;
-
-  pointer-events: none;
-
-  transition: color 0.2s ease;
-}
-
-.input-wrapper input,
-.input-wrapper select,
-.input-wrapper textarea {
-  width: 100%;
-
-  border: 1px solid rgba(255, 255, 255, 0.09);
-
-  border-radius: 12px;
-
-  background: rgba(0, 0, 0, 0.18);
-
-  color: var(--color-text);
-
-  font-family: inherit;
-  font-size: 0.86rem;
-
-  outline: none;
-
-  transition:
-    border-color 0.2s ease,
-    background 0.2s ease,
-    box-shadow 0.2s ease;
-}
-
-
-/* INPUT */
-
-.input-wrapper input {
-  height: 52px;
-
-  padding: 0 16px 0 45px;
-}
-
-
-/* SELECT */
-
-.input-wrapper select {
-  height: 52px;
-
-  padding: 0 42px 0 45px;
-
-  appearance: none;
-  -webkit-appearance: none;
-
-  cursor: pointer;
-}
-
-.input-wrapper select option {
-  background: #11151f;
-  color: #fff;
-}
-
-
-/* TEXTAREA */
-
-.input-wrapper textarea {
-  min-height: 130px;
-
-  padding: 15px 16px 15px 45px;
-
-  resize: vertical;
-
-  line-height: 1.6;
-}
-
-.textarea-icon {
-  top: 18px;
-
-  transform: none;
-}
-
-
-/* PLACEHOLDER */
-
-.input-wrapper input::placeholder,
-.input-wrapper textarea::placeholder {
-  color: rgba(255, 255, 255, 0.28);
-}
-
-
-/* FOCUS */
-
-.input-wrapper input:focus,
-.input-wrapper select:focus,
-.input-wrapper textarea:focus {
-  border-color: rgba(242, 185, 12, 0.55);
-
-  background: rgba(242, 185, 12, 0.025);
-
-  box-shadow:
-    0 0 0 3px rgba(242, 185, 12, 0.08);
-}
-
-.input-wrapper:focus-within .input-icon {
-  color: var(--color-accent);
-}
-
-
-/* SELECT ARROW */
-
-.select-arrow {
-  position: absolute;
-
-  right: 16px;
-  top: 50%;
-
-  transform: translateY(-50%);
-
-  color: rgba(255, 255, 255, 0.32);
-
-  font-size: 11px;
-
-  pointer-events: none;
-}
-
-
-/* =========================================================
-   SUBMIT BUTTON
-   ========================================================= */
-
-.contact-submit {
-  width: 100%;
-  min-height: 53px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 11px;
-
-  margin-top: 3px;
-
-  border: none;
-  border-radius: 12px;
-
-  background: var(--color-accent);
-  color: #111;
-
-  font-family: inherit;
-  font-size: 0.86rem;
-  font-weight: 700;
-
-  cursor: pointer;
-
-  box-shadow:
-    0 10px 28px rgba(242, 185, 12, 0.16);
-
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease,
-    filter 0.2s ease;
-}
-
-.contact-submit:hover {
-  transform: translateY(-2px);
-
-  filter: brightness(1.05);
-
-  box-shadow:
-    0 15px 35px rgba(242, 185, 12, 0.24);
-}
-
-.contact-submit:active {
-  transform: translateY(0);
-}
-
-.contact-submit i {
-  font-size: 13px;
-
-  transition: transform 0.2s ease;
-}
-
-.contact-submit:hover i {
-  transform: translateX(3px);
-}
-
-
-/* =========================================================
-   PRIVACY NOTE
-   ========================================================= */
-
-.form-note {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 7px;
-
-  margin: 0;
-
-  color: var(--color-text-light);
-
-  font-size: 0.68rem;
-  line-height: 1.5;
-
-  text-align: center;
-}
-
-.form-note i {
-  color: var(--color-accent);
-  font-size: 10px;
-}
-
-
-/* =========================================================
-   RESPONSIVE
-   ========================================================= */
-
-@media (max-width: 900px) {
-
-  .contact-grid {
-    grid-template-columns: 1fr;
-    gap: 45px;
-  }
-
-  .contact-info {
-    max-width: 700px;
-  }
-
-}
-
-
-@media (max-width: 600px) {
-
-  .contact-grid {
-    margin-top: 38px;
-    gap: 35px;
-  }
-
-  .form-row {
-    grid-template-columns: 1fr;
-    gap: 19px;
-  }
-
-  .contact-form-wrapper {
-    padding: 22px 18px;
-    border-radius: 18px;
-  }
-
-  .contact-form-header {
-    padding-bottom: 20px;
-    margin-bottom: 21px;
-  }
-
-  .contact-item {
-    padding: 15px;
-  }
-
-  .contact-icon {
-    width: 44px;
-    height: 44px;
-    flex-basis: 44px;
-  }
-
-  .contact-item-content strong {
-    font-size: 0.86rem;
-  }
-
-  .contact-intro {
-    padding-bottom: 17px;
-  }
-
-  .contact-trust {
-    padding: 14px;
-  }
-
-  .input-wrapper input,
-  .input-wrapper select {
-    height: 50px;
-  }
-
-  .input-wrapper textarea {
-    min-height: 120px;
-  }
-
-}
-
-/* =========================================================
-   KENNE CINEMATIC HERO ADVERTISEMENT
-   FIX: consolidated the three separate/overlapping mobile hero
-   media queries that existed below into one block further down,
-   and switched the slides from `background-size:contain` (which
-   letterboxed the image with black bars and made the section read
-   as unnecessarily tall/empty) to `cover`, so the image fills the
-   hero at whatever height .hero is set to, on every screen size.
-   ========================================================= */
-
-.hero-video-bg {
-  position: absolute;
-  inset: 0;
-
-  width: 100%;
-  height: 100%;
-
-  overflow: hidden;
-
-  background: #080808;
-}
-
-
-/* Individual cinematic slides */
-
-.hero-slide {
-  position: absolute;
-  inset: 0;
-
-  width: 100%;
-  height: 100%;
-
-  background-position: center center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-color: #080808;
-
-  opacity: 0;
-
-  transform: scale(1);
-
-  transition:
-    opacity 0.7s ease-in-out,
-    transform 0.7s ease-in-out;
-
-  will-change: opacity, transform;
-}
-
-.hero-slide.active {
-  opacity: 1;
-  transform: scale(1.01);
-}
-
-
-/* Cinematic movement */
-
-.hero-slide:nth-child(odd).active {
-  transform: scale(1.04) translateX(-0.7%);
-}
-
-.hero-slide:nth-child(even).active {
-  transform: scale(1.04) translateX(0.7%);
-}
-
-
-/* =========================================================
-   PREMIUM CINEMATIC OVERLAY
-   ========================================================= */
-
-.hero-overlay {
-  position: absolute;
-  inset: 0;
-
-  z-index: 2;
-
-  background:
-    linear-gradient(
-      90deg,
-      rgba(5, 7, 12, 0.94) 0%,
-      rgba(5, 7, 12, 0.78) 38%,
-      rgba(5, 7, 12, 0.48) 68%,
-      rgba(5, 7, 12, 0.72) 100%
-    ),
-    linear-gradient(
-      180deg,
-      rgba(5, 7, 12, 0.35) 0%,
-      rgba(5, 7, 12, 0.05) 45%,
-      rgba(5, 7, 12, 0.78) 100%
-    );
-}
-
-
-/* Slight cinematic vignette */
-
-.hero-video-bg::after {
-  content: "";
-
-  position: absolute;
-  inset: 0;
-
-  pointer-events: none;
-
-  background:
-    radial-gradient(
-      ellipse at center,
-      transparent 30%,
-      rgba(0,0,0,0.28) 100%
-    );
-}
-
-
-/* =========================================================
-   CONTENT STAYS ABOVE ANIMATION
-   ========================================================= */
-
-.hero .container,
-.hero .hero-content {
-  position: relative;
-  z-index: 4;
-}
-
-
-/* =========================================================
-   MOVING TECHNICAL TRACK
-   ========================================================= */
-
-.hero-track {
-  position: absolute;
-
-  z-index: 3;
-
-  inset: 0;
-
-  pointer-events: none;
-
-  overflow: hidden;
-
-  opacity: 0.28;
-}
-
-
-/* Keep the existing track professional */
-
-.hero-track-line {
-  position: absolute;
-
-  height: 1px;
-
-  width: 100%;
-
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(242,185,12,0.45),
-    transparent
-  );
-
-  animation: kenneTrackMove 7s linear infinite;
-}
-
-.hero-track-line:nth-child(1) {
-  top: 24%;
-  animation-delay: 0s;
-}
-
-.hero-track-line:nth-child(2) {
-  top: 42%;
-  animation-delay: 1.8s;
-}
-
-.hero-track-line:nth-child(3) {
-  top: 67%;
-  animation-delay: 3.5s;
-}
-
-.hero-track-line:nth-child(4) {
-  top: 84%;
-  animation-delay: 5s;
-}
-
-
-@keyframes kenneTrackMove {
-
-  0% {
-    transform: translateX(-100%);
-    opacity: 0;
-  }
-
-  15% {
-    opacity: 1;
-  }
-
-  85% {
-    opacity: 1;
-  }
-
-  100% {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-
-}
-
-
-/* =========================================================
-   MOBILE — single consolidated hero block
-   Replaces the three separate/conflicting mobile hero blocks
-   that used to live at the end of this file (one setting
-   background-position:center top + cover, one setting a fixed
-   680px height, and one duplicating both). A phone hero this
-   tall forced people to scroll a long way before reaching any
-   content, so it's capped well below the viewport height instead.
-   ========================================================= */
-
-@media (max-width: 768px) {
-
-  .hero {
-    height: auto;
-    min-height: 78svh;
-    max-height: 560px;
-  }
-
-  .hero-video-bg,
-  .hero-slide {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-  }
-
-  .hero-slide {
-    background-position: center top;
-    background-size: cover;
-  }
-
-  .hero-overlay {
-    background:
-      linear-gradient(
-        180deg,
-        rgba(5,7,12,0.78) 0%,
-        rgba(5,7,12,0.62) 45%,
-        rgba(5,7,12,0.91) 100%
-      );
-  }
-
-  .hero-track {
-    opacity: 0.16;
-  }
-
-}
-
-@media (max-width: 480px) {
-  .hero {
-    min-height: 72svh;
-    max-height: 480px;
-  }
-}
-.footer-contact-icon {
-  width: 42px;
-  height: 42px;
-
-  min-width: 42px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  border-radius: 11px;
-
-  background: rgba(242, 185, 12, 0.10);
-  border: 1px solid rgba(242, 185, 12, 0.18);
-
-  color: var(--color-accent);
-
-  transition:
-    background 0.25s ease,
-    transform 0.25s ease,
-    border-color 0.25s ease;
-}
-
-.footer-contact-icon svg {
-  width: 19px;
-  height: 19px;
-
-  fill: none;
-
-  stroke: currentColor;
-  stroke-width: 1.8;
-
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.footer-contact-item:hover .footer-contact-icon {
-  background: rgba(242, 185, 12, 0.16);
-  border-color: rgba(242, 185, 12, 0.35);
-
-  transform: translateY(-2px);
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="KENNE provides mobile phones and electronics, China product sourcing, importation and cargo services, agent sourcing, money exchange solutions, car sales, rentals, parts and accessories.">
+  <title>KENNE | Mobile Phones, China Sourcing, Importation & Cars</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/animations.css">
+  <link rel="stylesheet" href="assets/css/themes.css">
+  <link rel="stylesheet" href="assets/css/dark-mode.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="canonical" href="https://www.kennegroup.com/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="KENNE">
+  <meta property="og:title" content="KENNE | Mobile Phones, China Sourcing, Importation & Cars">
+  <meta property="og:description" content="KENNE provides mobile phones and electronics, China product sourcing, importation and cargo services, agent sourcing, money exchange solutions, car sales, rentals, parts and accessories.">
+  <meta property="og:url" content="https://www.kennegroup.com/">
+  <meta property="og:image" content="https://www.kennegroup.com/favicon.svg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="KENNE | Mobile Phones, China Sourcing, Importation & Cars">
+  <meta name="twitter:description" content="KENNE provides mobile phones and electronics, China product sourcing, importation and cargo services, agent sourcing, money exchange solutions, car sales, rentals, parts and accessories.">
+  <meta name="theme-color" content="#0A0E27">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "name": "KENNE",
+  "description": "KENNE provides mobile phones and electronics, China product sourcing, importation and cargo services, agent sourcing, money exchange solutions, car sales, rentals, parts and accessories.",
+  "url": "https://www.kennegroup.com",
+  "logo": "https://www.kennegroup.com/favicon.svg",
+  "image": "https://www.kennegroup.com/favicon.svg",
+  "telephone": "+237670735947",
+  "email": "info@kennegroup.com",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Douala",
+    "addressCountry": "CM"
+  },
+  "areaServed": [
+    {
+      "@type": "Country",
+      "name": "Cameroon"
+    },
+    {
+      "@type": "Country",
+      "name": "China"
+    }
+  ],
+  "openingHoursSpecification": [
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday"
+      ],
+      "opens": "08:00",
+      "closes": "18:00"
+    }
+  ],
+  "department": [
+    {
+      "@type": "LocalBusiness",
+      "name": "KENNE Smart Technology",
+      "url": "https://www.kennegroup.com/smart-tech/"
+    },
+    {
+      "@type": "LocalBusiness",
+      "name": "KENNE Cargo",
+      "url": "https://www.kennegroup.com/cargo/"
+    },
+    {
+      "@type": "LocalBusiness",
+      "name": "KENNE Car Business",
+      "url": "https://www.kennegroup.com/cars/"
+    }
+  ]
+}
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What does KENNE do?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "KENNE operates across three major sectors: technology and electronics, China sourcing and importation, and automotive services."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can KENNE help me source products from China?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Kenne Cargo provides China sourcing and importation assistance for customers looking for products and suppliers."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I buy products in wholesale quantities?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. KENNE provides wholesale solutions across selected technology, electronics, automotive, and other product categories."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does KENNE sell mobile phones?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Kenne Smart Technology SARL deals in mobile phones, electronics, mobile accessories, and smart technology products."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does KENNE sell and rent cars?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Kenne Car Business provides wholesale and retail vehicle sales as well as car rental services."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can KENNE help me find car parts?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Kenne Car Business deals in automobile parts and accessories for vehicle owners, mechanics, garages, and businesses."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How can I contact KENNE?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Contact our team through WhatsApp, phone, email, or the contact form on our website."
+      }
+    }
+  ]
+}  
+ </script>
+</head>
+<body>
+
+  <div id="header-placeholder"></div>
+
+  <!-- ================================================
+       HERO
+       FIX: this whole section used to be wrapped in
+       markdown-style ```html / ``` code fences, which are not
+       valid HTML — a browser would have printed the literal
+       text "```html" on the page instead of rendering the hero.
+       Removed. Hero sizing itself is now handled responsively
+       in style.css (no more fixed 100vh/680px blocks).
+  ================================================= -->
+  <section class="hero">
+
+    <!-- CINEMATIC ADVERTISING BACKGROUND -->
+    <div class="hero-video-bg">
+
+      <!-- Existing shipping image remains part of the animation -->
+      <div
+        class="hero-slide active"
+        style="background-image:url('https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=1600&q=80');">
+      </div>
+
+      <!-- Luxury Cars -->
+      <div
+        class="hero-slide"
+        style="background-image:url('https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1600&q=80');">
+      </div>
+
+      <!-- Premium Phone -->
+      <div
+        class="hero-slide"
+        style="background-image:url('assets/images/iphones.jpg');">
+      </div>
+
+      <!-- Samsung / Android style premium smartphone -->
+      <div
+        class="hero-slide"
+        style="background-image:url('assets/images/samsung.jpg');">
+      </div>
+
+      <!-- Phone Accessories -->
+      <div
+        class="hero-slide"
+        style="background-image:url('assets/images/accessories.jpg');">
+      </div>
+
+      <!-- Global logistics / shipping -->
+      <div
+        class="hero-slide"
+        style="background-image:url('https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?auto=format&fit=crop&w=1600&q=80');">
+      </div>
+
+    </div>
+
+    <!-- Cinematic dark overlay -->
+    <div class="hero-overlay"></div>
+
+    <!-- Moving technical lines -->
+    <div class="hero-track">
+      <div class="hero-track-line"></div>
+      <div class="hero-track-line"></div>
+      <div class="hero-track-line"></div>
+      <div class="hero-track-line"></div>
+    </div>
+
+
+    <div class="container">
+      <div class="hero-content">
+
+        <div class="hero-eyebrow">
+          <div class="hero-eyebrow-dot"></div>
+          Smart Solutions. Global Sourcing. Reliable Mobility.
+        </div>
+
+        <h1 class="hero-title">
+          Kenne, Global<br>
+          <span class="accent">Sourcing</span> &amp;<br>
+          <span class="outline">Automotive Solutions</span>
+        </h1>
+
+        <p class="hero-subtitle">
+          KENNE is a diversified business group providing mobile phones and electronics, China sourcing
+          and importation, cargo services, money exchange, and automobile sales and rentals — connecting
+          Cameroon, China, and international markets. <strong>Connect. Source. Import. Drive.</strong>
+        </p>
+
+        <div class="hero-actions">
+          <a href="#divisions" class="btn btn--primary btn--lg">
+            Explore Our Divisions
+          </a>
+
+          <a href="#contact" class="btn btn--outline-white btn--lg">
+            Get in Touch
+          </a>
+        </div>
+
+        <div class="hero-stats">
+
+          <div class="hero-stat">
+            <div class="hero-stat-number">
+              <span class="counter" data-target="3">0</span>
+            </div>
+            <div class="hero-stat-label">
+              Business Divisions
+            </div>
+          </div>
+
+          <div class="hero-stat">
+            <div class="hero-stat-number">
+              <span class="counter" data-target="4000" data-suffix="+">0+</span>
+            </div>
+            <div class="hero-stat-label">
+              Shipments Handled
+            </div>
+          </div>
+
+          <div class="hero-stat">
+            <div class="hero-stat-number">
+              <span class="counter" data-target="800" data-suffix="+">0+</span>
+            </div>
+            <div class="hero-stat-label">
+              Cars &amp; Devices Sold
+            </div>
+          </div>
+
+          <div class="hero-stat">
+            <div class="hero-stat-number">
+              <span class="counter" data-target="98" data-suffix="%">0%</span>
+            </div>
+            <div class="hero-stat-label">
+              Customer Satisfaction
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+  </section>
+
+
+  <!-- ================================================
+       ABOUT
+       FIX: this section's markup was missing its opening
+       <section> tag — it ended in a stray </section> with
+       nothing to match, which breaks the document outline and
+       can make the browser close/reopen elements unpredictably.
+  ================================================= -->
+  <section class="section about-section" id="about">
+  <div class="container">
+    <div class="grid grid-2 about-section" style="gap:var(--space-12);align-items:center;">
+
+      <!-- About Image -->
+      <div class="reveal-left about-image">
+        <img
+          src="assets/images/about.jpg"
+          alt="KENNE professional team and business operations"
+          loading="lazy"
+        >
+
+        <div class="about-image__badge">
+          <div class="about-image__badge-icon">
+            <!-- Globe Icon -->
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <circle cx="12" cy="12" r="9"></circle>
+              <path d="M3 12h18"></path>
+              <path d="M12 3c2.2 2.4 3.4 5.4 3.4 9S14.2 18.6 12 21"></path>
+              <path d="M12 3c-2.2 2.4-3.4 5.4-3.4 9s1.2 6.6 3.4 9"></path>
+            </svg>
+          </div>
+
+          <div>
+            <strong>KENNE</strong>
+            <span>Technology • Trade • Mobility</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- About Content -->
+      <div class="reveal-right">
+        <div class="eyebrow">About KENNE</div>
+
+        <h2 class="section-title">
+          Your Trusted Partner for
+          <span>Technology, Trade &amp; Mobility</span>
+        </h2>
+
+        <p class="about-description">
+          KENNE is a multi-sector business built to make technology,
+          international sourcing, importation, and automotive services
+          easier and more accessible to individuals, entrepreneurs,
+          and businesses.
+        </p>
+
+        <p class="about-description">
+          We understand that buying products internationally, importing
+          goods, finding reliable suppliers, purchasing vehicles, and
+          accessing quality electronics can be challenging. That's why
+          KENNE brings these services together under one trusted brand,
+          connecting customers with practical solutions across
+          technology, trade, and mobility.
+        </p>
+
+        <!-- Professional Features -->
+        <div class="kenne-features">
+
+          <!-- Quality -->
+          <div class="feature-card">
+            <div class="feature-card__icon">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M12 3l2.1 2.1 3-.2.9 2.9 2.6 1.5-1.1 2.8 1.1 2.8-2.6 1.5-.9 2.9-3-.2L12 21l-2.1-2.1-3 .2-.9-2.9-2.6-1.5 1.1-2.8-1.1-2.8L6 7.8l.9-2.9 3 .2L12 3z"></path>
+                <path d="M8.5 12l2.2 2.2 4.8-4.8"></path>
+              </svg>
+            </div>
+            <div>
+              <strong>Quality Products</strong>
+              <span>Carefully selected products and services</span>
+            </div>
+          </div>
+
+          <!-- Pricing -->
+          <div class="feature-card">
+            <div class="feature-card__icon">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M12 2v20"></path>
+                <path d="M17 6.5c0-1.7-2.2-3-5-3s-5 1.3-5 3 2.2 3 5 3 5 1.3 5 3-2.2 3-5 3-5-1.3-5-3"></path>
+              </svg>
+            </div>
+            <div>
+              <strong>Competitive Pricing</strong>
+              <span>Practical pricing for individuals and businesses</span>
+            </div>
+          </div>
+
+          <!-- Sourcing -->
+          <div class="feature-card">
+            <div class="feature-card__icon">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <circle cx="9" cy="9" r="5"></circle>
+                <path d="M13 13l7 7"></path>
+                <path d="M7 9h4"></path>
+                <path d="M9 7v4"></path>
+              </svg>
+            </div>
+            <div>
+              <strong>Reliable Sourcing</strong>
+              <span>Connections to suppliers and international markets</span>
+            </div>
+          </div>
+
+          <!-- Professional Service -->
+          <div class="feature-card">
+            <div class="feature-card__icon">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M21 15.5a2 2 0 0 1-2 2h-1.2a2 2 0 0 0-1.7 1l-.5.8a2 2 0 0 1-3.2 0l-.5-.8a2 2 0 0 0-1.7-1H9a2 2 0 0 1-2-2V8.5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+                <path d="M7 12H5a2 2 0 0 0-2 2v3"></path>
+                <path d="M7 9H5a2 2 0 0 0-2-2V5"></path>
+                <circle cx="12" cy="11.5" r="1"></circle>
+                <circle cx="16" cy="11.5" r="1"></circle>
+              </svg>
+            </div>
+            <div>
+              <strong>Professional Service</strong>
+              <span>Customer-focused support from start to finish</span>
+            </div>
+          </div>
+
+          <!-- Transparency -->
+          <div class="feature-card">
+            <div class="feature-card__icon">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M3 12s3.5-7 9-7 9 7 9 7-3.5 7-9 7-9-7-9-7z"></path>
+                <circle cx="12" cy="12" r="2.5"></circle>
+              </svg>
+            </div>
+            <div>
+              <strong>Transparent Processes</strong>
+              <span>Clear communication throughout every transaction</span>
+            </div>
+          </div>
+
+          <!-- International -->
+          <div class="feature-card">
+            <div class="feature-card__icon">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <circle cx="12" cy="12" r="9"></circle>
+                <path d="M3 12h18"></path>
+                <path d="M12 3c2.5 2.7 3.5 5.7 3.5 9s-1 6.3-3.5 9"></path>
+                <path d="M12 3c-2.5 2.7-3.5 5.7-3.5 9s1 6.3 3.5 9"></path>
+              </svg>
+            </div>
+            <div>
+              <strong>International Connections</strong>
+              <span>Access to global trade and sourcing networks</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+  </section>
+
+  <!-- ================================================
+       OUR DIVISIONS
+  ================================================= -->
+  <section class="section bg-light" id="divisions">
+    <div class="container">
+
+      <!-- Section Header -->
+      <div class="section-header section-header--center reveal">
+        <div class="eyebrow">Our Core Business Divisions</div>
+
+        <h2 class="section-title">
+          One Business.
+          <span>Three Divisions.</span>
+        </h2>
+
+        <p class="section-subtitle">
+          Each division has its own focus, its own expertise, and its own
+          dedicated platform — all connected by the KENNE standard of service.
+        </p>
+      </div>
+
+
+      <div class="grid grid-3 kenne-divisions-grid stagger-children">
+
+
+        <!-- =========================================
+             KENNE SMART TECHNOLOGY
+        ========================================== -->
+        <a href="smart-tech/index.html" class="kenne-division-card">
+
+          <div class="kenne-division-image">
+
+            <img
+              src="assets/images/smarts.jpg"
+              alt="Modern smartphone and smart technology"
+              loading="lazy"
+            >
+
+            <div class="kenne-image-overlay"></div>
+
+            <div class="kenne-division-label tech-label">
+              <span class="kenne-label-dot"></span>
+              KENNE Smart Technology SARL
+            </div>
+
+            <div class="kenne-image-icon">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <rect x="6" y="2.5" width="12" height="19" rx="2"></rect>
+                <path d="M10 5h4"></path>
+                <path d="M11 18h2"></path>
+              </svg>
+            </div>
+
+          </div>
+
+
+
+          <div class="kenne-division-content">
+
+            <h3>
+              Smart Technology.
+              <span>Quality Electronics.</span>
+            </h3>
+
+            <p>
+              Mobile phones, electronics, smart devices and accessories
+              for individuals, professionals and businesses — available
+              through wholesale and retail.
+            </p>
+
+            <div class="kenne-division-action tech-action">
+              <span>Visit Kenne Tech</span>
+
+              <span class="kenne-action-icon">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M5 12h13"></path>
+                  <path d="M13 6l6 6-6 6"></path>
+                </svg>
+              </span>
+            </div>
+
+          </div>
+
+        </a>
+
+
+
+        <!-- =========================================
+             KENNE CARGO
+        ========================================== -->
+        <a href="cargo/index.html" class="kenne-division-card">
+
+          <div class="kenne-division-image">
+
+            <img
+              src="https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?auto=format&fit=crop&w=1200&q=85"
+              alt="International cargo shipping and logistics"
+              loading="lazy"
+            >
+
+            <div class="kenne-image-overlay"></div>
+
+            <div class="kenne-division-label cargo-label">
+              <span class="kenne-label-dot"></span>
+              KENNE Cargo
+            </div>
+
+            <div class="kenne-image-icon">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M3 7h12v10H3z"></path>
+                <path d="M15 10h3l3 3v4h-6z"></path>
+                <circle cx="7" cy="18" r="2"></circle>
+                <circle cx="18" cy="18" r="2"></circle>
+              </svg>
+            </div>
+
+          </div>
+
+
+          <div class="kenne-division-content">
+
+            <h3>
+              China Sourcing &
+              <span>Importation.</span>
+            </h3>
+
+            <p>
+              Agent sourcing, international importation, cargo and logistics,
+              and business support connecting China with Cameroon and
+              international markets.
+            </p>
+
+            <div class="kenne-division-action cargo-action">
+              <span>Visit Kenne Cargo</span>
+
+              <span class="kenne-action-icon">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M5 12h13"></path>
+                  <path d="M13 6l6 6-6 6"></path>
+                </svg>
+              </span>
+            </div>
+
+          </div>
+
+        </a>
+
+
+
+        <!-- =========================================
+             KENNE CAR BUSINESS
+        ========================================== -->
+        <a href="cars/index.html" class="kenne-division-card">
+
+          <div class="kenne-division-image">
+
+            <!-- PROFESSIONAL CAR IMAGE -->
+            <img
+              src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=1200&q=85"
+              alt="Premium automobile for KENNE Car Business"
+              loading="lazy"
+            >
+
+            <div class="kenne-image-overlay"></div>
+
+            <div class="kenne-division-label cars-label">
+              <span class="kenne-label-dot"></span>
+              KENNE Car Business
+            </div>
+
+            <div class="kenne-image-icon">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M5 16l1.5-5h11L19 16"></path>
+                <path d="M4 16h16v4H4z"></path>
+                <path d="M7 11l1.5-4h7L17 11"></path>
+                <circle cx="7.5" cy="18" r="1.5"></circle>
+                <circle cx="16.5" cy="18" r="1.5"></circle>
+              </svg>
+            </div>
+
+          </div>
+
+
+          <div class="kenne-division-content">
+
+            <h3>
+              Vehicle Sales, Rentals
+              <span>&amp; Parts.</span>
+            </h3>
+
+            <p>
+              Wholesale and retail vehicle sales, professional car rentals,
+              genuine automobile parts and accessories for a wide range
+              of automotive needs.
+            </p>
+
+            <div class="kenne-division-action cars-action">
+              <span>Visit Kenne Cars</span>
+
+              <span class="kenne-action-icon">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M5 12h13"></path>
+                  <path d="M13 6l6 6-6 6"></path>
+                </svg>
+              </span>
+            </div>
+
+          </div>
+
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ================================================
+       WHY CHOOSE KENNE
+       FIX: closing tag below used to be "</section" with no
+       closing angle bracket, which is invalid and would make
+       the browser try to recover by folding the next section
+       inside this one.
+  ================================================= -->
+  <section class="section kenne-why-section">
+    <div class="container">
+
+      <!-- Section Header -->
+      <div class="section-header section-header--center reveal">
+        <div class="eyebrow">Why Choose KENNE</div>
+
+        <h2 class="section-title">
+          One Business. Multiple Solutions.
+          <span>Global Connections.</span>
+        </h2>
+
+        <p class="kenne-why-intro">
+          KENNE brings technology, trade, sourcing, and mobility solutions
+          together to create a simpler and more connected experience for
+          individuals, entrepreneurs, and businesses.
+        </p>
+      </div>
+
+      <!-- Features -->
+      <div class="grid grid-3 kenne-why-grid stagger-children">
+
+        <!-- Reliability -->
+        <div class="card kenne-value-card">
+
+          <div class="kenne-value-icon">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M20 11.5c0 5-3.5 8.3-8 10-4.5-1.7-8-5-8-10V6l8-3 8 3v5.5z"></path>
+              <path d="M8.5 12l2.2 2.2 4.8-4.8"></path>
+            </svg>
+          </div>
+
+          <div class="kenne-value-content">
+            <span class="kenne-value-number">01</span>
+            <h4>Reliability</h4>
+            <p>
+              We focus on building long-term relationships with our
+              customers and business partners through dependable service
+              and clear communication.
+            </p>
+          </div>
+
+        </div>
+
+
+        <!-- Quality -->
+        <div class="card kenne-value-card">
+
+          <div class="kenne-value-icon">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M12 3l2.1 2.1 3-.2.9 2.9 2.6 1.5-1.1 2.8 1.1 2.8-2.6 1.5-.9 2.9-3-.2L12 21l-2.1-2.1-3 .2-.9-2.9-2.6-1.5 1.1-2.8-1.1-2.8L6 7.8l.9-2.9 3 .2L12 3z"></path>
+              <path d="M8.5 12l2.2 2.2 4.8-4.8"></path>
+            </svg>
+          </div>
+
+          <div class="kenne-value-content">
+            <span class="kenne-value-number">02</span>
+            <h4>Quality</h4>
+            <p>
+              We aim to provide products and services that meet customer
+              expectations while maintaining attention to quality and value.
+            </p>
+          </div>
+
+        </div>
+
+
+        <!-- Competitive Pricing -->
+        <div class="card kenne-value-card">
+
+          <div class="kenne-value-icon">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <circle cx="12" cy="12" r="9"></circle>
+              <path d="M12 7v10"></path>
+              <path d="M15 9.5c0-1.1-1.3-2-3-2s-3 .9-3 2 1.3 2 3 2 3 .9 3 2-1.3 2-3 2-3-.9-3-2"></path>
+            </svg>
+          </div>
+
+          <div class="kenne-value-content">
+            <span class="kenne-value-number">03</span>
+            <h4>Competitive Pricing</h4>
+            <p>
+              Our international sourcing and business connections allow
+              us to pursue competitive pricing across our range of
+              products and services.
+            </p>
+          </div>
+
+        </div>
+
+
+        <!-- Convenience -->
+        <div class="card kenne-value-card">
+
+          <div class="kenne-value-icon">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <rect x="3" y="3" width="7" height="7" rx="1"></rect>
+              <rect x="14" y="3" width="7" height="7" rx="1"></rect>
+              <rect x="3" y="14" width="7" height="7" rx="1"></rect>
+              <rect x="14" y="14" width="7" height="7" rx="1"></rect>
+            </svg>
+          </div>
+
+          <div class="kenne-value-content">
+            <span class="kenne-value-number">04</span>
+            <h4>Convenience</h4>
+            <p>
+              We bring multiple business solutions together under one
+              brand, making it easier to access the services you need.
+            </p>
+          </div>
+
+        </div>
+
+
+        <!-- Professional Service -->
+        <div class="card kenne-value-card">
+
+          <div class="kenne-value-icon">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M21 15.5a2 2 0 0 1-2 2h-1.2a2 2 0 0 0-1.7 1l-.5.8a2 2 0 0 1-3.2 0l-.5-.8a2 2 0 0 0-1.7-1H9a2 2 0 0 1-2-2V8.5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v7z"></path>
+              <path d="M7 10H5a2 2 0 0 0-2 2v5"></path>
+              <path d="M7 7H5a2 2 0 0 1-2-2V4"></path>
+              <circle cx="12" cy="12" r="1"></circle>
+              <circle cx="16" cy="12" r="1"></circle>
+            </svg>
+          </div>
+
+          <div class="kenne-value-content">
+            <span class="kenne-value-number">05</span>
+            <h4>Professional Service</h4>
+            <p>
+              Our team works to make every transaction clear, efficient,
+              organized, and focused on the needs of our customers.
+            </p>
+          </div>
+
+        </div>
+
+
+        <!-- International Reach -->
+        <div class="card kenne-value-card">
+
+          <div class="kenne-value-icon">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <circle cx="12" cy="12" r="9"></circle>
+              <path d="M3 12h18"></path>
+              <path d="M12 3c2.4 2.6 3.5 5.7 3.5 9s-1.1 6.4-3.5 9"></path>
+              <path d="M12 3c-2.4 2.6-3.5 5.7-3.5 9s1.1 6.4 3.5 9"></path>
+              <path d="M5.5 6.5h13"></path>
+              <path d="M5.5 17.5h13"></path>
+            </svg>
+          </div>
+
+          <div class="kenne-value-content">
+            <span class="kenne-value-number">06</span>
+            <h4>International Reach</h4>
+            <p>
+              Business connections involving China and international
+              markets help connect customers with global sourcing and
+              trade opportunities.
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================
+       HOW KENNE WORKS
+  ================================================= -->
+  <section class="section bg-light" id="how-it-works">
+    <div class="container">
+      <div class="section-header section-header--center reveal">
+        <div class="eyebrow">How KENNE Works</div>
+        <h2 class="section-title">Simple. Professional. <span>Customer-Focused.</span></h2>
+      </div>
+      <div class="grid grid-5 stagger-children">
+        <div class="card" style="padding:var(--space-5);text-align:center;">
+          <div style="font-family:var(--font-display);font-size:1.6rem;font-weight:900;color:var(--color-accent);margin-bottom:8px;">01</div>
+          <h4 style="font-size:var(--text-sm);margin-bottom:6px;">Tell Us What You Need</h4>
+          <p style="font-size:12px;color:var(--color-text-light);">Explain the product, vehicle, cargo, or service you're looking for.</p>
+        </div>
+        <div class="card" style="padding:var(--space-5);text-align:center;">
+          <div style="font-family:var(--font-display);font-size:1.6rem;font-weight:900;color:var(--color-accent);margin-bottom:8px;">02</div>
+          <h4 style="font-size:var(--text-sm);margin-bottom:6px;">Get Your Options</h4>
+          <p style="font-size:12px;color:var(--color-text-light);">We evaluate your request and provide options, pricing, and information.</p>
+        </div>
+        <div class="card" style="padding:var(--space-5);text-align:center;">
+          <div style="font-family:var(--font-display);font-size:1.6rem;font-weight:900;color:var(--color-accent);margin-bottom:8px;">03</div>
+          <h4 style="font-size:var(--text-sm);margin-bottom:6px;">Confirm</h4>
+          <p style="font-size:12px;color:var(--color-text-light);">Once satisfied with the proposed solution, proceed with the transaction.</p>
+        </div>
+        <div class="card" style="padding:var(--space-5);text-align:center;">
+          <div style="font-family:var(--font-display);font-size:1.6rem;font-weight:900;color:var(--color-accent);margin-bottom:8px;">04</div>
+          <h4 style="font-size:var(--text-sm);margin-bottom:6px;">We Handle It</h4>
+          <p style="font-size:12px;color:var(--color-text-light);">We coordinate sourcing, purchasing, cargo, vehicles, or delivery.</p>
+        </div>
+        <div class="card" style="padding:var(--space-5);text-align:center;">
+          <div style="font-family:var(--font-display);font-size:1.6rem;font-weight:900;color:var(--color-accent);margin-bottom:8px;">05</div>
+          <h4 style="font-size:var(--text-sm);margin-bottom:6px;">You Receive It</h4>
+          <p style="font-size:12px;color:var(--color-text-light);">Convenient, straightforward — from start to finish.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================
+       OUR SERVICES
+  ================================================= -->
+  <section class="section" id="services">
+    <div class="container">
+      <div class="section-header section-header--center reveal">
+        <div class="eyebrow">Explore KENNE Business Solutions</div>
+        <h2 class="section-title">Our <span>Services</span></h2>
+      </div>
+      <div class="grid grid-4 stagger-children">
+
+        <a href="smart-tech/shop.html" class="destination-card">
+          <img src="https://images.unsplash.com/photo-1592890288564-76628a30a657?auto=format&fit=crop&w=500&q=80" alt="Technology & Electronics" class="destination-card__image">
+          <div class="destination-card__overlay"></div>
+          <div class="destination-card__body">
+            <div class="destination-card__country">📱 Technology</div>
+            <div class="destination-card__city">Phones &amp; Electronics</div>
+            <div class="destination-card__routes">Devices, accessories &amp; smart tech</div>
+          </div>
+        </a>
+
+        <a href="cargo/services.html" class="destination-card">
+          <img src="https://images.unsplash.com/photo-1553413077-190dd305871c?auto=format&fit=crop&w=500&q=80" alt="China Sourcing & Importation" class="destination-card__image">
+          <div class="destination-card__overlay"></div>
+          <div class="destination-card__body">
+            <div class="destination-card__country">📦 Sourcing</div>
+            <div class="destination-card__city">China &amp; Importation</div>
+            <div class="destination-card__routes">Suppliers, purchasing &amp; cargo</div>
+          </div>
+        </a>
+
+        <a href="cars/inventory.html" class="destination-card">
+          <img src="https://images.unsplash.com/photo-1583121274602-3e2820c69888?auto=format&fit=crop&w=500&q=80" alt="Cars & Automotive" class="destination-card__image">
+          <div class="destination-card__overlay"></div>
+          <div class="destination-card__body">
+            <div class="destination-card__country">🚗 Automotive</div>
+            <div class="destination-card__city">Cars &amp; Rentals</div>
+            <div class="destination-card__routes">Sales, rentals, parts &amp; accessories</div>
+          </div>
+        </a>
+
+        <a href="#contact" class="destination-card">
+          <img src="https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=500&q=80" alt="International Business" class="destination-card__image">
+          <div class="destination-card__overlay"></div>
+          <div class="destination-card__body">
+            <div class="destination-card__country">🌍 International</div>
+            <div class="destination-card__city">Business Solutions</div>
+            <div class="destination-card__routes">Connecting you to global markets</div>
+          </div>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================
+       WHO WE SERVE
+  ================================================= -->
+  <section class="section bg-light">
+    <div class="container">
+      <div class="section-header section-header--center reveal">
+        <div class="eyebrow">Who We Serve</div>
+        <h2 class="section-title">Built for <span>Everyone</span></h2>
+        <p class="section-subtitle">Whether you're buying one product or sourcing for an entire business, KENNE is ready to help.</p>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;max-width:820px;margin:0 auto;">
+        <span class="filter-chip active">Individuals</span>
+        <span class="filter-chip active">Entrepreneurs</span>
+        <span class="filter-chip active">Retailers</span>
+        <span class="filter-chip active">Wholesalers</span>
+        <span class="filter-chip active">Importers</span>
+        <span class="filter-chip active">Businesses</span>
+        <span class="filter-chip active">Car Owners</span>
+        <span class="filter-chip active">Automotive Businesses</span>
+        <span class="filter-chip active">Resellers</span>
+        <span class="filter-chip active">Corporate Customers</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================
+       VISION & MISSION
+  ================================================= -->
+  <section class="section kenne-vision-mission">
+    <div class="container">
+
+      <div class="grid grid-2 kenne-vm-grid stagger-children">
+
+        <!-- =========================================
+             OUR VISION
+        ========================================== -->
+        <div class="card kenne-vm-card">
+
+          <div class="kenne-vm-image">
+
+            <img
+              src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1200&q=85"
+              alt="KENNE vision for building connections and opportunities"
+              loading="lazy"
+            >
+
+            <div class="kenne-vm-overlay"></div>
+
+            <div class="kenne-vm-image-title">
+              <span>OUR VISION</span>
+            </div>
+
+            <!-- Professional Vision Icon -->
+            <div class="kenne-vm-icon vision-icon">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M2.5 12s3.5-6.5 9.5-6.5 9.5 6.5 9.5 6.5-3.5 6.5-9.5 6.5S2.5 12 2.5 12z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+                <path d="M12 2v2"></path>
+                <path d="M12 20v2"></path>
+              </svg>
+            </div>
+
+          </div>
+
+
+          <div class="kenne-vm-content">
+
+            <div class="eyebrow">Our Vision</div>
+
+            <h3>
+              Building a Trusted Business Network
+              <span>Across Africa and the World</span>
+            </h3>
+
+            <p>
+              Our vision is to build KENNE into a trusted and recognized
+              business brand connecting technology, international trade,
+              sourcing, logistics, and automotive solutions.
+            </p>
+
+            <p>
+              We aim to create opportunities by connecting African customers
+              and businesses to reliable products, suppliers, vehicles,
+              services, and international markets.
+            </p>
+
+            <div class="kenne-vm-line"></div>
+
+          </div>
+
+        </div>
+
+
+
+        <!-- =========================================
+             OUR MISSION
+        ========================================== -->
+        <div class="card kenne-vm-card">
+
+          <div class="kenne-vm-image">
+
+            <img
+              src="https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1200&q=85"
+              alt="Professional business team working together"
+              loading="lazy"
+            >
+
+            <div class="kenne-vm-overlay"></div>
+
+            <div class="kenne-vm-image-title">
+              <span>OUR MISSION</span>
+            </div>
+
+            <!-- Professional Mission Icon -->
+            <div class="kenne-vm-icon mission-icon">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <circle cx="12" cy="12" r="8.5"></circle>
+                <circle cx="12" cy="12" r="4.5"></circle>
+                <circle cx="12" cy="12" r="1.5"></circle>
+                <path d="M16 8l4-4"></path>
+                <path d="M17 4h3v3"></path>
+              </svg>
+            </div>
+
+          </div>
+
+
+          <div class="kenne-vm-content">
+
+            <div class="eyebrow">Our Mission</div>
+
+            <h3>
+              Reliable Solutions,
+              <span>Professional Service</span>
+            </h3>
+
+            <p>
+              Our mission is to provide reliable products, professional
+              services, competitive solutions, and international business
+              connections that help individuals and businesses grow.
+            </p>
+
+            <p>
+              Through our different business divisions, we work to simplify
+              access to technology, sourcing, trade, logistics, automotive
+              services, and global markets.
+            </p>
+
+            <div class="kenne-vm-line"></div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+
+  <!-- ================================================
+       FAQ
+  ================================================= -->
+  <section class="section bg-light" id="faq">
+    <div class="container">
+      <div class="section-header section-header--center reveal">
+        <div class="eyebrow">Frequently Asked Questions</div>
+        <h2 class="section-title">Got <span>Questions?</span></h2>
+      </div>
+      <div style="max-width:760px;margin:0 auto;" class="stagger-children">
+
+        <div class="faq-item">
+          <div class="faq-question"><span>What does KENNE do?</span><span class="faq-icon">+</span></div>
+          <div class="faq-answer"><p>KENNE operates across three major sectors: technology and electronics, China sourcing and importation, and automotive services.</p></div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question"><span>Can KENNE help me source products from China?</span><span class="faq-icon">+</span></div>
+          <div class="faq-answer"><p>Yes. Kenne Cargo provides China sourcing and importation assistance for customers looking for products and suppliers.</p></div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question"><span>Can I buy products in wholesale quantities?</span><span class="faq-icon">+</span></div>
+          <div class="faq-answer"><p>Yes. KENNE provides wholesale solutions across selected technology, electronics, automotive, and other product categories.</p></div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question"><span>Does KENNE sell mobile phones?</span><span class="faq-icon">+</span></div>
+          <div class="faq-answer"><p>Yes. Kenne Smart Technology SARL deals in mobile phones, electronics, mobile accessories, and smart technology products.</p></div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question"><span>Does KENNE sell and rent cars?</span><span class="faq-icon">+</span></div>
+          <div class="faq-answer"><p>Yes. Kenne Car Business provides wholesale and retail vehicle sales as well as car rental services.</p></div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question"><span>Can KENNE help me find car parts?</span><span class="faq-icon">+</span></div>
+          <div class="faq-answer"><p>Yes. Kenne Car Business deals in automobile parts and accessories for vehicle owners, mechanics, garages, and businesses.</p></div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question"><span>How can I contact KENNE?</span><span class="faq-icon">+</span></div>
+          <div class="faq-answer"><p>Contact our team through WhatsApp, phone, email, or the contact form below. Tell us what you need and our team will guide you through the available options.</p></div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="contact">
+  <style>
+    #contact .contact-info-item {
+      display:flex;gap:var(--space-4);align-items:flex-start;
+      padding:var(--space-4);border-radius:var(--radius-md);
+      transition:background .2s ease, transform .2s ease;
+    }
+    #contact .contact-info-item:hover {
+      background:rgba(242,185,12,0.06);
+      transform:translateX(4px);
+    }
+    #contact .contact-icon {
+      width:48px;height:48px;flex-shrink:0;
+      background:linear-gradient(135deg, rgba(242,185,12,0.16), rgba(242,185,12,0.06));
+      border:1px solid rgba(242,185,12,0.25);
+      border-radius:var(--radius-md);
+      display:flex;align-items:center;justify-content:center;
+      color:var(--color-accent);
+    }
+    #contact .contact-icon svg { width:22px;height:22px; }
+
+    #contact .form-control {
+      width:100%;
+      padding:12px 14px;
+      border:1.5px solid rgba(0,0,0,0.12);
+      border-radius:var(--radius-md);
+      background:#fff;
+      font-size:var(--text-sm);
+      transition:border-color .2s ease, box-shadow .2s ease;
+      box-shadow:0 1px 2px rgba(0,0,0,0.04);
+    }
+    #contact .form-control:hover {
+      border-color:rgba(0,0,0,0.2);
+    }
+    #contact .form-control:focus {
+      outline:none;
+      border-color:var(--color-accent);
+      box-shadow:0 0 0 3px rgba(242,185,12,0.18);
+    }
+    #contact .form-label {
+      font-weight:600;
+      font-size:var(--text-sm);
+      margin-bottom:6px;
+      display:block;
+      color:var(--color-text, #222);
+    }
+    #contact form.card {
+      box-shadow:0 8px 30px rgba(0,0,0,0.08);
+      border:1px solid rgba(0,0,0,0.06);
+      border-radius:var(--radius-lg, 16px);
+    }
+    #contact select.form-control {
+      appearance:none;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%23888' stroke-width='2' viewBox='0 0 24 24'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat:no-repeat;
+      background-position:right 14px center;
+      padding-right:36px;
+    }
+  </style>
+
+  <div class="container">
+    <div class="section-header section-header--center reveal">
+      <div class="eyebrow">Let's Do Business</div>
+      <h2 class="section-title">Contact <span>KENNE</span></h2>
+      <p class="section-subtitle">Looking for mobile phones, electronics, China-sourced products, importation services, vehicles, car rentals, automobile parts, or business sourcing solutions? Get in touch today.</p>
+    </div>
+
+    <div class="grid grid-2" style="gap:var(--space-12);align-items:flex-start;">
+      <div style="display:flex;flex-direction:column;gap:var(--space-2);">
+
+        <div class="contact-info-item">
+          <div class="contact-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+              <circle cx="12" cy="10" r="3"/>
+            </svg>
+          </div>
+          <div><strong style="display:block;margin-bottom:4px;">Location</strong><span style="color:var(--color-text-light);font-size:var(--text-sm);">Douala, Cameroon</span></div>
+        </div>
+
+        <div class="contact-info-item">
+          <div class="contact-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+            </svg>
+          </div>
+          <div><strong style="display:block;margin-bottom:4px;">Phone / WhatsApp</strong><a href="tel:+237670735947" style="color:var(--color-accent);font-size:var(--text-sm);">+237 670 735 947</a></div>
+        </div>
+
+        <div class="contact-info-item">
+          <div class="contact-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="4" width="20" height="16" rx="2"/>
+              <path d="m22 6-10 7L2 6"/>
+            </svg>
+          </div>
+          <div><strong style="display:block;margin-bottom:4px;">Email</strong><a href="mailto:info@kennegroup.com" style="color:var(--color-accent);font-size:var(--text-sm);">info@kennegroup.com</a></div>
+        </div>
+
+        <div class="contact-info-item">
+          <div class="contact-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M12 6v6l4 2"/>
+            </svg>
+          </div>
+          <div><strong style="display:block;margin-bottom:4px;">Hours</strong><span style="color:var(--color-text-light);font-size:var(--text-sm);">Mon–Sat: 8am–6pm</span></div>
+        </div>
+
+      </div>
+
+      <form class="card" style="padding:var(--space-8);" onsubmit="event.preventDefault(); if(typeof showToast==='function') showToast('✓ Enquiry sent — our team will reach out shortly.'); this.reset();">
+        <div class="form-group" style="margin-bottom:var(--space-4);"><label class="form-label">Name *</label><input type="text" class="form-control" placeholder="Your full name" required></div>
+        <div class="form-group" style="margin-bottom:var(--space-4);"><label class="form-label">Email *</label><input type="email" class="form-control" placeholder="you@example.com" required></div>
+        <div class="form-group" style="margin-bottom:var(--space-4);"><label class="form-label">Phone</label><input type="tel" class="form-control" placeholder="+237 ..."></div>
+        <div class="form-group" style="margin-bottom:var(--space-4);">
+          <label class="form-label">What are you looking for? *</label>
+          <select class="form-control" required>
+            <option value="">Select an option</option>
+            <option>Mobile Phones &amp; Electronics</option>
+            <option>China Product Sourcing</option>
+            <option>Importation &amp; Cargo</option>
+            <option>Agent Sourcing</option>
+            <option>Money Exchange</option>
+            <option>Car Purchase</option>
+            <option>Car Rental</option>
+            <option>Car Parts &amp; Accessories</option>
+            <option>Wholesale Products</option>
+            <option>Other Business Services</option>
+          </select>
+        </div>
+        <div class="form-group" style="margin-bottom:var(--space-6);"><label class="form-label">Message *</label><textarea class="form-control" rows="4" placeholder="Tell us what you need..." required></textarea></div>
+        <button type="submit" class="btn btn--primary btn--full">Send Enquiry →</button>
+      </form>
+    </div>
+  </div>
+  </section>
+
+  <!-- ================================================
+       CTA BANNER
+  ================================================= -->
+  <section class="section cta-banner">
+    <div class="container">
+      <div class="cta-inner reveal">
+        <h2 class="section-title" style="font-size:var(--text-4xl);">Connect. Source. <span>Import. Drive.</span></h2>
+        <p class="section-subtitle" style="margin:0 auto;color:rgba(255,255,255,0.7);">Whichever division you need, KENNE is your trusted business partner.</p>
+        <div class="cta-actions">
+          <a href="#divisions" class="btn btn--primary btn--lg">Explore Our Divisions</a>
+          <a href="#contact" class="btn btn--outline-white btn--lg">Contact Us</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div id="footer-placeholder"></div>
+  <button id="back-to-top" aria-label="Back to top">↑</button>
+
+<script src="assets/js/notifications.js"></script>
+<script src="assets/js/reviews.js"></script>
+<script src="assets/js/drawer.js"></script>
+<script src="assets/js/ai-support.js"></script>
+<script src="assets/js/main.js"></script>
+<script src="assets/js/site-extras.js"></script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+
+    const slides = document.querySelectorAll('.hero-slide');
+
+    if (!slides.length) return;
+
+    let currentSlide = 0;
+
+    // Change image every 2 seconds
+    const slideDuration = 2000;
+
+    function showNextSlide() {
+      slides[currentSlide].classList.remove('active');
+
+      currentSlide++;
+
+      if (currentSlide >= slides.length) {
+        currentSlide = 0;
+      }
+
+      slides[currentSlide].classList.add('active');
+    }
+
+    setInterval(showNextSlide, slideDuration);
+
+  });
+</script>
+
+</body>
+</html>
