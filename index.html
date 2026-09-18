@@ -1322,14 +1322,46 @@
   <div id="footer-placeholder"></div>
   <button id="back-to-top" aria-label="Back to top">↑</button>
 
-  <script src="assets/js/notifications.js"></script>
-  <script src="assets/js/reviews.js"></script>
-  <script src="assets/js/drawer.js"></script>
-  <script src="assets/js/ai-support.js"></script>
-  <script src="assets/js/main.js"></script>
-  <script src="assets/js/site-extras.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', () => KenneReviews.renderPublicSection('reviews-host', 'group'));
-  </script>
+<script src="assets/js/notifications.js"></script>
+<script src="assets/js/reviews.js"></script>
+<script src="assets/js/drawer.js"></script>
+<script src="assets/js/ai-support.js"></script>
+<script src="assets/js/main.js"></script>
+<script src="assets/js/site-extras.js"></script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    KenneReviews.renderPublicSection('reviews-host', 'group');
+  });
+</script>
+
+<!-- KENNE CINEMATIC HERO SLIDESHOW -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+
+    const slides = document.querySelectorAll('.hero-slide');
+
+    if (!slides.length) return;
+
+    let currentSlide = 0;
+    const slideDuration = 6500;
+
+    function showNextSlide() {
+      slides[currentSlide].classList.remove('active');
+
+      currentSlide++;
+
+      if (currentSlide >= slides.length) {
+        currentSlide = 0;
+      }
+
+      slides[currentSlide].classList.add('active');
+    }
+
+    setInterval(showNextSlide, slideDuration);
+
+  });
+</script>
+
 </body>
 </html>
