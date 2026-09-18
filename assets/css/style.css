@@ -4031,24 +4031,33 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
 
 .hero-slide {
   position: absolute;
-  inset: -4%;
+  inset: 0;
 
-  width: 108%;
-  height: 108%;
+  width: 100%;
+  height: 100%;
 
-  background-position: center;
+  background-position: center center;
   background-repeat: no-repeat;
-  background-size: cover;
+
+  /* Shows more of the image */
+  background-size: contain;
+
+  background-color: #080808;
 
   opacity: 0;
 
-  transform: scale(1.08);
+  transform: scale(1);
 
   transition:
-    opacity 1.8s ease-in-out,
-    transform 8s cubic-bezier(.16,1,.3,1);
+    opacity 0.7s ease-in-out,
+    transform 0.7s ease-in-out;
 
   will-change: opacity, transform;
+}
+
+.hero-slide.active {
+  opacity: 1;
+  transform: scale(1.01);
 }
 
 
