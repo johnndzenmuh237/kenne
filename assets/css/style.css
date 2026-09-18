@@ -650,10 +650,11 @@ h1, h2, h3, h4, h5, h6 {
   display: flex;
   align-items: center;
   background: var(--color-navy);
-  min-height: 640px;
-  height: 88vh;
-  height: 88dvh;
-  max-height: 820px;
+  /* FIX: no fixed/max height here — the hero is sized by its own
+     content (header clearance + title + subtitle + stats) plus this
+     floor. That's what keeps it short on both mobile and desktop
+     without ever clipping the stats row off the bottom. */
+  min-height: 600px;
 }
 
 .hero-bg {
@@ -693,8 +694,13 @@ h1, h2, h3, h4, h5, h6 {
 .hero-content {
   position: relative;
   z-index: 2;
-  padding-top: var(--space-16);
-  padding-bottom: var(--space-16);
+  /* FIX: this was `padding-top: var(--space-16)` with no header
+     offset, so the hero-eyebrow line started directly underneath
+     the fixed .site-header and got covered/overlapped by it (the
+     "2 Smart Solutions..." + header-jump you saw). Restoring the
+     header-height offset. */
+  padding-top: calc(var(--header-height) + var(--space-10));
+  padding-bottom: var(--space-12);
   max-width: 780px;
 }
 
@@ -4228,8 +4234,12 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
 
   .hero {
     height: auto;
-    min-height: 78svh;
-    max-height: 560px;
+    min-height: 520px;
+  }
+
+  .hero-content {
+    padding-top: calc(var(--header-height) + var(--space-6));
+    padding-bottom: var(--space-8);
   }
 
   .hero-video-bg,
@@ -4259,12 +4269,18 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
     opacity: 0.16;
   }
 
+  .hero-stats {
+    gap: var(--space-6);
+  }
+
 }
 
 @media (max-width: 480px) {
   .hero {
-    min-height: 72svh;
-    max-height: 480px;
+    min-height: 480px;
+  }
+  .hero-stats {
+    gap: var(--space-4);
   }
 }
 .footer-contact-icon {
