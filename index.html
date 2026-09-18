@@ -1300,20 +1300,15 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
-    KenneReviews.renderPublicSection('reviews-host', 'group');
-  });
-</script>
-
-<!-- KENNE CINEMATIC HERO SLIDESHOW -->
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
 
     const slides = document.querySelectorAll('.hero-slide');
 
     if (!slides.length) return;
 
     let currentSlide = 0;
-    const slideDuration = 6500;
+
+    // Each image stays for 3.5 seconds
+    const slideDuration = 3500;
 
     function showNextSlide() {
       slides[currentSlide].classList.remove('active');
