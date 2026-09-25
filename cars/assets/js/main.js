@@ -1,5 +1,5 @@
 /* ============================================================
-   KENNE CARGO — MAIN JAVASCRIPT
+   KENNE CAR BUSINESS — MAIN JAVASCRIPT
    main.js
    ============================================================ */
 
@@ -133,7 +133,9 @@ function injectHeader() {
             <!-- Mobile-only CTA -->
             <div class="nav-mobile-cta" aria-hidden="true">
               <a href="inventory.html" class="btn btn--primary btn--full">Browse Cars</a>
-              <a href="cart.html" class="btn btn--outline-white btn--full">View Cart</a>
+              <a href="cart.html" class="btn btn--outline-white btn--full" style="position:relative;">
+                🛒 View Cart <span data-cart-badge class="notif-badge" style="position:static;margin-left:6px;display:inline-flex;align-items:center;justify-content:center;" hidden>0</span>
+              </a>
             </div>
           </nav>
 
@@ -152,8 +154,8 @@ function injectHeader() {
               </div>
             </div>
             <button class="dark-mode-toggle" id="dark-toggle" aria-label="Toggle dark mode"></button>
-            <a href="cart.html" class="btn btn--outline-white btn--sm" style="position:relative;">
-              🛒 Cart <span id="cart-badge" class="notif-badge" style="position:static;margin-left:4px;display:inline-flex;align-items:center;justify-content:center;" hidden>0</span>
+            <a href="cart.html" class="btn btn--outline-white btn--sm" style="position:relative;" aria-label="View cart">
+              🛒 Cart <span id="cart-badge" data-cart-badge class="notif-badge" style="position:static;margin-left:4px;display:inline-flex;align-items:center;justify-content:center;" hidden>0</span>
             </a>
             <a href="contact.html" class="btn btn--primary btn--sm">Talk</a>
           </div>
@@ -209,7 +211,10 @@ function injectHeader() {
         </div>
 
         <div class="drawer-section-title">Customer</div>
-        <a href="cart.html" class="drawer-link">My Cart</a>
+        <a href="cart.html" class="drawer-link" style="display:flex;align-items:center;justify-content:space-between;">
+          <span>🛒 My Cart</span>
+          <span data-cart-badge class="notif-badge" style="position:static;" hidden>0</span>
+        </a>
         <a href="contact.html" class="drawer-link">Contact Support</a>
 
         <div class="drawer-section-title">Business</div>
@@ -224,6 +229,8 @@ function injectHeader() {
 
   // Activate header scroll behavior
   initHeader();
+  // Cart badges live inside the header/drawer we just injected — refresh them now.
+  if (window.KenneCart) window.KenneCart.updateCartBadge();
   window.dispatchEvent(new CustomEvent('kenne:header-ready'));
 }
 
@@ -440,9 +447,6 @@ function initFAQ() {
 }
 
 /* ----------------------------------------------------------
-   HERO TRACKING FORM
-   ---------------------------------------------------------- */
-/* ----------------------------------------------------------
    HERO BACKGROUND — tries a chain of images, falls back gracefully
    ---------------------------------------------------------- */
 function initHeroBackground() {
@@ -599,6 +603,7 @@ document.addEventListener('DOMContentLoaded', () => {
   injectHeader();
   injectFooter();
   if (window.KenneNotifications) window.KenneNotifications.initBell();
+  if (window.KenneCart) window.KenneCart.updateCartBadge();
   initMobileNav();
   initDarkMode();
   initScrollReveal();
@@ -610,4 +615,9 @@ document.addEventListener('DOMContentLoaded', () => {
   initAnchorScrolling();
   initButtonRipple();
   highlightActiveNav();
+});
+
+// Keep the cart badge (desktop + mobile) in sync whenever the cart changes anywhere on the site.
+window.addEventListener('kenne:cart-updated', () => {
+  if (window.KenneCart) window.KenneCart.updateCartBadge();
 });
