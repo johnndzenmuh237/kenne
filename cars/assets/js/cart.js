@@ -2,13 +2,16 @@
    KENNE — SHARED CART / CHECKOUT ENGINE
    assets/js/cart.js
    ------------------------------------------------------------
-   A front-end cart + checkout system reused by Kenne Car Business
-   and Kenne Smart Technology. No backend — orders, stock, and
-   payments are simulated in localStorage, the same honest pattern
-   used by the Cargo site's shipment tracking.
+   A front-end cart system reused by Kenne Car Business and Kenne
+   Smart Technology. No backend — the cart is stored in
+   localStorage so it survives page navigation and reloads.
+   Ordering is completed on WhatsApp: the "Order Now" action
+   builds a pre-filled WhatsApp message with the full cart
+   summary and total, and opens a chat with the Kenne team so a
+   human confirms payment, delivery and details.
 
    Each site sets window.CART_NAMESPACE (e.g. 'kenne_cars' or
-   'kenne_tech') before this file runs, so their carts/orders never
+   'kenne_tech') before this file runs, so their carts never
    collide even though the code is shared.
    ============================================================ */
 (function (global) {
@@ -83,16 +86,18 @@
   }
 
   function updateCartBadge() {
-    const badge = document.getElementById('cart-badge');
-    if (!badge) return;
+    const badges = document.querySelectorAll('#cart-badge, [data-cart-badge]');
+    if (!badges.length) return;
     const count = getCount();
-    badge.textContent = count;
-    badge.hidden = count === 0;
+    badges.forEach(badge => {
+      badge.textContent = count;
+      badge.hidden = count === 0;
+    });
   }
 
   /* ----------------------------------------------------------
-     ORDERS — created at checkout, mirrors Cargo's shipment
-     registration + notification pattern.
+     ORDER NUMBER — shown to the customer as a friendly reference
+     even though the actual order is confirmed on WhatsApp.
      ---------------------------------------------------------- */
   function generateOrderNumber(prefix) {
     const year = new Date().getFullYear();
@@ -100,70 +105,53 @@
     return `${prefix}-${year}-${num}`;
   }
 
-  function placeOrder({ prefix, customer, paymentMethod, notifyDetails }) {
+  /* ----------------------------------------------------------
+     WHATSAPP ORDERING
+     Builds a readable order summary and opens WhatsApp so the
+     customer can confirm the order and delivery/payment details
+     with a real person on the Kenne team.
+     ---------------------------------------------------------- */
+  function buildWhatsAppOrderMessage(prefix) {
     const items = readCart();
     if (items.length === 0) return null;
-    const ref = generateOrderNumber(prefix);
+    const ref = generateOrderNumber(prefix || 'KC-ORD');
+    const lines = items.map(i => `• ${i.qty}× ${i.name} — ${formatMoney(i.price * i.qty)}`);
     const total = getTotal();
-    const paidNow = paymentMethod === 'pay-now';
-    const order = {
-      ref,
-      items,
-      total,
-      customer,
-      paymentMethod,
-      paymentStatus: paidNow ? 'Paid' : 'Pay on Delivery',
-      balance: paidNow ? 0 : total,
-      createdAt: Date.now(),
-    };
-    const orders = JSON.parse(localStorage.getItem(ORDERS_KEY) || '[]');
-    orders.unshift(order);
-    try { localStorage.setItem(ORDERS_KEY, JSON.stringify(orders)); } catch (e) {}
-    clearCart();
+    const message =
+`Hello Kenne Cars, I'd like to place an order.
 
-    // Reuse the same notification system built for Cargo, if present.
-    if (global.KenneNotifications) {
-      global.KenneNotifications.push({
-        icon: '🛒',
-        title: `New order — ${ref}`,
-        message: `${customer.name || 'A customer'} placed an order for ${formatMoney(total)} (${paidNow ? 'paid' : 'pay on delivery'}).`,
-        ref,
-      });
-      if (notifyDetails) {
-        global.KenneNotifications.notifyClient({
-          ref,
-          clientName: customer.name,
-          clientEmail: customer.email,
-          clientPhone: customer.phone,
-          origin: notifyDetails.origin,
-          destination: notifyDetails.destination,
-          service: notifyDetails.service,
-          itemDescription: items.map(i => `${i.qty}× ${i.name}`).join(', '),
-        });
-      }
+Order Ref: ${ref}
+${lines.join('\n')}
+
+Total: ${formatMoney(total)}
+
+Please confirm availability, delivery and payment options.`;
+    return { ref, message, total, items };
+  }
+
+  function getWhatsAppOrderLink(prefix) {
+    const built = buildWhatsAppOrderMessage(prefix);
+    if (!built) return null;
+    const phone = (global.SITE && global.SITE.whatsapp) || '237670735947';
+    return { ...built, url: `https://wa.me/${phone}?text=${encodeURIComponent(built.message)}` };
+  }
+
+  // Opens WhatsApp with the full cart summary pre-filled, ready to send.
+  // Used by the "Order Now via WhatsApp" button on the cart page.
+  function orderViaWhatsApp(prefix) {
+    const built = getWhatsAppOrderLink(prefix);
+    if (!built) {
+      if (typeof window.showToast === 'function') window.showToast('Your cart is empty.', 'error');
+      return null;
     }
-    return order;
-  }
-
-  function loadOrder(ref) {
-    const orders = JSON.parse(localStorage.getItem(ORDERS_KEY) || '[]');
-    return orders.find(o => o.ref === ref) || null;
-  }
-
-  function recordPayment(ref, amount) {
-    const orders = JSON.parse(localStorage.getItem(ORDERS_KEY) || '[]');
-    const order = orders.find(o => o.ref === ref);
-    if (!order) return null;
-    order.balance = Math.max(0, order.balance - amount);
-    order.paymentStatus = order.balance === 0 ? 'Paid' : 'Partially Paid';
-    localStorage.setItem(ORDERS_KEY, JSON.stringify(orders));
-    return order;
+    window.open(built.url, '_blank', 'noopener');
+    return built;
   }
 
   global.KenneCart = {
     addItem, removeItem, setQty, clearCart, getItems, getTotal, getCount,
-    formatMoney, updateCartBadge, placeOrder, loadOrder, recordPayment,
-    generateOrderNumber,
+    formatMoney, updateCartBadge, generateOrderNumber,
+    buildWhatsAppOrderMessage, getWhatsAppOrderLink, orderViaWhatsApp,
   };
 
   document.addEventListener('DOMContentLoaded', updateCartBadge);
