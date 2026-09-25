@@ -34,7 +34,7 @@
     <div class="container">
       <nav class="breadcrumb" aria-label="Breadcrumb" style="margin-bottom:var(--space-6);">
         <a href="index.html">Home</a><span class="breadcrumb-sep">›</span>
-        <a href="inventory.html">Inventory</a><span class="breadcrumb-sep">›</span>
+        <a href="inventory.html" id="crumb-parent">Inventory</a><span class="breadcrumb-sep">›</span>
         <span class="breadcrumb-current" id="crumb-name">Car</span>
       </nav>
 
@@ -69,15 +69,36 @@
     document.getElementById('crumb-name').textContent = car.name;
 
     const isRental = car.category === 'rental';
+    if (isRental) {
+      document.getElementById('crumb-parent').textContent = 'Rentals';
+      document.getElementById('crumb-parent').href = 'rentals.html';
+    }
+
     const priceHtml = car.priceUnit
       ? `${formatCFA(car.price)} <span style="font-size:var(--text-base);color:var(--color-text-light);font-weight:600;">${car.priceUnit}</span>`
       : formatCFA(car.price);
 
+    // Action area differs for rentals (book on WhatsApp) vs cars for sale (add to cart)
+    const actionsHtml = isRental
+      ? `
+        <div style="display:flex;gap:var(--space-3);flex-wrap:wrap;">
+          <a href="${whatsappBookingLink(car)}" target="_blank" rel="noopener" class="btn btn--primary btn--lg">📱 Book on WhatsApp</a>
+          <button class="btn btn--outline btn--lg" onclick="addCarToCart()">🛒 Add Booking to Cart</button>
+        </div>
+        <p style="font-size:12px;color:var(--color-text-light);margin-top:var(--space-3);">
+          By booking, you agree to our <a href="rentals.html#terms" style="color:var(--color-accent);">rental terms &amp; conditions</a> (ID, deposit, fuel &amp; mileage policy).
+        </p>`
+      : `
+        <div style="display:flex;gap:var(--space-3);flex-wrap:wrap;">
+          <button class="btn btn--primary btn--lg" onclick="addCarToCart()">🛒 Add to Cart</button>
+          <a href="${whatsappBookingLink(car)}" target="_blank" rel="noopener" class="btn btn--outline btn--lg">💬 Ask on WhatsApp</a>
+        </div>`;
+
     document.getElementById('pd-content').innerHTML = `
       <div>
-        <div class="pd-gallery-main"><img id="pd-main-img" src="${car.gallery[0]}" alt="${car.name}"></div>
+        <div class="pd-gallery-main"><img id="pd-main-img" src="${car.gallery[0]}" alt="${car.name}" onerror="this.src='https://images.unsplash.com/photo-1494976388531-d1058494cdd8?auto=format&fit=crop&w=900&q=80';"></div>
         <div class="pd-gallery-thumbs">
-          ${car.gallery.map((g, i) => `<img src="${g}" alt="${car.name} — photo ${i + 1}" class="${i === 0 ? 'active' : ''}" onclick="document.getElementById('pd-main-img').src='${g}';document.querySelectorAll('.pd-gallery-thumbs img').forEach(t=>t.classList.remove('active'));this.classList.add('active');">`).join('')}
+          ${car.gallery.map((g, i) => `<img src="${g}" alt="${car.name} — photo ${i + 1}" class="${i === 0 ? 'active' : ''}" onerror="this.style.display='none';" onclick="document.getElementById('pd-main-img').src='${g}';document.querySelectorAll('.pd-gallery-thumbs img').forEach(t=>t.classList.remove('active'));this.classList.add('active');">`).join('')}
         </div>
       </div>
       <div>
@@ -92,19 +113,28 @@
           <div class="pd-spec-item"><span>Mileage</span><strong>${car.mileage}</strong></div>
           <div class="pd-spec-item"><span>Fuel</span><strong>${car.fuel}</strong></div>
           <div class="pd-spec-item"><span>Transmission</span><strong>${car.transmission}</strong></div>
+          ${car.seats ? `<div class="pd-spec-item"><span>Seats</span><strong>${car.seats}</strong></div>` : ''}
+          ${car.drivetrain ? `<div class="pd-spec-item"><span>Drivetrain</span><strong>${car.drivetrain}</strong></div>` : ''}
+          ${car.color ? `<div class="pd-spec-item"><span>Color</span><strong>${car.color}</strong></div>` : ''}
         </div>
+        ${!isRental ? `
         <div class="pd-qty-row">
-          <span style="font-size:var(--text-sm);font-weight:600;">${isRental ? 'Rental Days' : 'Quantity'}</span>
+          <span style="font-size:var(--text-sm);font-weight:600;">Quantity</span>
           <div class="qty-stepper">
             <button type="button" onclick="stepQty(-1)">−</button>
             <input type="text" id="pd-qty" value="1" readonly>
             <button type="button" onclick="stepQty(1)">+</button>
           </div>
-        </div>
-        <div style="display:flex;gap:var(--space-3);flex-wrap:wrap;">
-          <button class="btn btn--primary btn--lg" onclick="addCarToCart()">🛒 ${isRental ? 'Add Booking to Cart' : 'Add to Cart'}</button>
-          <a href="https://wa.me/${SITE.whatsapp}?text=${encodeURIComponent('Hi, I\\'m interested in the ' + car.name + ' listed on Kenne Cars.')}" target="_blank" rel="noopener" class="btn btn--outline btn--lg">💬 Ask on WhatsApp</a>
-        </div>
+        </div>` : `
+        <div class="pd-qty-row">
+          <span style="font-size:var(--text-sm);font-weight:600;">Rental Days</span>
+          <div class="qty-stepper">
+            <button type="button" onclick="stepQty(-1)">−</button>
+            <input type="text" id="pd-qty" value="1" readonly>
+            <button type="button" onclick="stepQty(1)">+</button>
+          </div>
+        </div>`}
+        ${actionsHtml}
       </div>
     `;
 
@@ -115,14 +145,15 @@
     }
 
     function addCarToCart() {
-      const qty = parseInt(document.getElementById('pd-qty').value || '1');
+      const qty = parseInt(document.getElementById('pd-qty')?.value || '1');
       window.KenneCart.addItem({ id: car.id, name: car.name, price: car.price, image: car.image }, qty);
     }
 
     // Related cars: same body type, excluding current
     document.addEventListener('DOMContentLoaded', () => {
-      const related = CARS_DATA.filter(c => c.id !== car.id && c.bodyType === car.bodyType).slice(0, 3);
-      const fallback = related.length ? related : CARS_DATA.filter(c => c.id !== car.id).slice(0, 3);
+      const pool = isRental ? CARS_DATA.filter(c => c.category === 'rental') : CARS_DATA.filter(c => c.category !== 'rental');
+      const related = pool.filter(c => c.id !== car.id && c.bodyType === car.bodyType).slice(0, 3);
+      const fallback = related.length ? related : pool.filter(c => c.id !== car.id).slice(0, 3);
       document.getElementById('related-cars').innerHTML = fallback.map(renderCarCard).join('');
     });
   </script>
