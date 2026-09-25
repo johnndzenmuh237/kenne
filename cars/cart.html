@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex">
-  <meta name="description" content="Review the cars, parts and accessories in your KENNE Cars cart before checkout.">
+  <meta name="description" content="Review the cars, parts and accessories in your KENNE Cars cart before ordering.">
   <title>Your Cart | Kenne Car Business</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -61,7 +61,7 @@
                 <tr>
                   <td>
                     <div class="cart-row-product">
-                      <img src="${i.image}" alt="${i.name}">
+                      <img src="${i.image}" alt="${i.name}" onerror="this.src='https://images.unsplash.com/photo-1494976388531-d1058494cdd8?auto=format&fit=crop&w=200&q=80';">
                       <span>${i.name}</span>
                     </div>
                   </td>
@@ -81,17 +81,23 @@
           </table>
           <div class="cart-summary">
             <div class="cart-summary-row"><span>Subtotal</span><span>${window.KenneCart.formatMoney(total)}</span></div>
-            <div class="cart-summary-row"><span>Delivery</span><span>Calculated at checkout</span></div>
+            <div class="cart-summary-row"><span>Delivery</span><span>Confirmed on WhatsApp</span></div>
             <div class="cart-summary-row total"><span>Total</span><span>${window.KenneCart.formatMoney(total)}</span></div>
-            <a href="checkout.html" class="btn btn--primary btn--full btn--lg" style="margin-top:var(--space-4);">Proceed to Checkout →</a>
+            <button class="btn btn--primary btn--full btn--lg" style="margin-top:var(--space-4);" onclick="orderNow()">🟢 Order Now on WhatsApp</button>
             <a href="inventory.html" class="btn btn--outline btn--full" style="margin-top:var(--space-3);">Continue Browsing</a>
+            <p style="font-size:12px;color:var(--color-text-light);margin-top:var(--space-4);text-align:center;">
+              Tapping "Order Now" opens WhatsApp with your full order summary — our team confirms availability, delivery and payment with you directly.
+            </p>
           </div>
         </div>
       `;
     }
     function changeQty(lineId, qty) { window.KenneCart.setQty(lineId, qty); renderCart(); }
     function removeLine(lineId) { window.KenneCart.removeItem(lineId); renderCart(); }
+    function orderNow() { window.KenneCart.orderViaWhatsApp('KC-ORD'); }
+
     document.addEventListener('DOMContentLoaded', renderCart);
+    window.addEventListener('kenne:cart-updated', renderCart);
   </script>
   <script src="../assets/js/site-extras.js"></script>
 </body>
