@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Shop phones at Kenne Smart Technology — Apple, Samsung, Tecno, Infinix and more, brand new or UK used, tested and verified.">
+  <meta name="description" content="Shop phones at Kenne Smart Technology — Samsung Galaxy, iPhone, Tecno, Infinix and Itel, brand new or UK used, tested and verified.">
   <title>Shop Phones | Kenne Smart Technology</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,12 +18,12 @@
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="KENNE">
   <meta property="og:title" content="Shop Phones | Kenne Smart Technology">
-  <meta property="og:description" content="Shop phones at Kenne Smart Technology — Apple, Samsung, Tecno, Infinix and more, brand new or UK used, tested and verified.">
+  <meta property="og:description" content="Shop phones at Kenne Smart Technology — Samsung Galaxy, iPhone, Tecno, Infinix and Itel, brand new or UK used, tested and verified.">
   <meta property="og:url" content="https://www.kennegroup.com/smart-tech/shop.html">
   <meta property="og:image" content="https://www.kennegroup.com/favicon.svg">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Shop Phones | Kenne Smart Technology">
-  <meta name="twitter:description" content="Shop phones at Kenne Smart Technology — Apple, Samsung, Tecno, Infinix and more, brand new or UK used, tested and verified.">
+  <meta name="twitter:description" content="Shop phones at Kenne Smart Technology — Samsung Galaxy, iPhone, Tecno, Infinix and Itel, brand new or UK used, tested and verified.">
   <meta name="theme-color" content="#0A0E27">
 </head>
 <body>
@@ -49,7 +49,7 @@
         <aside class="filter-panel">
           <div class="filter-group">
             <h4>Search</h4>
-            <input type="text" id="f-search" class="form-control" placeholder="Search phones…">
+            <input type="text" id="f-search" class="form-control" placeholder="Search phones or models…">
           </div>
           <div class="filter-group">
             <h4>Brand</h4>
@@ -63,8 +63,8 @@
           </div>
           <div class="filter-group">
             <h4>Max Price</h4>
-            <input type="range" id="f-price" min="100000" max="900000" step="10000" value="900000" style="width:100%;">
-            <div style="font-size:12px;color:var(--color-text-light);margin-top:4px;" id="f-price-label">Up to CFA 900,000</div>
+            <input type="range" id="f-price" min="40000" max="800000" step="5000" value="800000" style="width:100%;">
+            <div style="font-size:12px;color:var(--color-text-light);margin-top:4px;" id="f-price-label">Up to CFA 800,000</div>
           </div>
         </aside>
 
@@ -97,7 +97,7 @@
       `<button type="button" class="filter-chip active" data-brand="">All</button>` +
       brands.map(b => `<button type="button" class="filter-chip" data-brand="${b}">${b}</button>`).join('');
 
-    let state = { search: '', brand: getQueryParam('brand') || '', condition: '', maxPrice: 900000 };
+    let state = { search: '', brand: getQueryParam('brand') || '', condition: '', maxPrice: 800000 };
     if (state.brand) {
       document.querySelectorAll('#f-brand .filter-chip').forEach(b => b.classList.toggle('active', b.dataset.brand === state.brand));
     }
