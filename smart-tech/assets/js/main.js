@@ -1,5 +1,5 @@
 /* ============================================================
-   KENNE CARGO — MAIN JAVASCRIPT
+   KENNE SMART TECHNOLOGY — MAIN JAVASCRIPT
    main.js
    ============================================================ */
 
@@ -28,17 +28,45 @@ const KENNE_LOGO_SVG = `
     <path d="M15 30V16h3.2v5.9L23.4 16h4l-5.6 6.6 5.9 7.4h-4.2l-4.2-5.7-1.5 1.7V30H15z" fill="white"/>
   </svg>`;
 
+/* ----------------------------------------------------------
+   REAL ICON SET — plain inline SVG (no emoji, no external image
+   requests). Reused across the ticker, top bar, header and
+   footer so every "icon" on the site renders identically on
+   every device and platform. Each icon carries its own
+   width/height so it drops straight into any inline span.
+   ---------------------------------------------------------- */
+function icon(path, size) {
+  return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:${size}px;height:${size}px;vertical-align:-${Math.round(size * 0.2)}px;flex:none;">${path}</svg>`;
+}
+
+const ICONS = {
+  smartphone: (s = 16) => icon(`<rect x="7" y="2" width="10" height="20" rx="2"/><line x1="11" y1="18" x2="13" y2="18"/>`, s),
+  plug:       (s = 16) => icon(`<path d="M9 2v6M15 2v6M6 8h12l-1 5a5 5 0 01-10 0L6 8z"/><path d="M12 19v3"/>`, s),
+  checkCircle:(s = 16) => icon(`<circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-6"/>`, s),
+  box:        (s = 16) => icon(`<path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/>`, s),
+  creditCard: (s = 16) => icon(`<rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/>`, s),
+  receipt:    (s = 16) => icon(`<path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/>`, s),
+  pin:        (s = 16) => icon(`<path d="M12 22s7-7.58 7-13a7 7 0 10-14 0c0 5.42 7 13 7 13z"/><circle cx="12" cy="9" r="2.5"/>`, s),
+  phone:      (s = 16) => icon(`<path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>`, s),
+  mail:       (s = 16) => icon(`<path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>`, s),
+  clock:      (s = 16) => icon(`<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>`, s),
+  star:       (s = 16) => icon(`<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>`, s),
+  cart:       (s = 18) => icon(`<circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/>`, s),
+  bell:       (s = 20) => icon(`<path d="M18 8a6 6 0 00-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/>`, s),
+};
+
+/* Header ticker — real icons instead of emoji */
 const TICKER_ITEMS = [
-  { icon: '📱', text: 'Latest Phones — iPhone, Samsung, Tecno, Infinix & More' },
-  { icon: '🔌', text: 'Genuine Chargers, Earbuds & Accessories' },
-  { icon: '✅', text: 'Every Phone Tested & Verified Before Sale' },
-  { icon: '📦', text: 'Sourced Direct from China, Sold in Cameroon' },
-  { icon: '💳', text: 'Pay Now or Pay on Delivery — Your Choice' },
-  { icon: '🧾', text: 'Every Order Gets an Instant Order Number' },
-  { icon: '📍', text: 'Douala, Cameroon' },
-  { icon: '☎', text: `${SITE.phone}` },
-  { icon: '✉', text: SITE.email },
-  { icon: '⭐', text: 'Kenne Smart Technology — Stay Connected' },
+  { icon: ICONS.smartphone(15), text: 'Latest Phones — iPhone, Samsung, Tecno, Infinix & More' },
+  { icon: ICONS.plug(15), text: 'Genuine Chargers, Earbuds & Accessories' },
+  { icon: ICONS.checkCircle(15), text: 'Every Phone Tested & Verified Before Sale' },
+  { icon: ICONS.box(15), text: 'Sourced Direct from China, Sold in Cameroon' },
+  { icon: ICONS.creditCard(15), text: 'Pay Now or Pay on Delivery — Your Choice' },
+  { icon: ICONS.receipt(15), text: 'Every Order Gets an Instant Order Number' },
+  { icon: ICONS.pin(15), text: 'Douala, Cameroon' },
+  { icon: ICONS.phone(15), text: `${SITE.phone}` },
+  { icon: ICONS.mail(15), text: SITE.email },
+  { icon: ICONS.star(15), text: 'Kenne Smart Technology — Stay Connected' },
 ];
 
 function buildTickerTrack() {
@@ -61,21 +89,21 @@ function injectHeader() {
       <div class="container">
         <div class="top-bar-left">
           <div class="top-bar-item">
-            <span aria-hidden="true">📍</span>
+            <span aria-hidden="true">${ICONS.pin(16)}</span>
             <span>${SITE.address}</span>
           </div>
           <div class="top-bar-item">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+            ${ICONS.phone(16)}
             <a href="tel:${SITE.phoneHref}">${SITE.phone}</a>
           </div>
           <div class="top-bar-item top-bar-item--email">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+            ${ICONS.mail(16)}
             <a href="mailto:${SITE.email}">${SITE.email}</a>
           </div>
         </div>
         <div class="top-bar-right">
           <div class="top-bar-item">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            ${ICONS.clock(16)}
             <span>${SITE.hours}</span>
           </div>
           <div class="top-bar-item">
@@ -110,8 +138,8 @@ function injectHeader() {
                   <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
                 </a>
                 <div class="nav-dropdown">
-                  <a href="shop.html?brand=Apple"><span>🍎</span> Apple / iPhone</a>
-                  <a href="shop.html?brand=Samsung"><span>📱</span> Samsung</a>
+                  <a href="shop.html?brand=Apple">${ICONS.smartphone(15)} Apple / iPhone</a>
+                  <a href="shop.html?brand=Samsung">${ICONS.smartphone(15)} Samsung</a>
                   <a href="shop.html"><span>→</span> View All Phones</a>
                 </div>
               </li>
@@ -129,14 +157,17 @@ function injectHeader() {
             <!-- Mobile-only CTA -->
             <div class="nav-mobile-cta" aria-hidden="true">
               <a href="shop.html" class="btn btn--primary btn--full">Shop Phones</a>
-              <a href="cart.html" class="btn btn--outline-white btn--full">View Cart</a>
+              <a href="cart.html" class="btn btn--outline-white btn--full" style="position:relative;display:flex;align-items:center;justify-content:center;gap:8px;">
+                ${ICONS.cart(18)} View Cart
+                <span data-cart-badge class="notif-badge" style="position:static;margin-left:2px;display:inline-flex;align-items:center;justify-content:center;" hidden>0</span>
+              </a>
             </div>
           </nav>
 
           <div class="header-cta">
             <div class="notif-wrap" id="notif-wrap">
               <button class="notif-bell" id="notif-bell-btn" aria-label="Notifications" aria-expanded="false">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 00-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+                ${ICONS.bell(20)}
                 <span class="notif-badge" id="notif-badge" hidden>0</span>
               </button>
               <div class="notif-panel" id="notif-panel" hidden>
@@ -148,8 +179,9 @@ function injectHeader() {
               </div>
             </div>
             <button class="dark-mode-toggle" id="dark-toggle" aria-label="Toggle dark mode"></button>
-            <a href="cart.html" class="btn btn--outline-white btn--sm" style="position:relative;">
-              🛒 Cart <span id="cart-badge" class="notif-badge" style="position:static;margin-left:4px;display:inline-flex;align-items:center;justify-content:center;" hidden>0</span>
+            <a href="cart.html" class="btn btn--outline-white btn--sm" style="position:relative;display:inline-flex;align-items:center;gap:6px;" aria-label="View cart">
+              ${ICONS.cart(16)} Cart
+              <span id="cart-badge" data-cart-badge class="notif-badge" style="position:static;margin-left:2px;display:inline-flex;align-items:center;justify-content:center;" hidden>0</span>
             </a>
             <a href="contact.html" class="btn btn--primary btn--sm">Talk</a>
           </div>
@@ -198,7 +230,10 @@ function injectHeader() {
         </div>
 
         <div class="drawer-section-title">Customer</div>
-        <a href="cart.html" class="drawer-link">My Cart</a>
+        <a href="cart.html" class="drawer-link" style="display:flex;align-items:center;justify-content:space-between;">
+          <span style="display:flex;align-items:center;gap:8px;">${ICONS.cart(18)} My Cart</span>
+          <span data-cart-badge class="notif-badge" style="position:static;" hidden>0</span>
+        </a>
         <a href="contact.html" class="drawer-link">Contact Support</a>
 
         <div class="drawer-section-title">Business</div>
@@ -213,6 +248,7 @@ function injectHeader() {
 
   // Activate header scroll behavior
   initHeader();
+  if (window.KenneCart) window.KenneCart.updateCartBadge();
   window.dispatchEvent(new CustomEvent('kenne:header-ready'));
 }
 
@@ -276,21 +312,21 @@ function injectFooter() {
             <h4 class="footer-col-title">Get in Touch</h4>
             <div class="footer-contact">
               <div class="footer-contact-item">
-                <div class="footer-contact-icon">📍</div>
+                <div class="footer-contact-icon" style="display:flex;align-items:center;justify-content:center;">${ICONS.pin(20)}</div>
                 <div>
                   <strong>Shop</strong><br>
                   ${SITE.address}
                 </div>
               </div>
               <div class="footer-contact-item">
-                <div class="footer-contact-icon">📞</div>
+                <div class="footer-contact-icon" style="display:flex;align-items:center;justify-content:center;">${ICONS.phone(20)}</div>
                 <div>
                   <strong>Phone / WhatsApp</strong><br>
                   <a href="tel:${SITE.phoneHref}">${SITE.phone}</a>
                 </div>
               </div>
               <div class="footer-contact-item">
-                <div class="footer-contact-icon">✉️</div>
+                <div class="footer-contact-icon" style="display:flex;align-items:center;justify-content:center;">${ICONS.mail(20)}</div>
                 <div>
                   <strong>Email</strong><br>
                   <a href="mailto:${SITE.email}">${SITE.email}</a>
@@ -429,26 +465,16 @@ function initFAQ() {
 }
 
 /* ----------------------------------------------------------
-   HERO TRACKING FORM
-   ---------------------------------------------------------- */
-/* ----------------------------------------------------------
-   HERO BACKGROUND — tries a chain of images, falls back gracefully
+   HERO BACKGROUND
+   ------------------------------------------------------------
+   The Smart Tech homepage uses a CSS gradient + inline SVG
+   graphic instead of a stock photo (see index.html), so this
+   intentionally does not fetch/swap in an external image
+   anymore. Kept as a safe no-op so any page still calling it
+   doesn't break.
    ---------------------------------------------------------- */
 function initHeroBackground() {
-  const el = document.querySelector('.hero-bg');
-  if (!el) return;
-  const candidates = [
-    'https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?auto=format&fit=crop&w=1600&q=80',
-    'https://images.unsplash.com/photo-1578575437130-527eed3abbec?auto=format&fit=crop&w=1600&q=80',
-    'https://images.unsplash.com/photo-1519003722824-194d4455a60c?auto=format&fit=crop&w=1600&q=80',
-  ];
-  (function tryNext(i) {
-    if (i >= candidates.length) return;
-    const img = new Image();
-    img.onload = () => { el.style.backgroundImage = `url('${candidates[i]}')`; };
-    img.onerror = () => tryNext(i + 1);
-    img.src = candidates[i];
-  })(0);
+  return;
 }
 
 function initHeroTracking() {
@@ -588,6 +614,7 @@ document.addEventListener('DOMContentLoaded', () => {
   injectHeader();
   injectFooter();
   if (window.KenneNotifications) window.KenneNotifications.initBell();
+  if (window.KenneCart) window.KenneCart.updateCartBadge();
   initMobileNav();
   initDarkMode();
   initScrollReveal();
@@ -599,4 +626,10 @@ document.addEventListener('DOMContentLoaded', () => {
   initAnchorScrolling();
   initButtonRipple();
   highlightActiveNav();
+});
+
+// Keep every cart badge (desktop header + mobile drawer + mobile CTA) in sync
+// whenever the cart changes anywhere on the site.
+window.addEventListener('kenne:cart-updated', () => {
+  if (window.KenneCart) window.KenneCart.updateCartBadge();
 });
