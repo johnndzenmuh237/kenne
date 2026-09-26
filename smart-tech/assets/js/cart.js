@@ -82,12 +82,18 @@
     return 'CFA ' + Math.round(n).toLocaleString('en-US');
   }
 
+  // Updates every cart badge on the page — the desktop header one
+  // (#cart-badge) and any mobile drawer / mobile-CTA ones
+  // ([data-cart-badge]) — so the count stays in sync everywhere,
+  // not just the first badge found.
   function updateCartBadge() {
-    const badge = document.getElementById('cart-badge');
-    if (!badge) return;
+    const badges = document.querySelectorAll('#cart-badge, [data-cart-badge]');
+    if (!badges.length) return;
     const count = getCount();
-    badge.textContent = count;
-    badge.hidden = count === 0;
+    badges.forEach(badge => {
+      badge.textContent = count;
+      badge.hidden = count === 0;
+    });
   }
 
   /* ----------------------------------------------------------
