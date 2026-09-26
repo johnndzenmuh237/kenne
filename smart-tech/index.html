@@ -42,59 +42,87 @@
     "addressCountry": "CM"
   },
   "areaServed": [
-    {
-      "@type": "Country",
-      "name": "Cameroon"
-    },
-    {
-      "@type": "Country",
-      "name": "China"
-    }
+    { "@type": "Country", "name": "Cameroon" },
+    { "@type": "Country", "name": "China" }
   ],
   "openingHoursSpecification": [
     {
       "@type": "OpeningHoursSpecification",
-      "dayOfWeek": [
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday",
-        "Saturday"
-      ],
+      "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
       "opens": "08:00",
       "closes": "18:00"
     }
   ],
   "department": [
-    {
-      "@type": "LocalBusiness",
-      "name": "KENNE Smart Technology",
-      "url": "https://www.kennegroup.com/smart-tech/"
-    },
-    {
-      "@type": "LocalBusiness",
-      "name": "KENNE Cargo",
-      "url": "https://www.kennegroup.com/cargo/"
-    },
-    {
-      "@type": "LocalBusiness",
-      "name": "KENNE Car Business",
-      "url": "https://www.kennegroup.com/cars/"
-    }
+    { "@type": "LocalBusiness", "name": "KENNE Smart Technology", "url": "https://www.kennegroup.com/smart-tech/" },
+    { "@type": "LocalBusiness", "name": "KENNE Cargo", "url": "https://www.kennegroup.com/cargo/" },
+    { "@type": "LocalBusiness", "name": "KENNE Car Business", "url": "https://www.kennegroup.com/cars/" }
   ]
 }
   </script>
+
+  <!-- Hardens every product-card image slot: consistent frame, graceful
+       fallback color while your real photos load or if a path is wrong,
+       and a matching skeleton tone instead of a blank/broken box. -->
+  <style>
+    .product-card__image-wrap {
+      background: linear-gradient(135deg, rgba(10,14,39,0.06), rgba(233,69,96,0.08));
+      aspect-ratio: 4 / 3;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .product-card__image-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform .35s ease;
+    }
+    .product-card__image-wrap:hover img { transform: scale(1.04); }
+    .product-card__image-wrap img[data-broken="true"] {
+      object-fit: contain;
+      padding: var(--space-6);
+      opacity: .5;
+    }
+    .icon-tile {
+      width: 56px; height: 56px; border-radius: var(--radius-md, 12px);
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(233,69,96,0.1); color: var(--color-accent);
+      margin: 0 auto var(--space-3);
+    }
+    .icon-tile svg { width: 28px; height: 28px; }
+    .hero-icon-badge svg { width: 22px; height: 22px; vertical-align: -5px; margin-right: 6px; }
+  </style>
 </head>
 <body>
 
   <div id="header-placeholder"></div>
 
-  <!-- HERO -->
+  <!-- HERO — icon/gradient based, no stock photo -->
   <section class="hero">
-    <div class="hero-bg" style="background-image:url('https://images.unsplash.com/photo-1523206489230-c012c64b2b48?auto=format&fit=crop&w=1600&q=80');"></div>
+    <div class="hero-bg" style="background:
+        radial-gradient(circle at 15% 20%, rgba(233,69,96,0.35), transparent 45%),
+        radial-gradient(circle at 85% 75%, rgba(45,90,220,0.30), transparent 50%),
+        linear-gradient(135deg, #0A0E27 0%, #131A3D 55%, #0A0E27 100%);">
+    </div>
     <div class="hero-overlay"></div>
     <div class="hero-track"><div class="hero-track-line"></div><div class="hero-track-line"></div><div class="hero-track-line"></div><div class="hero-track-line"></div></div>
+
+    <!-- Decorative circuit/phone graphic — replaces the old hero photo -->
+    <svg aria-hidden="true" focusable="false" viewBox="0 0 520 520" style="position:absolute;right:-40px;bottom:-40px;width:min(46vw,520px);height:auto;opacity:0.16;pointer-events:none;" xmlns="http://www.w3.org/2000/svg">
+      <rect x="150" y="60" width="220" height="400" rx="32" stroke="white" stroke-width="6" fill="none"/>
+      <rect x="178" y="100" width="164" height="300" rx="8" stroke="white" stroke-width="3" fill="none"/>
+      <circle cx="260" cy="430" r="14" stroke="white" stroke-width="4" fill="none"/>
+      <path d="M60 140h90M60 140v100M60 240h60M60 240v90M60 330h50" stroke="white" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <path d="M460 140h-90M460 140v100M460 240h-60M460 240v90M460 330h-50" stroke="white" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <circle cx="60" cy="140" r="6" fill="white"/><circle cx="60" cy="330" r="6" fill="white"/>
+      <circle cx="460" cy="140" r="6" fill="white"/><circle cx="460" cy="330" r="6" fill="white"/>
+      <circle cx="240" cy="220" r="34" stroke="white" stroke-width="4" fill="none"/>
+      <circle cx="240" cy="220" r="8" fill="white"/>
+    </svg>
+
     <div class="container">
       <div class="hero-content">
         <div class="hero-eyebrow"><div class="hero-eyebrow-dot"></div> Phones • Electronics • Accessories</div>
@@ -105,11 +133,17 @@
         </h1>
         <p class="hero-subtitle">
           Genuine phones and electronics sourced from China, tested and verified before they reach you.
-          Apple, Samsung, Tecno, Infinix and more.
+          Apple, Samsung, Tecno, Infinix, Itel and more.
         </p>
         <div class="hero-actions">
-          <a href="shop.html" class="btn btn--primary btn--lg">📱 Shop Phones</a>
-          <a href="accessories.html" class="btn btn--outline-white btn--lg">🎧 Accessories</a>
+          <a href="shop.html" class="btn btn--primary btn--lg hero-icon-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="7" y="2" width="10" height="20" rx="2"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
+            Shop Phones
+          </a>
+          <a href="accessories.html" class="btn btn--outline-white btn--lg hero-icon-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 18v-6a9 9 0 0118 0v6"/><path d="M21 19a2 2 0 01-2 2h-1a2 2 0 01-2-2v-3a2 2 0 012-2h3zM3 19a2 2 0 002 2h1a2 2 0 002-2v-3a2 2 0 00-2-2H3z"/></svg>
+            Accessories
+          </a>
         </div>
         <div class="hero-stats">
           <div class="hero-stat"><div class="hero-stat-number"><span class="counter" data-target="500" data-suffix="+">0+</span></div><div class="hero-stat-label">Devices Sold</div></div>
@@ -126,22 +160,30 @@
     <div class="container">
       <div class="grid grid-4 stagger-children">
         <a href="shop.html?brand=Apple" class="card" style="padding:var(--space-6);text-align:center;text-decoration:none;">
-          <div style="font-size:2.4rem;margin-bottom:var(--space-3);">🍎</div>
+          <div class="icon-tile">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="7" y="2" width="10" height="20" rx="2"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
+          </div>
           <h4 style="color:var(--color-navy);margin-bottom:4px;">Apple / iPhone</h4>
           <p style="font-size:var(--text-sm);color:var(--color-text-light);">New &amp; UK used, all models</p>
         </a>
         <a href="shop.html?brand=Samsung" class="card" style="padding:var(--space-6);text-align:center;text-decoration:none;">
-          <div style="font-size:2.4rem;margin-bottom:var(--space-3);">📱</div>
+          <div class="icon-tile">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><circle cx="12" cy="18" r="1" fill="currentColor" stroke="none"/></svg>
+          </div>
           <h4 style="color:var(--color-navy);margin-bottom:4px;">Samsung</h4>
-          <p style="font-size:var(--text-sm);color:var(--color-text-light);">Galaxy S, A &amp; Note series</p>
+          <p style="font-size:var(--text-sm);color:var(--color-text-light);">Galaxy A &amp; S series</p>
         </a>
         <a href="shop.html" class="card" style="padding:var(--space-6);text-align:center;text-decoration:none;">
-          <div style="font-size:2.4rem;margin-bottom:var(--space-3);">💰</div>
+          <div class="icon-tile">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41 12 22 2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><circle cx="7" cy="7" r="1.5" fill="currentColor" stroke="none"/></svg>
+          </div>
           <h4 style="color:var(--color-navy);margin-bottom:4px;">Budget Phones</h4>
-          <p style="font-size:var(--text-sm);color:var(--color-text-light);">Tecno, Infinix &amp; more</p>
+          <p style="font-size:var(--text-sm);color:var(--color-text-light);">Tecno, Infinix &amp; Itel</p>
         </a>
         <a href="accessories.html" class="card" style="padding:var(--space-6);text-align:center;text-decoration:none;">
-          <div style="font-size:2.4rem;margin-bottom:var(--space-3);">🎧</div>
+          <div class="icon-tile">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 18v-6a9 9 0 0118 0v6"/><path d="M21 19a2 2 0 01-2 2h-1a2 2 0 01-2-2v-3a2 2 0 012-2h3zM3 19a2 2 0 002 2h1a2 2 0 002-2v-3a2 2 0 00-2-2H3z"/></svg>
+          </div>
           <h4 style="color:var(--color-navy);margin-bottom:4px;">Accessories</h4>
           <p style="font-size:var(--text-sm);color:var(--color-text-light);">Chargers, earbuds &amp; more</p>
         </a>
@@ -172,22 +214,30 @@
       </div>
       <div class="grid grid-4 stagger-children">
         <div class="card" style="padding:var(--space-6);text-align:center;">
-          <div style="font-size:2.2rem;margin-bottom:var(--space-3);">✅</div>
+          <div class="icon-tile">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-6"/></svg>
+          </div>
           <h4 style="margin-bottom:6px;">Tested &amp; Verified</h4>
           <p style="font-size:var(--text-sm);color:var(--color-text-light);">Every device checked before sale</p>
         </div>
         <div class="card" style="padding:var(--space-6);text-align:center;">
-          <div style="font-size:2.2rem;margin-bottom:var(--space-3);">💳</div>
+          <div class="icon-tile">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+          </div>
           <h4 style="margin-bottom:6px;">Flexible Payment</h4>
           <p style="font-size:var(--text-sm);color:var(--color-text-light);">Pay now or pay on delivery</p>
         </div>
         <div class="card" style="padding:var(--space-6);text-align:center;">
-          <div style="font-size:2.2rem;margin-bottom:var(--space-3);">🧾</div>
+          <div class="icon-tile">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/></svg>
+          </div>
           <h4 style="margin-bottom:6px;">Instant Order Number</h4>
           <p style="font-size:var(--text-sm);color:var(--color-text-light);">Track your order from checkout</p>
         </div>
         <div class="card" style="padding:var(--space-6);text-align:center;">
-          <div style="font-size:2.2rem;margin-bottom:var(--space-3);">🎧</div>
+          <div class="icon-tile">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 14v-2a9 9 0 0118 0v2"/><rect x="3" y="14" width="4" height="7" rx="1"/><rect x="17" y="14" width="4" height="7" rx="1"/></svg>
+          </div>
           <h4 style="margin-bottom:6px;">Real Support</h4>
           <p style="font-size:var(--text-sm);color:var(--color-text-light);">A real team in Douala, on WhatsApp</p>
         </div>
@@ -224,6 +274,16 @@
     document.addEventListener('DOMContentLoaded', () => {
       const featured = PRODUCTS_DATA.slice(0, 6);
       document.getElementById('featured-products').innerHTML = featured.map(renderProductCard).join('');
+      // Mark any image that fails to load so the CSS fallback (contain + dim) kicks in
+      // instead of showing a broken-image icon.
+      document.getElementById('featured-products').addEventListener('error', (e) => {
+        if (e.target.tagName === 'IMG') {
+          e.target.dataset.broken = 'true';
+          e.target.src = 'data:image/svg+xml;utf8,' + encodeURIComponent(
+            `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%230A0E27" stroke-width="1.5"><rect x="7" y="2" width="10" height="20" rx="2"/><line x1="11" y1="18" x2="13" y2="18"/></svg>`
+          );
+        }
+      }, true);
     });
   </script>
   <script src="../assets/js/site-extras.js"></script>
