@@ -1,5 +1,5 @@
 /* ============================================================
-   KENNE SMART TECHNOLOGY — MAIN JAVASCRIPT
+   KENNE CAR BUSINESS — MAIN JAVASCRIPT
    main.js
    ============================================================ */
 
@@ -9,23 +9,24 @@
    INJECT SHARED HEADER & FOOTER
    ---------------------------------------------------------- */
 const SITE = {
-  name: 'Kenne Smart Technology',
-  tagline: 'Phones • Electronics • Accessories',
+  name: 'Kenne Car Business',
+  tagline: 'Wholesale • Retail • Rentals • Parts',
   phone: '+237 670 735 947',
   phoneHref: '+237670735947',
   whatsapp: '237670735947',
-  email: 'tech@kennegroup.com',
+  email: 'cars@kennegroup.com',
   address: 'Douala, Cameroon',
   hours: 'Mon–Sat: 8am–6pm',
 };
 
-/* Chip/circuit "K" mark, in the navy/electric-blue Smart Tech palette */
+/* Steering-wheel + "K" mark, in the navy/crimson Kenne Car Business palette */
 const KENNE_LOGO_SVG = `
   <svg class="logo-icon" width="42" height="42" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
     <rect width="44" height="44" rx="10" fill="var(--color-navy)"/>
-    <rect x="14" y="14" width="16" height="16" rx="3" stroke="var(--color-accent)" stroke-width="1.4" opacity="0.6"/>
-    <path d="M22 8v4M22 32v4M8 22h4M32 22h4M12 12l2.5 2.5M31.5 31.5L34 34M34 12l-2.5 2.5M12 34l2.5-2.5" stroke="var(--color-accent)" stroke-width="1.2" opacity="0.5" stroke-linecap="round"/>
-    <path d="M15 30V16h3.2v5.9L23.4 16h4l-5.6 6.6 5.9 7.4h-4.2l-4.2-5.7-1.5 1.7V30H15z" fill="white"/>
+    <circle cx="22" cy="22" r="10.5" stroke="var(--color-accent)" stroke-width="1.6" opacity="0.6"/>
+    <circle cx="22" cy="22" r="2.6" fill="var(--color-accent)"/>
+    <path d="M22 11.5v6M22 26.5v6M12 22h6M26 22h6" stroke="var(--color-accent)" stroke-width="1.6" opacity="0.55" stroke-linecap="round"/>
+    <path d="M14 30V15h3.4v6.1L22.6 15h4L20.8 22l6 8h-4.1l-4.1-5.9-1.6 1.9V30H14z" fill="white"/>
   </svg>`;
 
 /* ----------------------------------------------------------
@@ -40,9 +41,9 @@ function icon(path, size) {
 }
 
 const ICONS = {
-  smartphone: (s = 16) => icon(`<rect x="7" y="2" width="10" height="20" rx="2"/><line x1="11" y1="18" x2="13" y2="18"/>`, s),
-  plug:       (s = 16) => icon(`<path d="M9 2v6M15 2v6M6 8h12l-1 5a5 5 0 01-10 0L6 8z"/><path d="M12 19v3"/>`, s),
-  checkCircle:(s = 16) => icon(`<circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-6"/>`, s),
+  car:        (s = 16) => icon(`<path d="M3 13l2-5a2 2 0 012-2h10a2 2 0 012 2l2 5"/><path d="M3 13h18v4a1 1 0 01-1 1h-1a1 1 0 01-1-1v-1H6v1a1 1 0 01-1 1H4a1 1 0 01-1-1v-4z"/><circle cx="7.5" cy="17.5" r="1.5"/><circle cx="16.5" cy="17.5" r="1.5"/>`, s),
+  key:        (s = 16) => icon(`<circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M17 3l3 3M14 6l3 3"/>`, s),
+  wrench:     (s = 16) => icon(`<path d="M14.7 6.3a4 4 0 10-5.4 5.4L2 19l3 3 7.3-7.3a4 4 0 005.4-5.4l-2.83 2.83-2.12-2.12L14.7 6.3z"/>`, s),
   box:        (s = 16) => icon(`<path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/>`, s),
   creditCard: (s = 16) => icon(`<rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/>`, s),
   receipt:    (s = 16) => icon(`<path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/>`, s),
@@ -57,16 +58,16 @@ const ICONS = {
 
 /* Header ticker — real icons instead of emoji */
 const TICKER_ITEMS = [
-  { icon: ICONS.smartphone(15), text: 'Latest Phones — iPhone, Samsung, Tecno, Infinix & More' },
-  { icon: ICONS.plug(15), text: 'Genuine Chargers, Earbuds & Accessories' },
-  { icon: ICONS.checkCircle(15), text: 'Every Phone Tested & Verified Before Sale' },
-  { icon: ICONS.box(15), text: 'Sourced Direct from China, Sold in Cameroon' },
+  { icon: ICONS.car(15), text: 'Wholesale & Retail Cars — Every Make, Every Budget' },
+  { icon: ICONS.key(15), text: 'Car Rentals — Self Drive or With Driver' },
+  { icon: ICONS.wrench(15), text: 'Genuine Car Parts & Accessories' },
+  { icon: ICONS.box(15), text: 'Sourced Direct from China, Delivered in Cameroon' },
   { icon: ICONS.creditCard(15), text: 'Pay Now or Pay on Delivery — Your Choice' },
   { icon: ICONS.receipt(15), text: 'Every Order Gets an Instant Order Number' },
   { icon: ICONS.pin(15), text: 'Douala, Cameroon' },
   { icon: ICONS.phone(15), text: `${SITE.phone}` },
   { icon: ICONS.mail(15), text: SITE.email },
-  { icon: ICONS.star(15), text: 'Kenne Smart Technology — Stay Connected' },
+  { icon: ICONS.star(15), text: 'Kenne Car Business — Drive Away Happy' },
 ];
 
 function buildTickerTrack() {
@@ -114,7 +115,7 @@ function injectHeader() {
     </div>
 
     <header class="site-header header--transparent" id="site-header">
-      <div class="header-ticker" aria-label="Kenne Smart Technology highlights">
+      <div class="header-ticker" aria-label="Kenne Car Business highlights">
         ${buildTickerTrack()}
       </div>
       <div class="container">
@@ -122,8 +123,8 @@ function injectHeader() {
           <a href="index.html" class="header-logo">
             ${KENNE_LOGO_SVG}
             <div class="logo-text">
-              <strong>KENNE <span style="color:var(--color-accent);">TECH</span></strong>
-              <span>Phones • Electronics • Accessories</span>
+              <strong>KENNE <span style="color:var(--color-accent);">CARS</span></strong>
+              <span>Wholesale • Retail • Rentals • Parts</span>
             </div>
           </a>
 
@@ -133,18 +134,21 @@ function injectHeader() {
                 <a href="index.html" class="nav-link ${isActive('index.html')}">Home</a>
               </li>
               <li class="nav-item">
-                <a href="shop.html" class="nav-link ${isActive('shop.html')}">
-                  Shop Phones
+                <a href="inventory.html" class="nav-link ${isActive('inventory.html')}">
+                  Buy a Car
                   <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
                 </a>
                 <div class="nav-dropdown">
-                  <a href="shop.html?brand=Apple">${ICONS.smartphone(15)} Apple / iPhone</a>
-                  <a href="shop.html?brand=Samsung">${ICONS.smartphone(15)} Samsung</a>
-                  <a href="shop.html"><span>→</span> View All Phones</a>
+                  <a href="inventory.html?category=retail">${ICONS.car(15)} Retail Cars</a>
+                  <a href="inventory.html?category=wholesale">${ICONS.box(15)} Wholesale Lot</a>
+                  <a href="inventory.html"><span>→</span> View All Inventory</a>
                 </div>
               </li>
               <li class="nav-item">
-                <a href="accessories.html" class="nav-link ${isActive('accessories.html')}">Accessories</a>
+                <a href="rentals.html" class="nav-link ${isActive('rentals.html')}">Rentals</a>
+              </li>
+              <li class="nav-item">
+                <a href="parts.html" class="nav-link ${isActive('parts.html')}">Parts &amp; Accessories</a>
               </li>
               <li class="nav-item">
                 <a href="about.html" class="nav-link ${isActive('about.html')}">About</a>
@@ -156,7 +160,7 @@ function injectHeader() {
 
             <!-- Mobile-only CTA -->
             <div class="nav-mobile-cta" aria-hidden="true">
-              <a href="shop.html" class="btn btn--primary btn--full">Shop Phones</a>
+              <a href="inventory.html" class="btn btn--primary btn--full">Browse Cars</a>
               <a href="cart.html" class="btn btn--outline-white btn--full" style="position:relative;display:flex;align-items:center;justify-content:center;gap:8px;">
                 ${ICONS.cart(18)} View Cart
                 <span data-cart-badge class="notif-badge" style="position:static;margin-left:2px;display:inline-flex;align-items:center;justify-content:center;" hidden>0</span>
@@ -198,12 +202,12 @@ function injectHeader() {
       <div class="drawer-header">
         <a href="index.html" class="header-logo">
           ${KENNE_LOGO_SVG}
-          <div class="logo-text"><strong>KENNE <span style="color:var(--color-accent);">TECH</span></strong></div>
+          <div class="logo-text"><strong>KENNE <span style="color:var(--color-accent);">CARS</span></strong></div>
         </a>
         <button class="drawer-close" id="drawer-close" aria-label="Close menu">✕</button>
       </div>
       <div class="drawer-search">
-        <input type="search" id="drawer-search-input" placeholder="Search phones, accessories...">
+        <input type="search" id="drawer-search-input" placeholder="Search cars, parts, rentals...">
       </div>
       <nav class="drawer-nav">
         <div class="drawer-section-title">Main</div>
@@ -212,20 +216,27 @@ function injectHeader() {
         <a href="contact.html" class="drawer-link">Contact</a>
 
         <div class="drawer-group">
-          <button class="drawer-group-toggle">Phones <span class="chevron">▾</span></button>
+          <button class="drawer-group-toggle">Cars <span class="chevron">▾</span></button>
           <div class="drawer-submenu">
-            <a href="shop.html">All Phones</a>
-            <a href="shop.html?brand=Apple">Apple / iPhone</a>
-            <a href="shop.html?brand=Samsung">Samsung</a>
+            <a href="inventory.html">All Cars</a>
+            <a href="inventory.html?category=retail">Retail Cars</a>
+            <a href="inventory.html?category=wholesale">Wholesale Lot</a>
           </div>
         </div>
 
         <div class="drawer-group">
-          <button class="drawer-group-toggle">Accessories <span class="chevron">▾</span></button>
+          <button class="drawer-group-toggle">Rentals <span class="chevron">▾</span></button>
           <div class="drawer-submenu">
-            <a href="accessories.html">All Accessories</a>
-            <a href="accessories.html">Chargers &amp; Power Banks</a>
-            <a href="accessories.html">Earbuds &amp; Speakers</a>
+            <a href="rentals.html">Car Rentals</a>
+            <a href="rentals.html">Available Cars</a>
+          </div>
+        </div>
+
+        <div class="drawer-group">
+          <button class="drawer-group-toggle">Parts &amp; Accessories <span class="chevron">▾</span></button>
+          <div class="drawer-submenu">
+            <a href="parts.html">Car Parts</a>
+            <a href="parts.html">Car Accessories</a>
           </div>
         </div>
 
@@ -240,7 +251,7 @@ function injectHeader() {
         <a href="../index.html" class="drawer-link">🔀 Kenne Group</a>
       </nav>
       <div class="drawer-cta">
-        <a href="shop.html" class="btn btn--primary btn--full">Shop Phones</a>
+        <a href="inventory.html" class="btn btn--primary btn--full">Browse Cars</a>
         <a href="cart.html" class="btn btn--outline-white btn--full">View Cart</a>
       </div>
     </aside>
@@ -248,6 +259,7 @@ function injectHeader() {
 
   // Activate header scroll behavior
   initHeader();
+  // Cart badges live inside the header/drawer we just injected — refresh them now.
   if (window.KenneCart) window.KenneCart.updateCartBadge();
   window.dispatchEvent(new CustomEvent('kenne:header-ready'));
 }
@@ -266,13 +278,13 @@ function injectFooter() {
             <a href="index.html" class="header-logo footer-logo">
               ${KENNE_LOGO_SVG}
               <div class="logo-text">
-                <strong>KENNE <span style="color:var(--color-accent);">TECH</span></strong>
-                <span>Phones • Electronics • Accessories</span>
+                <strong>KENNE <span style="color:var(--color-accent);">CARS</span></strong>
+                <span>Wholesale • Retail • Rentals • Parts</span>
               </div>
             </a>
             <p class="footer-about">
-              Genuine phones and electronics, sourced from China and sold across Cameroon —
-              every device tested before it reaches you.
+              Quality cars sourced from China and sold across Cameroon — wholesale, retail, rentals,
+              and genuine parts, all backed by real customer support.
             </p>
             <div class="footer-socials">
               <a href="#" class="footer-social" aria-label="LinkedIn">in</a>
@@ -287,10 +299,10 @@ function injectFooter() {
           <div class="footer-col">
             <h4 class="footer-col-title">Shop</h4>
             <nav class="footer-links">
-              <a href="shop.html?brand=Apple">Apple / iPhone</a>
-              <a href="shop.html?brand=Samsung">Samsung</a>
-              <a href="shop.html">All Phones</a>
-              <a href="accessories.html">Accessories</a>
+              <a href="inventory.html?category=retail">Retail Cars</a>
+              <a href="inventory.html?category=wholesale">Wholesale Lot</a>
+              <a href="rentals.html">Car Rentals</a>
+              <a href="parts.html">Parts &amp; Accessories</a>
               <a href="cart.html">My Cart</a>
             </nav>
           </div>
@@ -303,7 +315,7 @@ function injectFooter() {
               <a href="contact.html">Contact</a>
               <a href="../index.html">Kenne Group</a>
               <a href="../cargo/index.html">Kenne Cargo</a>
-              <a href="../cars/index.html">Kenne Car Business</a>
+              <a href="../smart-tech/index.html">Kenne Smart Technology</a>
             </nav>
           </div>
 
@@ -314,7 +326,7 @@ function injectFooter() {
               <div class="footer-contact-item">
                 <div class="footer-contact-icon" style="display:flex;align-items:center;justify-content:center;">${ICONS.pin(20)}</div>
                 <div>
-                  <strong>Shop</strong><br>
+                  <strong>Showroom</strong><br>
                   ${SITE.address}
                 </div>
               </div>
@@ -467,11 +479,10 @@ function initFAQ() {
 /* ----------------------------------------------------------
    HERO BACKGROUND
    ------------------------------------------------------------
-   The Smart Tech homepage uses a CSS gradient + inline SVG
-   graphic instead of a stock photo (see index.html), so this
-   intentionally does not fetch/swap in an external image
-   anymore. Kept as a safe no-op so any page still calling it
-   doesn't break.
+   The Cars homepage now uses a CSS gradient + inline SVG graphic
+   instead of a stock photo (see index.html), so this no longer
+   fetches/swaps in an external image. Left as a no-op so any
+   page still calling it doesn't break.
    ---------------------------------------------------------- */
 function initHeroBackground() {
   return;
@@ -628,8 +639,7 @@ document.addEventListener('DOMContentLoaded', () => {
   highlightActiveNav();
 });
 
-// Keep every cart badge (desktop header + mobile drawer + mobile CTA) in sync
-// whenever the cart changes anywhere on the site.
+// Keep the cart badge (desktop + mobile) in sync whenever the cart changes anywhere on the site.
 window.addEventListener('kenne:cart-updated', () => {
   if (window.KenneCart) window.KenneCart.updateCartBadge();
 });
